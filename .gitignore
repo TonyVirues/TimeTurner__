@@ -1,0 +1,16 @@
+/vendor/
+/node_modules/
+
+.env
+
+/writable/*
+!/writable/index.html
+!/writable/.htaccess
+
+/tests/_output/
+/tests/_support/_generated/
+
+.phpunit.result.cache
+
+.DS_Store
+Thumbs.db

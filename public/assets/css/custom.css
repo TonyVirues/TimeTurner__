@@ -1,15 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>TimeTurner</title>
-    <meta name="description" content="The small framework with powerful features">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" type="image/png" href="/favicon.ico">
 
-    <!-- STYLES -->
-
-    <style {csp-style-nonce}>
         * {
             transition: background-color 300ms ease, color 300ms ease;
         }
@@ -135,7 +124,7 @@
             display: block;
         }
         section a {
-            color: rgba(221, 72, 20, 1);
+            color: #00aaff;
         }
         section svg {
             margin-bottom: -5px;
@@ -156,7 +145,7 @@
             stroke-width: 32px;
         }
         footer {
-            background-color: rgba(221, 72, 20, .8);
+            background-color: #0046e6;
             text-align: center;
         }
         footer .environment {
@@ -196,81 +185,3 @@
                 color: rgba(255, 255, 255, .8);
             }
         }
-    </style>
-</head>
-<body>
-
-<!-- HEADER: MENU + HEROE SECTION -->
-<header>
-
-    <div class="menu">
-
-    </div>
-
-    <div class="heroe">
-
-        <h1>Mar, si estas leyendo esto, es que lo hiciste bien <?= CodeIgniter\CodeIgniter::CI_VERSION ?></h1>
-        <p>he dejado el numero proque es un ejemplo de como usar una clase.</p>
-
-        <h2>Habra que ir arrancando esto</h2>
-
-    </div>
-
-</header>
-
-<!-- CONTENT -->
-
-<section>
-
-    <p>CALENDARIO</p>
-
-</section>
-
-<div class="further">
-
-    <section>
-
-        <P>PONERSE LAS PILITAS</P>
-
-
-    </section>
-
-</div>
-
-<!-- FOOTER: DEBUG INFO + COPYRIGHTS -->
-
-<footer>
-    <div class="environment">
-
-        <p>Gestor de turnos, con increible tecnologia actualizada esta guaop</p>
-
-        <p>Environment: <?= ENVIRONMENT ?></p>
-
-    </div>
-
-    <div class="copyrights">
-
-        <p>&copy; <?= date('Y') ?> CodeIgniter Foundation. CodeIgniter is open source project released under the MIT
-            open source licence.</p>
-
-    </div>
-
-</footer>
-
-<!-- SCRIPTS -->
-
-<script {csp-script-nonce}>
-    document.getElementById("menuToggle").addEventListener('click', toggleMenu);
-    function toggleMenu() {
-        var menuItems = document.getElementsByClassName('menu-item');
-        for (var i = 0; i < menuItems.length; i++) {
-            var menuItem = menuItems[i];
-            menuItem.classList.toggle("hidden");
-        }
-    }
-</script>
-
-<!-- -->
-
-</body>
-</html>

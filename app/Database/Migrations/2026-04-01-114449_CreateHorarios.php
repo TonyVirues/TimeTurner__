@@ -22,9 +22,11 @@ class CreateHorarios extends Migration
 			],
 			'hor_fecha_inicio' => [
 				'type' => 'DATE',
+				'null' => false,
 			],
 			'hor_fecha_fin' => [
 				'type' => 'DATE',
+				'null' => false,
 			],
 			'hor_descripcion' => [
 				'type' => 'TEXT',

@@ -1,4 +1,4 @@
-
+        /* Inicio del default codeIgniter */
         * {
             transition: background-color 300ms ease, color 300ms ease;
         }
@@ -185,3 +185,165 @@
                 color: rgba(255, 255, 255, .8);
             }
         }
+
+        /* Fin del default codeIgniter */
+
+
+/* Inicio del css para el login */
+/* @charset "utf-8"; */
+
+
+/* @import url//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css); */
+
+
+
+div.main{
+    background: #0264d6; /* Old browsers */
+background: -moz-radial-gradient(center, ellipse cover,  #0264d6 1%, #1c2b5a 100%); /* FF3.6+ */
+background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(1%,#0264d6), color-stop(100%,#1c2b5a)); /* Chrome,Safari4+ */
+background: -webkit-radial-gradient(center, ellipse cover,  #0264d6 1%,#1c2b5a 100%); /* Chrome10+,Safari5.1+ */
+background: -o-radial-gradient(center, ellipse cover,  #0264d6 1%,#1c2b5a 100%); /* Opera 12+ */
+background: -ms-radial-gradient(center, ellipse cover,  #0264d6 1%,#1c2b5a 100%); /* IE10+ */
+background: radial-gradient(ellipse at center,  #0264d6 1%,#1c2b5a 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0264d6', endColorstr='#1c2b5a',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+height:calc(100vh);
+width:100%;
+}
+
+[class*="fontawesome-"]:before {
+  font-family: 'FontAwesome', sans-serif;
+}
+
+/* ---------- GENERAL ---------- */
+
+* {
+  box-sizing: border-box;
+    margin:0px auto;
+
+  &:before,
+  &:after {
+    box-sizing: border-box;
+  }
+
+}
+
+body {
+   
+    color: #606468;
+  font: 87.5%/1.5em 'Open Sans', sans-serif;
+  margin: 0;
+}
+
+input {
+	border: none;
+	font-family: 'Open Sans', Arial, sans-serif;
+	font-size: 14px;
+	line-height: 1.5em;
+	padding: 0;
+	-webkit-appearance: none;
+}
+
+
+.clearfix {
+  zoom: 1;
+
+  &:before,
+  &:after {
+    content: ' ';
+    display: table;
+  }
+
+  &:after {
+    clear: both;
+  }
+
+}
+
+.container {
+  left: 50%;
+  position: fixed;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+
+/* ----------->Login<----------------*/
+
+/* ===== FONDO ===== */
+h1, h2 {
+    font-family: 'Manrope', sans-serif;
+}
+.login-page {
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f7f5ff 0%, #dde1ff 100%);
+}
+
+
+/* ===== CAJA CENTRAL ===== */
+.login-wrapper {
+    max-width: 1000px;
+    height: 600px;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(35, 44, 81, 0.15);
+}
+
+
+/* ===== IZQUIERDA ===== */
+.login-left {
+    background: #ffffff;
+    padding: 40px;
+}
+
+
+/* ===== DERECHA ===== */
+.login-right {
+    background: linear-gradient(135deg, #0059b5 0%, #67a0ff 100%);
+    color: white;
+}
+
+
+/* ===== INPUTS ===== */
+.login-left .form-control {
+    background-color: #dde1ff;
+    border: none;
+    border-radius: 0.75rem;
+    padding: 18px 16px;
+    font-size: 0.95rem;
+}
+.login-left .form-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+}
+
+.login-left .form-control:focus {
+    background-color: #d5dbff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 89, 181, 0.2);
+}
+
+
+/* ===== BOTÓN ===== */
+.btn-signature {
+    border-radius: 50px;
+    font-size: 1.1rem;
+    padding: 14px;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(0, 89, 181, 0.25);
+}
+.btn-signature:hover {
+    opacity: 0.9;
+}
+
+/* css para los iconoes del login */
+
+.input-icon {
+    position: absolute;
+    left: 15px;
+    top: 45px; /*Para ajustar los iconos */
+    color: #6c759e;
+    font-size: 20px;
+}

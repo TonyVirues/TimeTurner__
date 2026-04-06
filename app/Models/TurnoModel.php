@@ -65,7 +65,7 @@ class TurnoModel extends Model
     foreach ($turnos as $turno) {
       $eventos[] = [
         'id' => $turno['tur_id_turno'],
-        'title' => 'Turno ' . $turno['tur_estado'], //Pensar si cambiar por nombre del usuario @mar
+        'title' => date('H:i', strtotime($turno['tur_inicio'])) . ' - ' . date('H:i', strtotime($turno['tur_fin'])),
         'start' => date('c', strtotime($turno['tur_inicio'])),
         'end' => date('c', strtotime($turno['tur_fin'])),
         'extendedProps' => [

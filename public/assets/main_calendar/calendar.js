@@ -20,16 +20,31 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
 
-      fetch(`/turnos/eventos?horario_id=${horarioId}`)
-        .then((response) => response.json())
-        .then((data) => successCallback(data))
-        .catch((error) => failureCallback(error));
+      fetch(`/turnos/eventos?horario_id=${encodeURIComponent(horarioId)}`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Error al cargar los eventos");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          successCallback(data);
+        })
+        .catch((error) => {
+          console.error("Error cargando eventos:", error);
+          failureCallback(error);
+        });
     },
   });
 
   if (horarioSelect) {
     fetch("/horarios/listado")
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Error al cargar los horarios");
+        }
+        return response.json();
+      })
       .then((horarios) => {
         horarios.forEach((horario) => {
           const option = document.createElement("option");
@@ -37,8 +52,15 @@ document.addEventListener("DOMContentLoaded", function () {
           option.textContent = horario.hor_nombre;
           horarioSelect.appendChild(option);
         });
+
+        if (horarios.length > 0) {
+          horarioSelect.value = horarios[0].hor_id_horario;
+          calendar.refetchEvents();
+        }
       })
-      .catch((error) => console.error("Error cargando horarios:", error));
+      .catch((error) => {
+        console.error("Error cargando horarios:", error);
+      });
 
     horarioSelect.addEventListener("change", function () {
       calendar.refetchEvents();

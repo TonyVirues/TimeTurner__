@@ -12,6 +12,13 @@ document.addEventListener("DOMContentLoaded", function () {
     locale: "es",
     selectable: true,
     editable: true,
+    displayEventTime: true,
+    displayEventEnd: true,
+    eventTimeFormat: {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    },
     events: function (_fetchInfo, successCallback, failureCallback) {
       const horarioId = horarioSelect ? horarioSelect.value : "";
 

@@ -65,13 +65,15 @@ class TurnoModel extends Model
     foreach ($turnos as $turno) {
       $eventos[] = [
         'id' => $turno['tur_id_turno'],
-        'title' => ' Poner nombre usuario ', //@mar enlazar con nombre usuario cuando haga esa tabla, habrá que hacer join
+        'title' => 'Turno',
         'start' => date('c', strtotime($turno['tur_inicio'])),
         'end' => date('c', strtotime($turno['tur_fin'])),
+
         'extendedProps' => [
+          'estado' => $turno['tur_estado'],
+          'usuario' => $turno['usu_nombre'] ?? null,
+          'observaciones' => $turno['tur_observaciones'],
           'tur_id_horario' => $turno['tur_id_horario'],
-          'tur_estado' => $turno['tur_estado'],
-          'tur_observaciones' => $turno['tur_observaciones'],
         ],
       ];
     }

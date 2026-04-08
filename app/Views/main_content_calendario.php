@@ -38,11 +38,12 @@
 
   <div id="modalTurno" class="modal-turno oculto">
     <div class="modal-turno-contenido">
-      <h2>Crear turno</h2>
+      <h2 id="tituloModalTurno">Crear turno</h2>
       <p><strong>Horario seleccionado:</strong> <span id="nombreHorarioActual"></span></p>
 
       <form id="formTurno">
         <input type="hidden" id="tur_id_horario" name="tur_id_horario">
+        <input type="hidden" id="tur_id_turno" name="tur_id_turno">
 
         <div class="campo-formulario">
           <label for="tur_inicio">Inicio</label>
@@ -72,8 +73,10 @@
           <textarea id="tur_observaciones" name="tur_observaciones" rows="4"></textarea>
         </div>
 
+        <!-- Botones modal -->
         <div class="acciones-modal">
-          <button type="submit">Guardar turno</button>
+          <button type="button" id="btnEliminarTurno" class="btn-eliminar oculto-boton">Eliminar turno</button>
+          <button type="submit" id="btnGuardarTurno">Guardar turno</button>
           <button type="button" id="btnCerrarModal">Cancelar</button>
         </div>
       </form>

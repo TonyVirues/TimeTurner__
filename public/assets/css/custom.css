@@ -163,6 +163,19 @@ footer .copyrights {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 
+/* Botón eliminar */
+.oculto-boton {
+  display: none;
+}
+
+.btn-eliminar {
+  background-color: #d32f2f;
+  color: white;
+  border: 1px solid #b71c1c;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
 /* Campos formulario */
 
 .campo-formulario {

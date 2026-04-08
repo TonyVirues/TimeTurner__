@@ -9,7 +9,13 @@ document.addEventListener("DOMContentLoaded", function () {
   const inputHorarioId = document.getElementById("tur_id_horario");
   const btnCerrarModal = document.getElementById("btnCerrarModal");
 
+  const inputTurnoId = document.getElementById("tur_id_turno");
+  const tituloModalTurno = document.getElementById("tituloModalTurno");
+  const btnGuardarTurno = document.getElementById("btnGuardarTurno");
+  const btnEliminarTurno = document.getElementById("btnEliminarTurno");
+
   let horariosDisponibles = [];
+  let modoFormulario = "crear";
 
   if (!calendarEl) {
     console.error("No existe el elemento #calendar");
@@ -117,6 +123,10 @@ document.addEventListener("DOMContentLoaded", function () {
         inputFin.max = max;
       }
 
+      modoFormulario = "crear";
+      prepararModalCrear();
+      formTurno.reset();
+
       inputInicio.value = formatearFechaParaDatetimeLocal(info.start);
       inputFin.value = formatearFechaParaDatetimeLocal(info.end);
       inputHorarioId.value = horarioId;
@@ -129,6 +139,63 @@ document.addEventListener("DOMContentLoaded", function () {
       limpiarErroresCampos();
       abrirModal(modalTurno);
       calendar.unselect();
+    },
+
+    eventClick: function (info) {
+      const turnoId = info.event.id;
+
+      if (!turnoId) {
+        return;
+      }
+
+      fetch(`/turnos/mostrar/${encodeURIComponent(turnoId)}`)
+        .then(function (response) {
+          if (!response.ok) {
+            throw new Error("No se pudo cargar el turno.");
+          }
+
+          return response.json();
+        })
+        .then(function (turno) {
+          modoFormulario = "editar";
+          prepararModalEditar();
+          limpiarErroresCampos();
+
+          inputTurnoId.value = turno.tur_id_turno;
+          inputHorarioId.value = turno.tur_id_horario;
+          inputInicio.value = formatearFechaParaInputDesdeIso(turno.tur_inicio);
+          inputFin.value = formatearFechaParaInputDesdeIso(turno.tur_fin);
+
+          document.getElementById("tur_estado").value =
+            turno.tur_estado || "disponible";
+          document.getElementById("tur_observaciones").value =
+            turno.tur_observaciones || "";
+
+          const horarioSeleccionado = horariosDisponibles.find(function (h) {
+            return String(h.hor_id_horario) === String(turno.tur_id_horario);
+          });
+
+          if (horarioSeleccionado) {
+            const min = `${horarioSeleccionado.hor_fecha_inicio}T00:00`;
+            const max = `${horarioSeleccionado.hor_fecha_fin}T23:59`;
+
+            inputInicio.min = min;
+            inputInicio.max = max;
+            inputFin.min = min;
+            inputFin.max = max;
+          }
+
+          if (nombreHorarioActual && horarioSelect) {
+            nombreHorarioActual.textContent =
+              horarioSelect.options[horarioSelect.selectedIndex].text;
+          }
+
+          abrirModal(modalTurno);
+        })
+        .catch(function (error) {
+          console.error("Error cargando turno:", error);
+          alert(error.message);
+        });
     },
 
     events: function (_fetchInfo, successCallback, failureCallback) {
@@ -201,6 +268,51 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  if (btnEliminarTurno) {
+    btnEliminarTurno.addEventListener("click", function () {
+      const turnoId = inputTurnoId.value;
+
+      if (!turnoId) {
+        return;
+      }
+
+      const confirmado = window.confirm(
+        "¿Seguro que quieres eliminar este turno?",
+      );
+
+      if (!confirmado) {
+        return;
+      }
+
+      fetch(`/turnos/eliminar/${encodeURIComponent(turnoId)}`, {
+        method: "POST",
+      })
+        .then(function (response) {
+          return response.json().then(function (data) {
+            return {
+              ok: response.ok,
+              data: data,
+            };
+          });
+        })
+        .then(function (resultado) {
+          if (!resultado.ok || resultado.data.status !== "success") {
+            throw new Error(
+              resultado.data.message || "No se pudo eliminar el turno",
+            );
+          }
+
+          cerrarModal(modalTurno);
+          formTurno.reset();
+          calendar.refetchEvents();
+        })
+        .catch(function (error) {
+          console.error("Error al eliminar turno:", error);
+          alert(error.message);
+        });
+    });
+  }
+
   if (formTurno) {
     formTurno.addEventListener("submit", function (event) {
       event.preventDefault();
@@ -264,7 +376,12 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("tur_observaciones").value,
       );
 
-      fetch("/turnos/crear", {
+      const url =
+        modoFormulario === "editar"
+          ? `/turnos/actualizar/${encodeURIComponent(inputTurnoId.value)}`
+          : "/turnos/crear";
+
+      fetch(url, {
         method: "POST",
         body: datos,
       })
@@ -311,6 +428,59 @@ function cerrarModal(modal) {
   }
 
   modal.classList.add("oculto");
+}
+
+function prepararModalCrear() {
+  const titulo = document.getElementById("tituloModalTurno");
+  const btnGuardar = document.getElementById("btnGuardarTurno");
+  const btnEliminar = document.getElementById("btnEliminarTurno");
+  const inputTurnoId = document.getElementById("tur_id_turno");
+
+  if (titulo) {
+    titulo.textContent = "Crear turno";
+  }
+
+  if (btnGuardar) {
+    btnGuardar.textContent = "Guardar turno";
+  }
+
+  if (btnEliminar) {
+    btnEliminar.classList.add("oculto-boton");
+  }
+
+  if (inputTurnoId) {
+    inputTurnoId.value = "";
+  }
+}
+
+/**
+ * Prepara el modal para editar
+ */
+function prepararModalEditar() {
+  const titulo = document.getElementById("tituloModalTurno");
+  const btnGuardar = document.getElementById("btnGuardarTurno");
+  const btnEliminar = document.getElementById("btnEliminarTurno");
+
+  if (titulo) {
+    titulo.textContent = "Editar turno";
+  }
+
+  if (btnGuardar) {
+    btnGuardar.textContent = "Guardar cambios";
+  }
+
+  if (btnEliminar) {
+    btnEliminar.classList.remove("oculto-boton");
+  }
+}
+
+function formatearFechaParaInputDesdeIso(fecha) {
+  if (!fecha) {
+    return "";
+  }
+
+  const date = new Date(fecha);
+  return formatearFechaParaDatetimeLocal(date);
 }
 
 function formatearFechaParaDatetimeLocal(fecha) {

@@ -1,349 +1,194 @@
-        /* Inicio del default codeIgniter */
-        * {
-            transition: background-color 300ms ease, color 300ms ease;
-        }
-        *:focus {
-            background-color: rgba(221, 72, 20, .2);
-            outline: none;
-        }
-        html, body {
-            color: rgba(33, 37, 41, 1);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
-            font-size: 16px;
-            margin: 0;
-            padding: 0;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            text-rendering: optimizeLegibility;
-        }
-        header {
-            background-color: rgba(247, 248, 249, 1);
-            padding: .4rem 0 0;
-        }
-        .menu {
-            padding: .4rem 2rem;
-        }
-        header ul {
-            border-bottom: 1px solid rgba(242, 242, 242, 1);
-            list-style-type: none;
-            margin: 0;
-            overflow: hidden;
-            padding: 0;
-            text-align: right;
-        }
-        header li {
-            display: inline-block;
-        }
-        header li a {
-            border-radius: 5px;
-            color: rgba(0, 0, 0, .5);
-            display: block;
-            height: 44px;
-            text-decoration: none;
-        }
-        header li.menu-item a {
-            border-radius: 5px;
-            margin: 5px 0;
-            height: 38px;
-            line-height: 36px;
-            padding: .4rem .65rem;
-            text-align: center;
-        }
-        header li.menu-item a:hover,
-        header li.menu-item a:focus {
-            background-color: rgba(221, 72, 20, .2);
-            color: rgba(221, 72, 20, 1);
-        }
-        header .logo {
-            float: left;
-            height: 44px;
-            padding: .4rem .5rem;
-        }
-        header .menu-toggle {
-            display: none;
-            float: right;
-            font-size: 2rem;
-            font-weight: bold;
-        }
-        header .menu-toggle button {
-            background-color: rgba(221, 72, 20, .6);
-            border: none;
-            border-radius: 3px;
-            color: rgba(255, 255, 255, 1);
-            cursor: pointer;
-            font: inherit;
-            font-size: 1.3rem;
-            height: 36px;
-            padding: 0;
-            margin: 11px 0;
-            overflow: visible;
-            width: 40px;
-        }
-        header .menu-toggle button:hover,
-        header .menu-toggle button:focus {
-            background-color: rgba(221, 72, 20, .8);
-            color: rgba(255, 255, 255, .8);
-        }
-        header .heroe {
-            margin: 0 auto;
-            max-width: 1100px;
-            padding: 1rem 1.75rem 1.75rem 1.75rem;
-        }
-        header .heroe h1 {
-            font-size: 2.5rem;
-            font-weight: 500;
-        }
-        header .heroe h2 {
-            font-size: 1.5rem;
-            font-weight: 300;
-        }
-        section {
-            margin: 0 auto;
-            max-width: 1100px;
-            padding: 2.5rem 1.75rem 3.5rem 1.75rem;
-        }
-        section h1 {
-            margin-bottom: 2.5rem;
-        }
-        section h2 {
-            font-size: 120%;
-            line-height: 2.5rem;
-            padding-top: 1.5rem;
-        }
-        section pre {
-            background-color: rgba(247, 248, 249, 1);
-            border: 1px solid rgba(242, 242, 242, 1);
-            display: block;
-            font-size: .9rem;
-            margin: 2rem 0;
-            padding: 1rem 1.5rem;
-            white-space: pre-wrap;
-            word-break: break-all;
-        }
-        section code {
-            display: block;
-        }
-        section a {
-            color: #00aaff;
-        }
-        section svg {
-            margin-bottom: -5px;
-            margin-right: 5px;
-            width: 25px;
-        }
-        .further {
-            background-color: rgba(247, 248, 249, 1);
-            border-bottom: 1px solid rgba(242, 242, 242, 1);
-            border-top: 1px solid rgba(242, 242, 242, 1);
-        }
-        .further h2:first-of-type {
-            padding-top: 0;
-        }
-        .svg-stroke {
-            fill: none;
-            stroke: #000;
-            stroke-width: 32px;
-        }
-        footer {
-            background-color: #0046e6;
-            text-align: center;
-        }
-        footer .environment {
-            color: rgba(255, 255, 255, 1);
-            padding: 2rem 1.75rem;
-        }
-        footer .copyrights {
-            background-color: rgba(62, 62, 62, 1);
-            color: rgba(200, 200, 200, 1);
-            padding: .25rem 1.75rem;
-        }
-        @media (max-width: 629px) {
-            header ul {
-                padding: 0;
-            }
-            header .menu-toggle {
-                padding: 0 1rem;
-            }
-            header .menu-item {
-                background-color: rgba(244, 245, 246, 1);
-                border-top: 1px solid rgba(242, 242, 242, 1);
-                margin: 0 15px;
-                width: calc(100% - 30px);
-            }
-            header .menu-toggle {
-                display: block;
-            }
-            header .hidden {
-                display: none;
-            }
-            header li.menu-item a {
-                background-color: rgba(221, 72, 20, .1);
-            }
-            header li.menu-item a:hover,
-            header li.menu-item a:focus {
-                background-color: rgba(221, 72, 20, .7);
-                color: rgba(255, 255, 255, .8);
-            }
-        }
-
-        /* Fin del default codeIgniter */
-
-
-/* Inicio del css para el login */
-/* @charset "utf-8"; */
-
-
-/* @import url//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css); */
-
-
-
-div.main{
-    background: #0264d6; /* Old browsers */
-background: -moz-radial-gradient(center, ellipse cover,  #0264d6 1%, #1c2b5a 100%); /* FF3.6+ */
-background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(1%,#0264d6), color-stop(100%,#1c2b5a)); /* Chrome,Safari4+ */
-background: -webkit-radial-gradient(center, ellipse cover,  #0264d6 1%,#1c2b5a 100%); /* Chrome10+,Safari5.1+ */
-background: -o-radial-gradient(center, ellipse cover,  #0264d6 1%,#1c2b5a 100%); /* Opera 12+ */
-background: -ms-radial-gradient(center, ellipse cover,  #0264d6 1%,#1c2b5a 100%); /* IE10+ */
-background: radial-gradient(ellipse at center,  #0264d6 1%,#1c2b5a 100%); /* W3C */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0264d6', endColorstr='#1c2b5a',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
-height:calc(100vh);
-width:100%;
-}
-
-[class*="fontawesome-"]:before {
-  font-family: 'FontAwesome', sans-serif;
-}
-
-/* ---------- GENERAL ---------- */
-
+/* Inicio del default codeIgniter */
 * {
-  box-sizing: border-box;
-    margin:0px auto;
-
-  &:before,
-  &:after {
-    box-sizing: border-box;
-  }
-
+  transition:
+    background-color 300ms ease,
+    color 300ms ease;
 }
-
+*:focus {
+  background-color: rgba(221, 72, 20, 0.2);
+  outline: none;
+}
+html,
 body {
-   
-    color: #606468;
-  font: 87.5%/1.5em 'Open Sans', sans-serif;
+  color: rgba(33, 37, 41, 1);
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji";
+  font-size: 16px;
   margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
-
-input {
-	border: none;
-	font-family: 'Open Sans', Arial, sans-serif;
-	font-size: 14px;
-	line-height: 1.5em;
-	padding: 0;
-	-webkit-appearance: none;
+header {
+  background-color: rgba(247, 248, 249, 1);
+  padding: 0.4rem 0 0;
 }
-
-
-.clearfix {
-  zoom: 1;
-
-  &:before,
-  &:after {
-    content: ' ';
-    display: table;
+.menu {
+  padding: 0.4rem 2rem;
+}
+header ul {
+  border-bottom: 1px solid rgba(242, 242, 242, 1);
+  list-style-type: none;
+  margin: 0;
+  overflow: hidden;
+  padding: 0;
+  text-align: right;
+}
+header li {
+  display: inline-block;
+}
+header li a {
+  border-radius: 5px;
+  color: rgba(0, 0, 0, 0.5);
+  display: block;
+  height: 44px;
+  text-decoration: none;
+}
+header li.menu-item a {
+  border-radius: 5px;
+  margin: 5px 0;
+  height: 38px;
+  line-height: 36px;
+  padding: 0.4rem 0.65rem;
+  text-align: center;
+}
+header li.menu-item a:hover,
+header li.menu-item a:focus {
+  background-color: rgba(221, 72, 20, 0.2);
+  color: rgba(221, 72, 20, 1);
+}
+header .logo {
+  float: left;
+  height: 44px;
+  padding: 0.4rem 0.5rem;
+}
+header .menu-toggle {
+  display: none;
+  float: right;
+  font-size: 2rem;
+  font-weight: bold;
+}
+header .menu-toggle button {
+  background-color: rgba(221, 72, 20, 0.6);
+  border: none;
+  border-radius: 3px;
+  color: rgba(255, 255, 255, 1);
+  cursor: pointer;
+  font: inherit;
+  font-size: 1.3rem;
+  height: 36px;
+  padding: 0;
+  margin: 11px 0;
+  overflow: visible;
+  width: 40px;
+}
+header .menu-toggle button:hover,
+header .menu-toggle button:focus {
+  background-color: rgba(221, 72, 20, 0.8);
+  color: rgba(255, 255, 255, 0.8);
+}
+header .heroe {
+  margin: 0 auto;
+  max-width: 1100px;
+  padding: 1rem 1.75rem 1.75rem 1.75rem;
+}
+header .heroe h1 {
+  font-size: 2.5rem;
+  font-weight: 500;
+}
+header .heroe h2 {
+  font-size: 1.5rem;
+  font-weight: 300;
+}
+section {
+  margin: 0 auto;
+  max-width: 1100px;
+  padding: 2.5rem 1.75rem 3.5rem 1.75rem;
+}
+section h1 {
+  margin-bottom: 2.5rem;
+}
+section h2 {
+  font-size: 120%;
+  line-height: 2.5rem;
+  padding-top: 1.5rem;
+}
+section pre {
+  background-color: rgba(247, 248, 249, 1);
+  border: 1px solid rgba(242, 242, 242, 1);
+  display: block;
+  font-size: 0.9rem;
+  margin: 2rem 0;
+  padding: 1rem 1.5rem;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+section code {
+  display: block;
+}
+section a {
+  color: #00aaff;
+}
+section svg {
+  margin-bottom: -5px;
+  margin-right: 5px;
+  width: 25px;
+}
+.further {
+  background-color: rgba(247, 248, 249, 1);
+  border-bottom: 1px solid rgba(242, 242, 242, 1);
+  border-top: 1px solid rgba(242, 242, 242, 1);
+}
+.further h2:first-of-type {
+  padding-top: 0;
+}
+.svg-stroke {
+  fill: none;
+  stroke: #000;
+  stroke-width: 32px;
+}
+footer {
+  background-color: #0046e6;
+  text-align: center;
+}
+footer .environment {
+  color: rgba(255, 255, 255, 1);
+  padding: 2rem 1.75rem;
+}
+footer .copyrights {
+  background-color: rgba(62, 62, 62, 1);
+  color: rgba(200, 200, 200, 1);
+  padding: 0.25rem 1.75rem;
+}
+@media (max-width: 629px) {
+  header ul {
+    padding: 0;
   }
-
-  &:after {
-    clear: both;
+  header .menu-toggle {
+    padding: 0 1rem;
   }
-
+  header .menu-item {
+    background-color: rgba(244, 245, 246, 1);
+    border-top: 1px solid rgba(242, 242, 242, 1);
+    margin: 0 15px;
+    width: calc(100% - 30px);
+  }
+  header .menu-toggle {
+    display: block;
+  }
+  header .hidden {
+    display: none;
+  }
+  header li.menu-item a {
+    background-color: rgba(221, 72, 20, 0.1);
+  }
+  header li.menu-item a:hover,
+  header li.menu-item a:focus {
+    background-color: rgba(221, 72, 20, 0.7);
+    color: rgba(255, 255, 255, 0.8);
+  }
 }
 
-.container {
-  left: 50%;
-  position: fixed;
-  top: 50%;
-  transform: translate(-50%, -50%);
-}
-
-
-/* ----------->Login<----------------*/
-
-/* ===== FONDO ===== */
-h1, h2 {
-    font-family: 'Manrope', sans-serif;
-}
-.login-page {
-    font-family: 'Inter', sans-serif;
-    min-height: 100vh;
-    background: linear-gradient(135deg, #f7f5ff 0%, #dde1ff 100%);
-}
-
-
-/* ===== CAJA CENTRAL ===== */
-.login-wrapper {
-    max-width: 1000px;
-    height: 600px;
-    border-radius: 1rem;
-    overflow: hidden;
-    box-shadow: 0 8px 32px rgba(35, 44, 81, 0.15);
-}
-
-
-/* ===== IZQUIERDA ===== */
-.login-left {
-    background: #ffffff;
-    padding: 40px;
-}
-
-
-/* ===== DERECHA ===== */
-.login-right {
-    background: linear-gradient(135deg, #0059b5 0%, #67a0ff 100%);
-    color: white;
-}
-
-
-/* ===== INPUTS ===== */
-.login-left .form-control {
-    background-color: #dde1ff;
-    border: none;
-    border-radius: 0.75rem;
-    padding: 18px 16px;
-    font-size: 0.95rem;
-}
-.login-left .form-label {
-    font-size: 0.7rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 6px;
-}
-
-.login-left .form-control:focus {
-    background-color: #d5dbff;
-    box-shadow: 0 0 0 0.2rem rgba(0, 89, 181, 0.2);
-}
-
-
-/* ===== BOTÓN ===== */
-.btn-signature {
-    border-radius: 50px;
-    font-size: 1.1rem;
-    padding: 14px;
-    font-weight: 700;
-    box-shadow: 0 4px 12px rgba(0, 89, 181, 0.25);
-}
-.btn-signature:hover {
-    opacity: 0.9;
-}
-
-/* css para los iconoes del login */
-
-.input-icon {
-    position: absolute;
-    left: 15px;
-    top: 45px; /*Para ajustar los iconos */
-    color: #6c759e;
-    font-size: 20px;
-}
+/* Fin del default codeIgniter */

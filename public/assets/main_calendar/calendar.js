@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const calendarEl = document.getElementById("calendar");
   const horarioSelect = document.getElementById("horarioSelect");
 
+  // Constantes del modal crear/editar
   const modalTurno = document.getElementById("modalTurno");
   const formTurno = document.getElementById("formTurno");
   const inputInicio = document.getElementById("tur_inicio");
@@ -10,32 +11,38 @@ document.addEventListener("DOMContentLoaded", function () {
   const btnCerrarModal = document.getElementById("btnCerrarModal");
 
   const inputTurnoId = document.getElementById("tur_id_turno");
+  const nombreHorarioActual = document.getElementById("nombreHorarioActual");
   const tituloModalTurno = document.getElementById("tituloModalTurno");
   const btnGuardarTurno = document.getElementById("btnGuardarTurno");
   const btnEliminarTurno = document.getElementById("btnEliminarTurno");
 
+  // Array que guarda los horarios cargados desde backend
   let horariosDisponibles = [];
+  // Controla el comportamiento del formulario, si es para crear o editar
   let modoFormulario = "crear";
 
+  // Condición que corta el flujo si falla el calendario
   if (!calendarEl) {
     console.error("No existe el elemento #calendar");
     return;
   }
 
-  const nombreHorarioActual = document.getElementById("nombreHorarioActual");
-
-  // Captura el nombre del horario donde se va crear/modificar turno
+  /**
+   * Actualiza el texto del modal con el nombre del horario seleccionado,
+   * donde se va crear/modificar turno
+   */
   if (nombreHorarioActual && horarioSelect) {
     nombreHorarioActual.textContent =
       horarioSelect.options[horarioSelect.selectedIndex].text;
   }
 
   /**
-   * Vista del calendario
+   * Crea la instancia del calendario
    */
   const calendar = new FullCalendar.Calendar(calendarEl, {
     initialView: "dayGridMonth",
 
+    //Barra superior
     headerToolbar: {
       left: "prev,next today",
       center: "title",
@@ -49,12 +56,12 @@ document.addEventListener("DOMContentLoaded", function () {
     },
 
     locale: "es",
-    firstDay: 1,
+    firstDay: 1, //lunes
     selectable: true,
     editable: true,
     nowIndicator: true,
     allDaySlot: false,
-
+    // Muestra hora principio/fin de turno
     displayEventTime: true,
     displayEventEnd: true,
 
@@ -69,6 +76,11 @@ document.addEventListener("DOMContentLoaded", function () {
       hour12: false,
     },
 
+    /**
+     * Añade un estilo al turno en función de su estado
+     * @param {*} arg
+     * @returns
+     */
     eventClassNames: function (arg) {
       const estado = arg.event.extendedProps.estado;
 
@@ -87,20 +99,38 @@ document.addEventListener("DOMContentLoaded", function () {
       return [];
     },
 
+    /**
+     * Inserta el nombre del usuario/sin asignar y la hora al evento turno del calendario
+     * @param {*} arg
+     * @returns
+     */
     eventContent: function (arg) {
-      const usuario = arg.event.extendedProps.usuario;
+      const usuario = arg.event.extendedProps.usuario ?? "Sin asignar";
 
-      return {
-        html: `
-          <div>
-            <strong>${usuario ?? "Sin asignar"}</strong><br>
-            ${arg.timeText}
-          </div>
-        `,
-      };
+      const container = document.createElement("div");
+
+      const strong = document.createElement("strong");
+      strong.textContent = usuario;
+
+      const br = document.createElement("br");
+
+      const time = document.createTextNode(arg.timeText);
+
+      container.appendChild(strong);
+      container.appendChild(br);
+      container.appendChild(time);
+
+      return { domNodes: [container] };
     },
 
+    /**
+     * Se ejecuta con click+arrastrar
+     * Abre modal modo crear, con los datos seleccionados
+     * @param {*} info
+     * @returns
+     */
     select: function (info) {
+      // Lee el id del horario y si no haydevuelve string vacío
       const horarioId = horarioSelect ? horarioSelect.value : "";
 
       if (!horarioId) {
@@ -108,11 +138,12 @@ document.addEventListener("DOMContentLoaded", function () {
         calendar.unselect();
         return;
       }
-
+      // Busca en el array de horarios y devuelve el que coincide con el ID seleccionado
       const horarioSeleccionado = horariosDisponibles.find(function (h) {
         return String(h.hor_id_horario) === String(horarioId);
       });
 
+      // Acota lo que el usuario puede selecionar del calendario, fecha-hora max y min
       if (horarioSeleccionado) {
         const min = `${horarioSeleccionado.hor_fecha_inicio}T00:00`;
         const max = `${horarioSeleccionado.hor_fecha_fin}T23:59`;
@@ -131,6 +162,7 @@ document.addEventListener("DOMContentLoaded", function () {
       inputFin.value = formatearFechaParaDatetimeLocal(info.end);
       inputHorarioId.value = horarioId;
 
+      // Cambia el nombre del horario en el modal
       if (nombreHorarioActual && horarioSelect) {
         nombreHorarioActual.textContent =
           horarioSelect.options[horarioSelect.selectedIndex].text;
@@ -138,22 +170,28 @@ document.addEventListener("DOMContentLoaded", function () {
 
       limpiarErroresCampos();
       abrirModal(modalTurno);
-      calendar.unselect();
+      // Se quita la seleccion del calendario al abrir el modal, no sé si quiero eso @mar
+      // calendar.unselect();
     },
 
+    /**
+     * Se abre modal modo editar al hacer click en un turno
+     * @param {*} info
+     * @returns
+     */
     eventClick: function (info) {
       const turnoId = info.event.id;
 
       if (!turnoId) {
         return;
       }
-
+      // Hace una petición con la id del turno al backend y este consulta a la db
       fetch(`/turnos/mostrar/${encodeURIComponent(turnoId)}`)
         .then(function (response) {
           if (!response.ok) {
             throw new Error("No se pudo cargar el turno.");
           }
-
+          // Devuelve una promesa con los datos del turno en json
           return response.json();
         })
         .then(function (turno) {
@@ -166,6 +204,7 @@ document.addEventListener("DOMContentLoaded", function () {
           inputInicio.value = formatearFechaParaInputDesdeIso(turno.tur_inicio);
           inputFin.value = formatearFechaParaInputDesdeIso(turno.tur_fin);
 
+          // En el modal rellena el estado del turno y observaciones si hay
           document.getElementById("tur_estado").value =
             turno.tur_estado || "disponible";
           document.getElementById("tur_observaciones").value =
@@ -198,6 +237,14 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     },
 
+    /**
+     * Carga los turnos del calendario desde el backend
+     * según el horario seleccionado y los pasa a FullCalendar
+     * @param {*} _fetchInfo
+     * @param {*} successCallback
+     * @param {*} failureCallback
+     * @returns
+     */
     events: function (_fetchInfo, successCallback, failureCallback) {
       const horarioId = horarioSelect ? horarioSelect.value : "";
 
@@ -209,21 +256,26 @@ document.addEventListener("DOMContentLoaded", function () {
       fetch(`/turnos/eventos?horario_id=${encodeURIComponent(horarioId)}`)
         .then(function (response) {
           if (!response.ok) {
-            throw new Error("Error al cargar los eventos");
+            throw new Error("Error al cargar los turnos");
           }
 
           return response.json();
         })
         .then(function (data) {
+          // Pasa los turnos al calendario
           successCallback(data);
         })
         .catch(function (error) {
-          console.error("Error cargando eventos:", error);
+          console.error("Error cargando turnos:", error);
           failureCallback(error);
         });
     },
   });
 
+  /**
+   * Carga los horarios desde el backend, rellena el desplegable
+   * y recarga los turnos del calendario cuando cambia el horario seleccionado
+   */
   if (horarioSelect) {
     fetch("/horarios/listado")
       .then(function (response) {
@@ -236,6 +288,7 @@ document.addEventListener("DOMContentLoaded", function () {
       .then(function (horarios) {
         horariosDisponibles = horarios;
 
+        // Rellena el desplegable de horarios
         horarios.forEach(function (horario) {
           const option = document.createElement("option");
           option.value = horario.hor_id_horario;
@@ -243,6 +296,7 @@ document.addEventListener("DOMContentLoaded", function () {
           horarioSelect.appendChild(option);
         });
 
+        // Selecciona el primer horario por defecto
         if (horarios.length > 0) {
           horarioSelect.value = horarios[0].hor_id_horario;
           calendar.refetchEvents();
@@ -252,6 +306,7 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error("Error cargando horarios:", error);
       });
 
+    // Se ejecuta cuando escucha cambios en el select
     horarioSelect.addEventListener("change", function () {
       if (nombreHorarioActual) {
         nombreHorarioActual.textContent =
@@ -268,6 +323,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  // Elimina un turno
   if (btnEliminarTurno) {
     btnEliminarTurno.addEventListener("click", function () {
       const turnoId = inputTurnoId.value;
@@ -284,6 +340,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
 
+      // Llamamos al backend para eliminar el turno
       fetch(`/turnos/eliminar/${encodeURIComponent(turnoId)}`, {
         method: "POST",
       })
@@ -313,6 +370,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  // @mar Revisión por aquí
   if (formTurno) {
     formTurno.addEventListener("submit", function (event) {
       event.preventDefault();
@@ -410,7 +468,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
   }
-
+  // Pinta el calendario
   calendar.render();
 });
 

@@ -10,9 +10,9 @@ class AuthController extends BaseController
   {
     return view('auth/login');
   }
-  public function pie()
+  public function registro()
   {
-    return view('layouts/footer');
+    return view('layouts/registro');
   }
   //     public function login()
   //     {

@@ -14,6 +14,8 @@ class AuthController extends BaseController
   {
     return view('layouts/footer');
   }
+
+  // Esto habrá que conectarlo con la DB tabla usuarios. Cambiar nombres para que coincidan con los campos de la tabla
   //     public function login()
   //     {
   //         $usuario = $this->request->getPost('usuario');

@@ -19,6 +19,7 @@
     </div>
   </header>
 
+  <!-- Selector de horarios @TODO @mar @tony la selección de horarios hay que ponerla bonita en el lateral -->
   <section class="main">
     <div class="container">
 
@@ -29,6 +30,7 @@
         </select>
       </div>
 
+      <!-- Contenedor donde FullCalendar dibuja el calendario -->
       <div class="col-12">
         <div id="calendar" class="col-12"></div>
       </div>
@@ -36,6 +38,7 @@
     </div>
   </section>
 
+  <!-- Modal turnos -->
   <div id="modalTurno" class="modal-turno oculto">
     <div class="modal-turno-contenido">
       <h2 id="tituloModalTurno">Crear turno</h2>

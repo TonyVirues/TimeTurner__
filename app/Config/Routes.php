@@ -6,7 +6,7 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 $routes->get('/home', 'Home::index');
-$routes->get('/login', 'AuthController::index');
+$routes->get('/login', 'AuthController::login');
 $routes->get('/registro', 'AuthController::registro');
 
 // Rutas de horarios

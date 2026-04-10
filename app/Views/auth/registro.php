@@ -1,9 +1,13 @@
-<?= $this->extend('layaouts/main') ?>
+<?= $this->extend('layouts/main') ?>
+
+<?= $this->section('styles') ?>
+<link rel="stylesheet" href="/assets/css/login.css">
+<?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
 <div class="login-page">
     <div class="container-fluid d-flex justify-content-center py-5 rounded">
-        <div class="row mx-auto">
+        <div class="row registro-wrapper mx-auto">
             
             <!--Lado izquierdo-->
                 <div class="col-md-6 login-left d-flex  justify-content-center">
@@ -39,21 +43,20 @@
                             <div class="mb-3 position-relative">
                                 <label class="form-label">Contraseña</label>
                                 <span class="material-symbols-outlined input-icon">lock</span>
-                                <input type="password" name="contraseña" class="form-control ps-5">
+                                <input type="password" name="contraseña" class="form-control ps-5" 
+                                placeholder="********">
                             </div>
                             <div class="mb-3 position-relative">
                                 <label class="form-label">Confirma contraseña</label>
                                 <span class="material-symbols-outlined input-icon">lock</span>
-                                <input type="password" name="ccontraseña" class="form-control ps-5">
+                                <input type="password" name="ccontraseña" class="form-control ps-5"
+                                placeholder="********">
                             </div>
 
                             <!--botón-->
                             <button type="submit" class="btn btn-primary w-100">Registrarse</button>
-
                         </form>
-
                     </div>
-
                 </div>
 
             <!--Lado derecho-->

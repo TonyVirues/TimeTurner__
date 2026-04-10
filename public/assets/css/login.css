@@ -125,6 +125,13 @@ h2 {
   box-shadow: 0 8px 32px rgba(35, 44, 81, 0.15);
 }
 
+.registro-wrapper {
+  max-width: 1000px;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(35, 44, 81, 0.15);
+}
+
 /* ===== IZQUIERDA ===== */
 .login-left {
   background: #ffffff;
@@ -170,7 +177,7 @@ h2 {
   opacity: 0.9;
 }
 
-/* css para los iconoes del login */
+/* css para los iconos del login */
 
 .input-icon {
   position: absolute;
@@ -179,3 +186,5 @@ h2 {
   color: #6c759e;
   font-size: 20px;
 }
+
+/*------------------>REGISTRO<--------------------*/

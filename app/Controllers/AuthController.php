@@ -6,14 +6,16 @@ use App\Models\UserModel;
 
 class AuthController extends BaseController
 {
-  public function index()
+  public function login()
   {
     return view('auth/login');
   }
+
   public function registro()
   {
-    return view('layouts/registro');
+    return view('auth/registro');
   }
+
   //     public function login()
   //     {
   //         $usuario = $this->request->getPost('usuario');

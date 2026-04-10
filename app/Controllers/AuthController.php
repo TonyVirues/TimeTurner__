@@ -10,10 +10,14 @@ class AuthController extends BaseController
   {
     return view('auth/login');
   }
+
+  // @mar para @tony Esto se está usando?
   public function pie()
   {
     return view('layouts/footer');
   }
+
+  // Esto habrá que conectarlo con la DB tabla usuarios. Cambiar nombres para que coincidan con los campos de la tabla
   //     public function login()
   //     {
   //         $usuario = $this->request->getPost('usuario');

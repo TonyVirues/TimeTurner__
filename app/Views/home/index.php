@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="/assets/css/custom.css">
-  <link rel="shortcut icon" type="image/png" href="/favicon.ico">
+  <link rel="icon" type="image/svg+xml" href="/assets/imagen/logo.svg">
 </head>
 
 <body>
@@ -19,6 +19,7 @@
     </div>
   </header>
 
+  <!-- Selector de horarios @TODO @mar @tony la selección de horarios hay que ponerla bonita en el lateral -->
   <section class="main">
     <div class="container">
 
@@ -29,6 +30,7 @@
         </select>
       </div>
 
+      <!-- Contenedor donde FullCalendar dibuja el calendario -->
       <div class="col-12">
         <div id="calendar" class="col-12"></div>
       </div>
@@ -36,6 +38,7 @@
     </div>
   </section>
 
+  <!-- Modal turnos -->
   <div id="modalTurno" class="modal-turno oculto">
     <div class="modal-turno-contenido">
       <h2 id="tituloModalTurno">Crear turno</h2>

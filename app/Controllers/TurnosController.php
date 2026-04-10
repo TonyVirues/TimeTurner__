@@ -8,7 +8,7 @@ use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
-class Turnos extends BaseController
+class TurnosController extends BaseController
 {
   protected $turnoModel;
   protected $horarioModel;

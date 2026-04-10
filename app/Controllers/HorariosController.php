@@ -7,7 +7,7 @@ use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
-class Horarios extends BaseController
+class HorariosController extends BaseController
 {
   protected $horarioModel;
 
@@ -23,15 +23,6 @@ class Horarios extends BaseController
   {
     parent::initController($request, $response, $logger);
     $this->horarioModel = new HorarioModel();
-  }
-
-  /**
-   * Carga y devuelve la vista main_content_calendario apra mostrar en el navegador
-   * @return string
-   */
-  public function index()
-  {
-    return view('main_content_calendario');
   }
 
   /**

@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="/assets/css/custom.css">
-  <link rel="shortcut icon" type="image/png" href="/favicon.ico">
+  <link rel="icon" type="image/svg+xml" href="/assets/imagen/logo.svg">
 </head>
 
 <body>

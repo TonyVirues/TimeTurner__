@@ -82,21 +82,18 @@ document.addEventListener("DOMContentLoaded", function () {
      * @returns
      */
     eventClassNames: function (arg) {
+      const clasesPorEstado = {
+        asignado: "turno-asignado",
+        disponible: "turno-disponible",
+        pendiente_cambio: "turno-pendiente",
+        cambiado: "turno-cambiado",
+        cancelado: "turno-cancelado",
+      };
+
       const estado = arg.event.extendedProps.estado;
+      const clase = clasesPorEstado[estado];
 
-      if (estado === "asignado") {
-        return ["turno-asignado"];
-      }
-
-      if (estado === "disponible") {
-        return ["turno-disponible"];
-      }
-
-      if (estado === "pendiente_cambio") {
-        return ["turno-pendiente"];
-      }
-
-      return [];
+      return clase ? [clase] : [];
     },
 
     /**

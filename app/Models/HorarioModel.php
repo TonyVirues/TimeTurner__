@@ -51,7 +51,7 @@ class HorarioModel extends Model
   // Listado de horarios para el selector de horarios
   public function getHorariosListado()
   {
-    return $this->select('hor_id_horario, hor_nombre, hor_estado')
+    return $this->select('hor_id_horario, hor_nombre, hor_estado, hor_fecha_inicio, hor_fecha_fin')
       ->orderBy('hor_fecha_inicio', 'ASC')
       ->findAll();
   }

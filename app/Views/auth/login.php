@@ -14,7 +14,7 @@
         <!--Título-->
         <div style="width: 100%; max-width: 400px;">
           <h1 class="fw-bold mb-4">TimeTurner</h1>
-          <h2 class="mb-4">Sign In</h2>
+          <h2 class="mb-4">Inicia sesión</h2>
 
           <form action="<?= base_url('login') ?>" method="post">
 
@@ -71,3 +71,6 @@
   </div>
 </div>
 <?= $this->endSection() ?>
+
+
+

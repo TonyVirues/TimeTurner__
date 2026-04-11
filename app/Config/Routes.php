@@ -5,9 +5,12 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
-$routes->get('/home', 'Home::index');
+// Rutas Login , registro
 $routes->get('/login', 'AuthController::login');
 $routes->get('/registro', 'AuthController::registro');
+
+// Rutas Contenido principal
+$routes->get('/calendario', 'Home::calendario');
 
 // Rutas de horarios
 $routes->get('horarios', 'Horarios::index');

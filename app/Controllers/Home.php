@@ -4,8 +4,8 @@ namespace App\Controllers;
 
 class Home extends BaseController
 {
-    public function index(): string
+    public function calendario(): string
     {
-        return view('main_content_calendario');
+        return view('home/calendario');
     }
 }

@@ -1,14 +1,13 @@
+<?= $this->extend('layouts/main') ?>
 
-
-<body>
-
+<?= $this->section('content') ?>
   <header>
     <div>
       <h1>TimeTurner</h1>
     </div>
   </header>
 
-  
+    <?= $this->renderSection('calendario') ?>
 
   <footer>
     <div class="environment fixed-bottom">
@@ -17,7 +16,5 @@
     </div>
   </footer>
 
-  
-</body>
 
-</html>
+</html><?= $this->endSection() ?>

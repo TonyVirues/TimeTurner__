@@ -4,8 +4,6 @@
 
 <?= $this->section('calendario') ?>
 <section class="main">
-    <div class="container">
-
       <div class="col-12">
         <label for="horarioSelect">Selecciona un horario:</label>
         <select id="horarioSelect">
@@ -17,7 +15,6 @@
         <div id="calendar" class="col-12"></div>
       </div>
 
-    </div>
   </section>
 
   <div id="modalTurno" class="modal-turno oculto">

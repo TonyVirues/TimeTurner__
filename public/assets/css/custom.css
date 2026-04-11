@@ -25,9 +25,10 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* ==== Header ==== */
+/* ==== Header — solo login/registro ==== */
+/* Acotado a .auth-page para no afectar al header del home */
 
-header {
+.auth-page header {
   background-color: rgba(247, 248, 249, 1);
   padding: 0.4rem 0 0;
 }
@@ -36,7 +37,7 @@ header {
   padding: 0.4rem 2rem;
 }
 
-header ul {
+.auth-page header ul {
   border-bottom: 1px solid rgba(242, 242, 242, 1);
   list-style-type: none;
   margin: 0;
@@ -45,11 +46,11 @@ header ul {
   text-align: right;
 }
 
-header li {
+.auth-page header li {
   display: inline-block;
 }
 
-header li a {
+.auth-page header li a {
   border-radius: 5px;
   color: rgba(0, 0, 0, 0.5);
   display: block;
@@ -57,7 +58,7 @@ header li a {
   text-decoration: none;
 }
 
-header li.menu-item a {
+.auth-page header li.menu-item a {
   border-radius: 5px;
   margin: 5px 0;
   height: 38px;
@@ -66,19 +67,19 @@ header li.menu-item a {
   text-align: center;
 }
 
-header li.menu-item a:hover,
-header li.menu-item a:focus {
+.auth-page header li.menu-item a:hover,
+.auth-page header li.menu-item a:focus {
   background-color: rgba(221, 72, 20, 0.2);
   color: rgba(221, 72, 20, 1);
 }
 
-header .logo {
+.auth-page header .logo {
   float: left;
   height: 44px;
   padding: 0.4rem 0.5rem;
 }
 
-header .menu-toggle {
+.auth-page header .menu-toggle {
   display: none;
 }
 
@@ -90,19 +91,20 @@ section {
   padding: 2.5rem 1.75rem 3.5rem 1.75rem;
 }
 
-/* ==== Footer ==== */
+/* ==== Footer — solo login/registro ==== */
+/* Acotado a .auth-page para no afectar al footer del home */
 
-footer {
+.auth-page footer {
   background-color: #0046e6;
   text-align: center;
 }
 
-footer .environment {
+.auth-page footer .environment {
   color: white;
   padding: 2rem 1.75rem;
 }
 
-footer .copyrights {
+.auth-page footer .copyrights {
   background-color: #3e3e3e;
   color: #c8c8c8;
   padding: 0.25rem 1.75rem;
@@ -140,7 +142,6 @@ footer .copyrights {
   color: white;
 }
 
-/* Espaciado del contenido dentro del evento */
 .fc-event {
   padding: 2px 6px;
 }
@@ -155,11 +156,9 @@ footer .copyrights {
   position: fixed;
   inset: 0;
   background-color: rgba(0, 0, 0, 0.4);
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   z-index: 9999;
 }
 
@@ -167,15 +166,12 @@ footer .copyrights {
   background-color: white;
   border-radius: 8px;
   padding: 20px;
-
   width: 100%;
   max-width: 500px;
-
   box-sizing: border-box;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 
-/* Botón eliminar */
 .oculto-boton {
   display: none;
 }
@@ -188,7 +184,6 @@ footer .copyrights {
   cursor: pointer;
 }
 
-/* Campos formulario */
 .campo-formulario {
   margin-bottom: 15px;
 }
@@ -207,7 +202,6 @@ footer .copyrights {
   box-sizing: border-box;
 }
 
-/* Error en campos */
 .error-campo {
   color: #d32f2f;
   font-size: 0.8rem;
@@ -219,17 +213,161 @@ footer .copyrights {
   border: 1px solid #d32f2f;
 }
 
-/* Botones */
 .acciones-modal {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
 }
 
-/* ==== RESPONSIVE ==== */
+/* ==== RESPONSIVE login/registro ==== */
 
 @media (max-width: 629px) {
-  header .menu-toggle {
+  .auth-page header .menu-toggle {
     display: block;
+  }
+}
+
+/* ============================================================
+   HOME — Layout sidebar + topbar
+   Bootstrap al máximo, CSS propio solo donde Bootstrap
+   no llega. Prefijo tt- para evitar conflictos.
+   ============================================================ */
+
+html, body, main {
+  height: 100%;
+}
+
+/* --- Sidebar --- */
+.tt-sidebar {
+  width: 240px;
+  min-width: 240px;
+  height: 100vh;
+  transition: width 0.25s ease, min-width 0.25s ease;
+  overflow: hidden;
+}
+
+.tt-sidebar.tt-collapsed {
+  width: 64px;
+  min-width: 64px;
+}
+
+.tt-sidebar.tt-collapsed .tt-logo-text,
+.tt-sidebar.tt-collapsed .tt-nav-label,
+.tt-sidebar.tt-collapsed .tt-sidebar-footer {
+  display: none;
+}
+
+/* --- Logo --- */
+.tt-logo-icon {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  background-color: #0059bb;
+  border-radius: 10px;
+}
+
+.tt-logo-icon .material-symbols-outlined {
+  font-size: 20px;
+}
+
+.tt-logo-name {
+  font-family: 'Manrope', sans-serif;
+  font-size: 15px;
+  color: #0059bb;
+  white-space: nowrap;
+}
+
+.tt-logo-sub {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  white-space: nowrap;
+}
+
+/* --- Nav item --- */
+.tt-nav-link {
+  color: #414754;
+  padding: 10px 12px;
+}
+
+.tt-nav-link:hover {
+  background-color: #f3f4f5;
+  color: #191c1d;
+}
+
+.tt-nav-link.active {
+  background-color: #e8f0fb;
+  color: #0059bb;
+  font-weight: 600;
+}
+
+.tt-nav-link .material-symbols-outlined {
+  font-size: 20px;
+}
+
+/* --- Topbar --- */
+.tt-topbar-title {
+  font-family: 'Manrope', sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  color: #191c1d;
+}
+
+.tt-topbar-sub {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+}
+
+/* --- Avatar --- */
+.tt-avatar {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  background-color: #e8f0fb;
+  border: 1.5px solid #c1c6d7;
+  color: #0059bb;
+  cursor: pointer;
+}
+
+.tt-avatar .material-symbols-outlined {
+  font-size: 22px;
+}
+
+/* --- Overlay móvil --- */
+.tt-sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(25, 28, 29, 0.35);
+  z-index: 199;
+}
+
+.tt-sidebar-overlay.tt-visible {
+  display: block;
+}
+
+/* --- Footer del home --- */
+.tt-app-shell footer {
+  background-color: #ffffff;
+  text-align: left;
+  font-size: 12px;
+}
+
+/* --- Responsive móvil --- */
+@media (max-width: 768px) {
+  .tt-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 200;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    width: 260px;
+    min-width: 260px;
+  }
+
+  .tt-sidebar.tt-open {
+    transform: translateX(0);
   }
 }

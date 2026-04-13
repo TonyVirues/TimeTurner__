@@ -242,8 +242,27 @@ html, body, main {
   width: 240px;
   min-width: 240px;
   height: 100vh;
+  background-color: #0f1623;
+  border-right: 1px solid rgba(255,255,255,0.1);
   transition: width 0.25s ease, min-width 0.25s ease;
   overflow: hidden;
+}
+
+.tt-sidebar-border-bottom {
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.tt-sidebar-border-top {
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.tt-sidebar-hint {
+  background-color: rgba(255,255,255,0.04);
+}
+
+.tt-sidebar-hint-text {
+  font-size: 11px;
+  color: rgba(255,255,255,0.25);
 }
 
 .tt-sidebar.tt-collapsed {
@@ -259,50 +278,71 @@ html, body, main {
 
 /* --- Logo --- */
 .tt-logo-icon {
-  width: 36px;
-  height: 36px;
-  min-width: 36px;
-  background-color: #0059bb;
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
   border-radius: 10px;
+  overflow: hidden;
+}
+
+.tt-logo-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .tt-logo-icon .material-symbols-outlined {
   font-size: 20px;
 }
 
+.tt-sidebar .border-bottom {
+  border-bottom-color: rgba(255,255,255,0.07) !important;
+}
+
 .tt-logo-name {
   font-family: 'Manrope', sans-serif;
   font-size: 15px;
-  color: #0059bb;
+  color: #ffffff;
   white-space: nowrap;
 }
 
 .tt-logo-sub {
   font-size: 10px;
   text-transform: uppercase;
-  letter-spacing: 1.2px;
+  letter-spacing: 1.5px;
   white-space: nowrap;
+  color: rgba(255,255,255,0.35) !important;
+  font-weight: 600;
 }
 
 /* --- Nav item --- */
 .tt-nav-link {
-  color: #414754;
+  color: rgba(255,255,255,0.5);
   padding: 10px 12px;
 }
 
 .tt-nav-link:hover {
-  background-color: #f3f4f5;
-  color: #191c1d;
+  background-color: rgba(255,255,255,0.06);
+  color: rgba(255,255,255,0.85);
 }
 
 .tt-nav-link.active {
-  background-color: #e8f0fb;
-  color: #0059bb;
+  background-color: rgba(0,122,255,0.2);
+  color: #4da3ff;
   font-weight: 600;
 }
 
 .tt-nav-link .material-symbols-outlined {
   font-size: 20px;
+}
+
+/* --- Pie del sidebar oscuro --- */
+.tt-sidebar-footer .bg-light {
+  background-color: rgba(255,255,255,0.04) !important;
+}
+
+.tt-sidebar-footer small {
+  color: rgba(255,255,255,0.25) !important;
 }
 
 /* --- Topbar --- */
@@ -370,4 +410,26 @@ html, body, main {
   .tt-sidebar.tt-open {
     transform: translateX(0);
   }
+}
+
+/* ==== Calendario — wrapper y tamaño ==== */
+
+/* Ocupa todo el espacio vertical disponible entre topbar y footer */
+.tt-calendario-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* El calendario crece para ocupar todo el espacio restante */
+.tt-calendario-inner {
+  flex: 1;
+  padding: 16px;
+  overflow: hidden;
+}
+
+/* FullCalendar ocupa el 100% del contenedor */
+.tt-calendario-inner #calendar {
+  height: 100%;
 }

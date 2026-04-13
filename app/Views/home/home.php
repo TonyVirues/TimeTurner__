@@ -3,44 +3,11 @@
 <?= $this->section('content') ?>
 
 <!-- Shell principal: sidebar + contenido en fila -->
-<div class="d-flex" style="height: 100vh; overflow: hidden;">
+<div class="d-flex" style="height: 100vh; overflow: hidden;"> <!--cuerpo de la pagina-->
 
-  <!-- ========== SIDEBAR ========== -->
-  <nav class="tt-sidebar d-flex flex-column flex-shrink-0 bg-white border-end" id="ttSidebar">
 
-    <!-- Logo -->
-    <div class="d-flex align-items-center gap-2 px-3 py-3 border-bottom">
-      <div class="tt-logo-icon rounded-3 d-flex align-items-center justify-content-center">
-        <span class="material-symbols-outlined text-white">schedule</span>
-      </div>
-      <div class="tt-logo-text overflow-hidden">
-        <span class="d-block fw-bold tt-logo-name">TimeTurner</span>
-        <small class="text-muted tt-logo-sub">Gestor de turnos</small>
-      </div>
-    </div>
-
-    <!-- Navegación -->
-    <ul class="nav flex-column px-2 py-3 flex-grow-1">
-      <li class="nav-item">
-        <a href="/home" class="nav-link tt-nav-link active d-flex align-items-center gap-2 rounded-3">
-          <span class="material-symbols-outlined">calendar_month</span>
-          <span class="tt-nav-label">Calendario</span>
-        </a>
-      </li>
-      <!-- Aquí irán las próximas secciones -->
-    </ul>
-
-    <!-- Pie del sidebar -->
-    <div class="px-2 pb-3">
-      <div class="bg-light rounded-3 p-3 text-center">
-        <small class="text-muted">Más secciones próximamente</small>
-      </div>
-    </div>
-
-  </nav>
-
-  <!-- Overlay para móvil -->
-  <div class="tt-sidebar-overlay" id="ttSidebarOverlay"></div>
+  <!--Menú-->
+  <?= $this->include('menu/show/showMenu') ?>
 
   <!-- ========== ÁREA PRINCIPAL ========== -->
   <div class="d-flex flex-column flex-grow-1 overflow-hidden">

@@ -44,7 +44,7 @@
       <h2 id="tituloModalTurno">Crear turno</h2>
       <p><strong>Horario seleccionado:</strong> <span id="nombreHorarioActual"></span></p>
 
-      <form id="formTurno">
+      <form id="formularioTurno">
         <input type="hidden" id="tur_id_horario" name="tur_id_horario">
         <input type="hidden" id="tur_id_turno" name="tur_id_turno">
 

@@ -13,17 +13,17 @@ $routes->get('/registro', 'AuthController::registro');
 $routes->get('/calendario', 'Home::calendario');
 
 // Rutas de horarios
-$routes->get('horarios', 'Horarios::index');
-$routes->get('horarios/mostrar/(:num)', 'Horarios::mostrar/$1');
-$routes->post('horarios/crear', 'Horarios::crear');
-$routes->post('horarios/actualizar/(:num)', 'Horarios::actualizar/$1');
-$routes->post('horarios/eliminar/(:num)', 'Horarios::eliminar/$1');
-$routes->get('horarios/listado', 'Horarios::listado');
+$routes->get('horarios', 'HorariosController::index');
+$routes->get('horarios/mostrar/(:num)', 'HorariosController::mostrar/$1');
+$routes->post('horarios/crear', 'HorariosController::crear');
+$routes->post('horarios/actualizar/(:num)', 'HorariosController::actualizar/$1');
+$routes->post('horarios/eliminar/(:num)', 'HorariosController::eliminar/$1');
+$routes->get('horarios/listado', 'HorariosController::listado');
 
 // Rutas de turnos
-$routes->get('turnos/mostrar/(:num)', 'Turnos::mostrar/$1');
-$routes->get('turnos/listado/horario/(:num)', 'Turnos::listadoPorHorario/$1');
-$routes->get('turnos/eventos', 'Turnos::eventos');
-$routes->post('turnos/crear', 'Turnos::crear');
-$routes->post('turnos/actualizar/(:num)', 'Turnos::actualizar/$1');
-$routes->post('turnos/eliminar/(:num)', 'Turnos::eliminar/$1');
+$routes->get('turnos/mostrar/(:num)', 'TurnosController::mostrar/$1');
+$routes->get('turnos/listado/horario/(:num)', 'TurnosController::listadoPorHorario/$1');
+$routes->get('turnos/eventos', 'TurnosController::eventos');
+$routes->post('turnos/crear', 'TurnosController::crear');
+$routes->post('turnos/actualizar/(:num)', 'TurnosController::actualizar/$1');
+$routes->post('turnos/eliminar/(:num)', 'TurnosController::eliminar/$1');

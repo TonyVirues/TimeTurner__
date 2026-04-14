@@ -53,7 +53,7 @@
         <div class="text-center px-5">
           <!--Logo-->
           <div class="mb-4">
-            <img src="/assets/imagen/logo.jpg" class="img-fluid  rounded" style="max-width: 200px;" alt="Logo Timeturner">
+            <img src="/assets/imagen/logo.svg" class="img-fluid  rounded" style="max-width: 200px;" alt="Logo Timeturner">
           </div>
 
           <!--Título-->

@@ -461,66 +461,13 @@ document.addEventListener("DOMContentLoaded", function () {
   calendar.render();
 });
 
-function abrirModal(modal) {
-  if (!modal) {
-    return;
-  }
-
-  modal.classList.remove("oculto");
-}
-
-function cerrarModal(modal) {
-  if (!modal) {
-    return;
-  }
-
-  modal.classList.add("oculto");
-}
-
-function prepararModalCrear() {
-  const titulo = document.getElementById("tituloModalTurno");
-  const btnGuardar = document.getElementById("btnGuardarTurno");
-  const btnEliminar = document.getElementById("btnEliminarTurno");
-  const inputTurnoId = document.getElementById("tur_id_turno");
-
-  if (titulo) {
-    titulo.textContent = "Crear turno";
-  }
-
-  if (btnGuardar) {
-    btnGuardar.textContent = "Guardar turno";
-  }
-
-  if (btnEliminar) {
-    btnEliminar.classList.add("oculto-boton");
-  }
-
-  if (inputTurnoId) {
-    inputTurnoId.value = "";
-  }
-}
+//==== Funciones auxiliares ====//
 
 /**
- * Prepara el modal para editar
+ * Convierte una fecha en formato ISO (string) a formato válido para input datetime-local
+ * @param {*} fecha
+ * @returns
  */
-function prepararModalEditar() {
-  const titulo = document.getElementById("tituloModalTurno");
-  const btnGuardar = document.getElementById("btnGuardarTurno");
-  const btnEliminar = document.getElementById("btnEliminarTurno");
-
-  if (titulo) {
-    titulo.textContent = "Editar turno";
-  }
-
-  if (btnGuardar) {
-    btnGuardar.textContent = "Guardar cambios";
-  }
-
-  if (btnEliminar) {
-    btnEliminar.classList.remove("oculto-boton");
-  }
-}
-
 function formatearFechaParaInputDesdeIso(fecha) {
   if (!fecha) {
     return "";
@@ -530,6 +477,11 @@ function formatearFechaParaInputDesdeIso(fecha) {
   return formatearFechaParaDatetimeLocal(date);
 }
 
+/**
+ * Convierte un objeto Date a formato YYYY-MM-DDTHH:mm (compatible con datetime-local)
+ * @param {*} fecha
+ * @returns
+ */
 function formatearFechaParaDatetimeLocal(fecha) {
   const year = fecha.getFullYear();
   const month = String(fecha.getMonth() + 1).padStart(2, "0");
@@ -642,4 +594,79 @@ function parsearRespuestaFetch(response) {
   return response.json().then(function (data) {
     return { ok: response.ok, data: data };
   });
+}
+
+//==== Modal ====//
+
+/**
+ * Muestra el modal eliminando la clase que lo oculta
+ * @param {*} modal
+ * @returns
+ */
+function abrirModal(modal) {
+  if (!modal) {
+    return;
+  }
+
+  modal.classList.remove("oculto");
+}
+
+/**
+ * Oculta el modal añadiendo la clase correspondiente
+ * @param {*} modal
+ * @returns
+ */
+function cerrarModal(modal) {
+  if (!modal) {
+    return;
+  }
+
+  modal.classList.add("oculto");
+}
+
+/**
+ * Configura el modal en modo crear
+ */
+function prepararModalCrear() {
+  const titulo = document.getElementById("tituloModalTurno");
+  const btnGuardar = document.getElementById("btnGuardarTurno");
+  const btnEliminar = document.getElementById("btnEliminarTurno");
+  const inputTurnoId = document.getElementById("tur_id_turno");
+
+  if (titulo) {
+    titulo.textContent = "Crear turno";
+  }
+
+  if (btnGuardar) {
+    btnGuardar.textContent = "Guardar turno";
+  }
+
+  if (btnEliminar) {
+    btnEliminar.classList.add("oculto-boton");
+  }
+
+  if (inputTurnoId) {
+    inputTurnoId.value = "";
+  }
+}
+
+/**
+ * Configura el modal para editar
+ */
+function prepararModalEditar() {
+  const titulo = document.getElementById("tituloModalTurno");
+  const btnGuardar = document.getElementById("btnGuardarTurno");
+  const btnEliminar = document.getElementById("btnEliminarTurno");
+
+  if (titulo) {
+    titulo.textContent = "Editar turno";
+  }
+
+  if (btnGuardar) {
+    btnGuardar.textContent = "Guardar cambios";
+  }
+
+  if (btnEliminar) {
+    btnEliminar.classList.remove("oculto-boton");
+  }
 }

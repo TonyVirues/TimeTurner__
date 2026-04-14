@@ -1,28 +1,36 @@
-<a class="btn btn-primary" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
-  Link with href
-</a>
-<button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
-  Button with data-bs-target
-</button>
+<!-- ===== SIDEBAR ===== -->
+<nav class="tt-sidebar d-flex flex-column flex-shrink-0" id="ttSidebar">
 
-<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
-  <div class="offcanvas-header">
-    <h5 class="offcanvas-title" id="offcanvasExampleLabel">Offcanvas</h5>
-    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-  </div>
-  <div class="offcanvas-body">
-    <div>
-      Some text as placeholder. In real life you can have the elements you have chosen. Like, text, images, lists, etc.
+  <!-- Logo -->
+  <div class="d-flex align-items-center gap-2 px-3 tt-sidebar-border-bottom" style="height: 60px; min-height: 60px;">
+    <div class="tt-logo-icon">
+      <img src="/public/assets/imagen/logo.svg" alt="Logo TimeTurner">
     </div>
-    <div class="dropdown mt-3">
-      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown">
-        Dropdown button
-      </button>
-      <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <li><a class="dropdown-item" href="#">Action</a></li>
-        <li><a class="dropdown-item" href="#">Another action</a></li>
-        <li><a class="dropdown-item" href="#">Something else here</a></li>
-      </ul>
+    <div class="tt-logo-text" style="flex: 1; overflow: hidden;">
+      <span class="d-block tt-logo-name">TimeTurner</span>
+      <small class="tt-logo-sub">Gestor de turnos</small>
     </div>
   </div>
-</div>
+
+  <!-- Navegación -->
+  <ul class="nav flex-column px-2 py-3 flex-grow-1">
+    <li class="nav-item">
+      <a href="/home" class="nav-link tt-nav-link active d-flex align-items-center gap-2 rounded-3">
+        <span class="material-symbols-outlined">calendar_month</span>
+        <span class="tt-nav-label">Calendario</span>
+      </a>
+    </li>
+    <!-- Aquí irán las próximas secciones -->
+  </ul>
+
+  <!-- Pie del sidebar -->
+  <div class="px-2 pb-3 tt-sidebar-footer tt-sidebar-border-top">
+    <div class="tt-sidebar-hint rounded-3 p-3 text-center">
+      <small class="tt-sidebar-hint-text">Más secciones próximamente</small>
+    </div>
+  </div>
+
+</nav>
+
+<!-- Overlay para móvil -->
+<div class="tt-sidebar-overlay" id="ttSidebarOverlay"></div>

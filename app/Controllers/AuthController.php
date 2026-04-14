@@ -6,35 +6,15 @@ use App\Models\UserModel;
 
 class AuthController extends BaseController
 {
-  public function index()
+  public function login()
   {
     return view('auth/login');
   }
-  public function pie()
+
+  public function registro()
   {
-    return view('layouts/footer');
+    return view('auth/registro');
   }
 
-  // Esto habrá que conectarlo con la DB tabla usuarios. Cambiar nombres para que coincidan con los campos de la tabla
-  //     public function login()
-  //     {
-  //         $usuario = $this->request->getPost('usuario');
-  //         $password = $this->request->getPost('password');
 
-  //         $model = new UserModel();
-  //         $user = $model->where('usuario', $usuario)->first();
-
-  //         if ($user && password_verify($password, $user['password'])) {
-
-  //             session()->set([
-  //                 'id' => $user['id'],
-  //                 'usuario' => $user['usuario'],
-  //                 'logged_in' => true
-  //             ]);
-
-  //             return redirect()->to('/dashboard');
-  //         }
-
-  //         return redirect()->back()->with('error', 'Credenciales incorrectas');
-  //     }
 }

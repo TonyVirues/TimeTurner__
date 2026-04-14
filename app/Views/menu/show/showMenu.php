@@ -4,7 +4,7 @@
   <!-- Logo -->
   <div class="d-flex align-items-center gap-2 px-3 tt-sidebar-border-bottom" style="height: 60px; min-height: 60px;">
     <div class="tt-logo-icon">
-      <img src="/assets/imagen/logo.jpg" alt="Logo TimeTurner">
+      <img src="/public/assets/imagen/logo.svg" alt="Logo TimeTurner">
     </div>
     <div class="tt-logo-text" style="flex: 1; overflow: hidden;">
       <span class="d-block tt-logo-name">TimeTurner</span>

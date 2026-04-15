@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Constantes del modal crear/editar
   const modalTurno = document.getElementById("modalTurno");
-  const formTurno = document.getElementById("formTurno");
+  const formularioTurno = document.getElementById("formularioTurno");
   const inputInicio = document.getElementById("tur_inicio");
   const inputFin = document.getElementById("tur_fin");
   const inputHorarioId = document.getElementById("tur_id_horario");
@@ -12,9 +12,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const inputTurnoId = document.getElementById("tur_id_turno");
   const nombreHorarioActual = document.getElementById("nombreHorarioActual");
-  const tituloModalTurno = document.getElementById("tituloModalTurno");
-  const btnGuardarTurno = document.getElementById("btnGuardarTurno");
   const btnEliminarTurno = document.getElementById("btnEliminarTurno");
+
+  const inputEstado = document.getElementById("tur_estado");
+  const inputObservaciones = document.getElementById("tur_observaciones");
 
   // Array que guarda los horarios cargados desde backend
   let horariosDisponibles = [];
@@ -23,18 +24,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Condición que corta el flujo si falla el calendario
   if (!calendarEl) {
-    console.error("No existe el elemento #calendar");
+    console.error("No existe el elemento calendar");
     return;
   }
 
-  /**
-   * Actualiza el texto del modal con el nombre del horario seleccionado,
-   * donde se va crear/modificar turno
-   */
-  if (nombreHorarioActual && horarioSelect) {
-    nombreHorarioActual.textContent =
-      horarioSelect.options[horarioSelect.selectedIndex].text;
+  if (!inputInicio || !inputFin || !inputHorarioId || !inputTurnoId) {
+    console.error("Faltan elementos importantes del formulario de turnos");
+    return;
   }
+
+  // Llama a la función que actualiza el texto del modal con el nombre del horario seleccionado
+  actualizarNombreHorario(nombreHorarioActual, horarioSelect);
 
   /**
    * Crea la instancia del calendario
@@ -135,35 +135,26 @@ document.addEventListener("DOMContentLoaded", function () {
         calendar.unselect();
         return;
       }
-      // Busca en el array de horarios y devuelve el que coincide con el ID seleccionado
-      const horarioSeleccionado = horariosDisponibles.find(function (h) {
-        return String(h.hor_id_horario) === String(horarioId);
-      });
 
-      // Acota lo que el usuario puede selecionar del calendario, fecha-hora max y min
-      if (horarioSeleccionado) {
-        const min = `${horarioSeleccionado.hor_fecha_inicio}T00:00`;
-        const max = `${horarioSeleccionado.hor_fecha_fin}T23:59`;
+      // Llama a la función para obtener el horario por id
+      const horarioSeleccionado = obtenerHorarioPorId(
+        horariosDisponibles,
+        horarioId,
+      );
 
-        inputInicio.min = min;
-        inputInicio.max = max;
-        inputFin.min = min;
-        inputFin.max = max;
-      }
+      // Llama a la función para aplicar el rango del horario a los inputs max/min
+      aplicarRangoHorarioAInputs(horarioSeleccionado, inputInicio, inputFin);
 
       modoFormulario = "crear";
       prepararModalCrear();
-      formTurno.reset();
+      formularioTurno.reset();
 
       inputInicio.value = formatearFechaParaDatetimeLocal(info.start);
       inputFin.value = formatearFechaParaDatetimeLocal(info.end);
       inputHorarioId.value = horarioId;
 
-      // Cambia el nombre del horario en el modal
-      if (nombreHorarioActual && horarioSelect) {
-        nombreHorarioActual.textContent =
-          horarioSelect.options[horarioSelect.selectedIndex].text;
-      }
+      // Llama a la función que actualiza el texto del modal con el nombre del horario seleccionado
+      actualizarNombreHorario(nombreHorarioActual, horarioSelect);
 
       limpiarErroresCampos();
       abrirModal(modalTurno);
@@ -202,29 +193,29 @@ document.addEventListener("DOMContentLoaded", function () {
           inputFin.value = formatearFechaParaInputDesdeIso(turno.tur_fin);
 
           // En el modal rellena el estado del turno y observaciones si hay
-          document.getElementById("tur_estado").value =
-            turno.tur_estado || "disponible";
-          document.getElementById("tur_observaciones").value =
-            turno.tur_observaciones || "";
-
-          const horarioSeleccionado = horariosDisponibles.find(function (h) {
-            return String(h.hor_id_horario) === String(turno.tur_id_horario);
-          });
-
-          if (horarioSeleccionado) {
-            const min = `${horarioSeleccionado.hor_fecha_inicio}T00:00`;
-            const max = `${horarioSeleccionado.hor_fecha_fin}T23:59`;
-
-            inputInicio.min = min;
-            inputInicio.max = max;
-            inputFin.min = min;
-            inputFin.max = max;
+          if (inputEstado) {
+            inputEstado.value = turno.tur_estado || "disponible";
           }
 
-          if (nombreHorarioActual && horarioSelect) {
-            nombreHorarioActual.textContent =
-              horarioSelect.options[horarioSelect.selectedIndex].text;
+          if (inputObservaciones) {
+            inputObservaciones.value = turno.tur_observaciones || "";
           }
+
+          // Llama a la función para obtener el horario por id
+          const horarioSeleccionado = obtenerHorarioPorId(
+            horariosDisponibles,
+            turno.tur_id_horario,
+          );
+
+          // Llama a la función para aplicar el rango del horario a los inputs max/min
+          aplicarRangoHorarioAInputs(
+            horarioSeleccionado,
+            inputInicio,
+            inputFin,
+          );
+
+          // Llama a la función que actualiza el texto del modal con el nombre del horario seleccionado
+          actualizarNombreHorario(nombreHorarioActual, horarioSelect);
 
           abrirModal(modalTurno);
         })
@@ -296,6 +287,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Selecciona el primer horario por defecto
         if (horarios.length > 0) {
           horarioSelect.value = horarios[0].hor_id_horario;
+          actualizarNombreHorario(nombreHorarioActual, horarioSelect);
           calendar.refetchEvents();
         }
       })
@@ -305,11 +297,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Se ejecuta cuando escucha cambios en el select
     horarioSelect.addEventListener("change", function () {
-      if (nombreHorarioActual) {
-        nombreHorarioActual.textContent =
-          horarioSelect.options[horarioSelect.selectedIndex].text;
-      }
-
+      actualizarNombreHorario(nombreHorarioActual, horarioSelect);
       calendar.refetchEvents();
     });
   }
@@ -341,14 +329,7 @@ document.addEventListener("DOMContentLoaded", function () {
       fetch(`/turnos/eliminar/${encodeURIComponent(turnoId)}`, {
         method: "POST",
       })
-        .then(function (response) {
-          return response.json().then(function (data) {
-            return {
-              ok: response.ok,
-              data: data,
-            };
-          });
-        })
+        .then(parsearRespuestaFetch)
         .then(function (resultado) {
           if (!resultado.ok || resultado.data.status !== "success") {
             throw new Error(
@@ -357,7 +338,7 @@ document.addEventListener("DOMContentLoaded", function () {
           }
 
           cerrarModal(modalTurno);
-          formTurno.reset();
+          formularioTurno.reset();
           calendar.refetchEvents();
         })
         .catch(function (error) {
@@ -367,9 +348,13 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // @mar Revisión por aquí
-  if (formTurno) {
-    formTurno.addEventListener("submit", function (event) {
+  /**
+   * Guarda el turno cuando se envía el formulario del modal
+   */
+  if (formularioTurno) {
+    // Se ejecuta cuando se envía el formulario
+    formularioTurno.addEventListener("submit", function (event) {
+      // Para que no se envíe el formulario de la forma clásica
       event.preventDefault();
 
       limpiarErroresCampos();
@@ -386,9 +371,11 @@ document.addEventListener("DOMContentLoaded", function () {
         hayErrores = true;
       }
 
+      // Llama a la función para convertir el formato de hora
       const inicioSql = convertirDatetimeLocalAFormatoSql(inputInicio.value);
       const finSql = convertirDatetimeLocalAFormatoSql(inputFin.value);
 
+      // Valida que la fecha fin sea posterior a la de inicio
       if (inputInicio.value && inputFin.value && finSql <= inicioSql) {
         mostrarErrorCampo(
           "tur_fin",
@@ -397,14 +384,17 @@ document.addEventListener("DOMContentLoaded", function () {
         hayErrores = true;
       }
 
-      const horarioSeleccionado = horariosDisponibles.find(function (h) {
-        return String(h.hor_id_horario) === String(inputHorarioId.value);
-      });
+      // Llama a la función para obtener el horario por id
+      const horarioSeleccionado = obtenerHorarioPorId(
+        horariosDisponibles,
+        inputHorarioId.value,
+      );
 
       if (horarioSeleccionado && inputInicio.value && inputFin.value) {
         const inicioHorario = `${horarioSeleccionado.hor_fecha_inicio} 00:00:00`;
         const finHorario = `${horarioSeleccionado.hor_fecha_fin} 23:59:59`;
 
+        // Valida que las fechas y horarios del turno no se salgan del rango del horario
         if (inicioSql < inicioHorario) {
           mostrarErrorCampo("tur_inicio", "Fuera del rango del horario.");
           hayErrores = true;
@@ -420,15 +410,16 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
 
+      // Construye el cuerpo de la petición POST en formato FormData (clave-valor)
       const datos = new FormData();
 
       datos.append("tur_id_horario", inputHorarioId.value);
       datos.append("tur_inicio", inicioSql);
       datos.append("tur_fin", finSql);
-      datos.append("tur_estado", document.getElementById("tur_estado").value);
+      datos.append("tur_estado", inputEstado ? inputEstado.value : "");
       datos.append(
         "tur_observaciones",
-        document.getElementById("tur_observaciones").value,
+        inputObservaciones ? inputObservaciones.value : "",
       );
 
       const url =
@@ -440,27 +431,28 @@ document.addEventListener("DOMContentLoaded", function () {
         method: "POST",
         body: datos,
       })
-        .then(function (response) {
-          return response.json().then(function (data) {
-            return {
-              ok: response.ok,
-              data: data,
-            };
-          });
-        })
+        .then(parsearRespuestaFetch)
         .then(function (resultado) {
           if (!resultado.ok || resultado.data.status !== "success") {
             throw new Error(
-              resultado.data.message || "No se pudo crear el turno",
+              resultado.data.message ||
+                (modoFormulario === "editar"
+                  ? "No se pudo actualizar el turno"
+                  : "No se pudo crear el turno"),
             );
           }
 
           cerrarModal(modalTurno);
-          formTurno.reset();
+          formularioTurno.reset();
           calendar.refetchEvents();
         })
         .catch(function (error) {
-          console.error("Error al crear turno:", error);
+          console.error(
+            modoFormulario === "editar"
+              ? "Error al actualizar turno:"
+              : "Error al crear turno:",
+            error,
+          );
           alert(error.message);
         });
     });
@@ -469,66 +461,13 @@ document.addEventListener("DOMContentLoaded", function () {
   calendar.render();
 });
 
-function abrirModal(modal) {
-  if (!modal) {
-    return;
-  }
-
-  modal.classList.remove("oculto");
-}
-
-function cerrarModal(modal) {
-  if (!modal) {
-    return;
-  }
-
-  modal.classList.add("oculto");
-}
-
-function prepararModalCrear() {
-  const titulo = document.getElementById("tituloModalTurno");
-  const btnGuardar = document.getElementById("btnGuardarTurno");
-  const btnEliminar = document.getElementById("btnEliminarTurno");
-  const inputTurnoId = document.getElementById("tur_id_turno");
-
-  if (titulo) {
-    titulo.textContent = "Crear turno";
-  }
-
-  if (btnGuardar) {
-    btnGuardar.textContent = "Guardar turno";
-  }
-
-  if (btnEliminar) {
-    btnEliminar.classList.add("oculto-boton");
-  }
-
-  if (inputTurnoId) {
-    inputTurnoId.value = "";
-  }
-}
+//==== Funciones auxiliares ====//
 
 /**
- * Prepara el modal para editar
+ * Convierte una fecha en formato ISO (string) a formato válido para input datetime-local
+ * @param {*} fecha
+ * @returns
  */
-function prepararModalEditar() {
-  const titulo = document.getElementById("tituloModalTurno");
-  const btnGuardar = document.getElementById("btnGuardarTurno");
-  const btnEliminar = document.getElementById("btnEliminarTurno");
-
-  if (titulo) {
-    titulo.textContent = "Editar turno";
-  }
-
-  if (btnGuardar) {
-    btnGuardar.textContent = "Guardar cambios";
-  }
-
-  if (btnEliminar) {
-    btnEliminar.classList.remove("oculto-boton");
-  }
-}
-
 function formatearFechaParaInputDesdeIso(fecha) {
   if (!fecha) {
     return "";
@@ -538,6 +477,11 @@ function formatearFechaParaInputDesdeIso(fecha) {
   return formatearFechaParaDatetimeLocal(date);
 }
 
+/**
+ * Convierte un objeto Date a formato YYYY-MM-DDTHH:mm (compatible con datetime-local)
+ * @param {*} fecha
+ * @returns
+ */
 function formatearFechaParaDatetimeLocal(fecha) {
   const year = fecha.getFullYear();
   const month = String(fecha.getMonth() + 1).padStart(2, "0");
@@ -589,5 +533,140 @@ function mostrarErrorCampo(idInput, mensaje) {
 
   if (error) {
     error.textContent = mensaje;
+  }
+}
+
+/**
+ * Obtiene el horario por id
+ * @param {*} horariosDisponibles
+ * @param {*} horarioId
+ * @returns
+ */
+function obtenerHorarioPorId(horariosDisponibles, horarioId) {
+  return horariosDisponibles.find(function (h) {
+    return String(h.hor_id_horario) === String(horarioId);
+  });
+}
+
+/**
+ * Establece los límites mínimo y máximo en los inputs de fecha
+ * según el rango del horario seleccionado.
+ * @param {*} horario
+ * @param {*} inputInicio
+ * @param {*} inputFin
+ * @returns
+ */
+function aplicarRangoHorarioAInputs(horario, inputInicio, inputFin) {
+  if (!horario || !inputInicio || !inputFin) {
+    return;
+  }
+
+  const min = `${horario.hor_fecha_inicio}T00:00`;
+  const max = `${horario.hor_fecha_fin}T23:59`;
+
+  inputInicio.min = min;
+  inputInicio.max = max;
+  inputFin.min = min;
+  inputFin.max = max;
+}
+
+/**
+ * Actualiza el texto del modal con el nombre del horario seleccionado,
+ * donde se va crear/modificar turno
+ * @param {*} nombreHorarioActual
+ * @param {*} horarioSelect
+ * @returns
+ */
+function actualizarNombreHorario(nombreHorarioActual, horarioSelect) {
+  if (!nombreHorarioActual || !horarioSelect) {
+    return;
+  }
+  const selectedOption = horarioSelect.options[horarioSelect.selectedIndex];
+  nombreHorarioActual.textContent = selectedOption ? selectedOption.text : "";
+}
+
+/**
+ * Convierte la respuesta de fetch en { ok, data }
+ * @param {*} response
+ * @returns
+ */
+function parsearRespuestaFetch(response) {
+  return response.json().then(function (data) {
+    return { ok: response.ok, data: data };
+  });
+}
+
+//==== Modal ====//
+
+/**
+ * Muestra el modal eliminando la clase que lo oculta
+ * @param {*} modal
+ * @returns
+ */
+function abrirModal(modal) {
+  if (!modal) {
+    return;
+  }
+
+  modal.classList.remove("oculto");
+}
+
+/**
+ * Oculta el modal añadiendo la clase correspondiente
+ * @param {*} modal
+ * @returns
+ */
+function cerrarModal(modal) {
+  if (!modal) {
+    return;
+  }
+
+  modal.classList.add("oculto");
+}
+
+/**
+ * Configura el modal en modo crear
+ */
+function prepararModalCrear() {
+  const titulo = document.getElementById("tituloModalTurno");
+  const btnGuardar = document.getElementById("btnGuardarTurno");
+  const btnEliminar = document.getElementById("btnEliminarTurno");
+  const inputTurnoId = document.getElementById("tur_id_turno");
+
+  if (titulo) {
+    titulo.textContent = "Crear turno";
+  }
+
+  if (btnGuardar) {
+    btnGuardar.textContent = "Guardar turno";
+  }
+
+  if (btnEliminar) {
+    btnEliminar.classList.add("oculto-boton");
+  }
+
+  if (inputTurnoId) {
+    inputTurnoId.value = "";
+  }
+}
+
+/**
+ * Configura el modal para editar
+ */
+function prepararModalEditar() {
+  const titulo = document.getElementById("tituloModalTurno");
+  const btnGuardar = document.getElementById("btnGuardarTurno");
+  const btnEliminar = document.getElementById("btnEliminarTurno");
+
+  if (titulo) {
+    titulo.textContent = "Editar turno";
+  }
+
+  if (btnGuardar) {
+    btnGuardar.textContent = "Guardar cambios";
+  }
+
+  if (btnEliminar) {
+    btnEliminar.classList.remove("oculto-boton");
   }
 }

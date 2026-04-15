@@ -5,10 +5,13 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
-$routes->get('/login', 'AuthController::index');
-$routes->get('/home', 'HomeController::index');
-$routes->get('/pie', 'AuthController::pie');
-$routes->get('/', 'HomeController::index');
+// Rutas Login , registro
+$routes->get('/login', 'AuthController::login');
+$routes->get('/registro', 'AuthController::registro');
+
+// Rutas Contenido principal
+$routes->get('/', 'HomeController::calendario'); //@mar Esto está temporal, porque quiero que se abra calendario del tiron
+$routes->get('/calendario', 'HomeController::calendario');
 
 // Rutas de horarios
 $routes->get('horarios/mostrar/(:num)', 'HorariosController::mostrar/$1');

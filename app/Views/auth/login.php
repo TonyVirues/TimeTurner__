@@ -11,31 +11,25 @@
 
       <!--Lado izquierdo-->
       <div class="col-md-6 login-left d-flex align-items-center justify-content-center">
-
+        <!--Título-->
         <div style="width: 100%; max-width: 400px;">
           <h1 class="fw-bold mb-4">TimeTurner</h1>
-          <h2 class="mb-4">Sign In</h2>
+          <h2 class="mb-4">Inicia sesión</h2>
 
           <form action="<?= base_url('login') ?>" method="post">
 
+          <!-- Input del ususario -->
             <div class="mb-3 position-relative">
-
               <label class="form-label">Usuario / Email</label>
-              <span class="material-symbols-outlined input-icon">
-                person
-              </span>
+              <span class="material-symbols-outlined input-icon">person</span>
               <input type="text" name="email" class="form-control ps-5" placeholder="mar@outlook.com">
-
             </div>
 
+            <!-- Input de contraseña -->
             <div class="mb-3 position-relative">
-
               <label class="form-label">Password</label>
-              <span class="material-symbols-outlined input-icon">
-                lock
-              </span>
-              <input type="password" name="password" class="form-control ps-5" placeholder="••••••••">
-
+              <span class="material-symbols-outlined input-icon">lock</span>
+              <input type="password" name="password" class="form-control ps-5" placeholder="********">
             </div>
 
             <!--Recordarme-->
@@ -49,14 +43,9 @@
             </div>
 
             <!--botón-->
-            <button type="submit" class="btn btn-primary w-100">
-              Continuar
-            </button>
-
+            <button type="submit" class="btn btn-primary w-100">Continuar</button>
           </form>
-
         </div>
-
       </div>
 
       <!--Lado derecho-->
@@ -82,3 +71,6 @@
   </div>
 </div>
 <?= $this->endSection() ?>
+
+
+

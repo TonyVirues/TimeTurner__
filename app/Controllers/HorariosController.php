@@ -67,6 +67,7 @@ class HorariosController extends BaseController
       'hor_fecha_fin' => $fechaFin,
       'hor_descripcion' => $this->request->getPost('hor_descripcion'),
       'hor_estado' => $this->request->getPost('hor_estado') ?: 'borrador',
+      'hor_id_empresa' => 1, //@mar harcodeo, cambiar 1
     ];
 
     $id = $this->horarioModel->insert($datos);

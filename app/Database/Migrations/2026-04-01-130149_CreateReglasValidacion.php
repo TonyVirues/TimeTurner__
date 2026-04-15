@@ -16,11 +16,11 @@ class CreateReglasValidacion extends Migration
         'unsigned' => true,
         'auto_increment' => true,
       ],
-      'reg_id_administrador' => [
+      'reg_id_empresa' => [
         'type' => 'INT',
         'constraint' => 10,
         'unsigned' => true,
-        'null' => true,
+        'null' => false,
       ],
       'reg_nombre' => [
         'type' => 'VARCHAR',
@@ -52,11 +52,7 @@ class CreateReglasValidacion extends Migration
       ],
       'reg_unidad' => [
         'type' => 'ENUM',
-        'constraint' => [
-          'horas',
-          'dias',
-          'turnos'
-        ],
+        'constraint' => ['horas', 'dias', 'turnos'],
         'null' => false,
         'default' => 'horas',
       ],
@@ -78,15 +74,15 @@ class CreateReglasValidacion extends Migration
     ]);
 
     $this->forge->addKey('reg_id_regla', true);
-    $this->forge->addKey('reg_id_administrador');
+    $this->forge->addKey('reg_id_empresa');
 
     $this->forge->addForeignKey(
-      'reg_id_administrador',
-      'usuarios',
-      'usu_id_usuario',
-      'SET NULL',
+      'reg_id_empresa',
+      'empresas',
+      'emp_id_empresa',
       'CASCADE',
-      'fk_reg_administrador'
+      'CASCADE',
+      'fk_reglas_empresa'
     );
 
     $this->forge->createTable('reglas_validacion');

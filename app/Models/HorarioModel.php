@@ -21,6 +21,7 @@ class HorarioModel extends Model
     'hor_fecha_fin',
     'hor_descripcion',
     'hor_estado',
+    'hor_id_empresa',
   ];
 
   /**

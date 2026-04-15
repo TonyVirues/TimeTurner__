@@ -17,19 +17,21 @@
           <h2 class="mb-4">Inicia sesión</h2>
 
           <form action="<?= base_url('login') ?>" method="post">
+            <!-- Seguridad -->
+            <?= csrf_field() ?>
 
-          <!-- Input del ususario -->
+            <!-- Input del ususario -->
             <div class="mb-3 position-relative">
               <label class="form-label">Usuario / Email</label>
               <span class="material-symbols-outlined input-icon">person</span>
-              <input type="text" name="email" class="form-control ps-5" placeholder="mar@outlook.com">
+              <input type="text" name="email" class="form-control ps-5" placeholder="mar@outlook.com" value="<?= old('usu_nombre') ?>" required>
             </div>
 
             <!-- Input de contraseña -->
             <div class="mb-3 position-relative">
               <label class="form-label">Password</label>
               <span class="material-symbols-outlined input-icon">lock</span>
-              <input type="password" name="password" class="form-control ps-5" placeholder="********">
+              <input type="password" name="password" class="form-control ps-5" placeholder="********" required>
             </div>
 
             <!--Recordarme-->
@@ -63,7 +65,7 @@
 
           <!--Texto-->
           <p>
-            La mejor forma gestionar tus turnos de trabajo.
+            La mejor forma de gestionar tus turnos de trabajo.
           </p>
         </div>
       </div>
@@ -71,6 +73,3 @@
   </div>
 </div>
 <?= $this->endSection() ?>
-
-
-

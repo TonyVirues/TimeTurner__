@@ -6,10 +6,12 @@
     color 300ms ease;
 }
 
-*:focus {
+/*@MAR @TONY he tenido que quitar esto porque se vuelven translúcidos los modales, revísalo, no se lo apliques a todo
+
+/* *:focus {
   background-color: rgba(221, 72, 20, 0.2);
   outline: none;
-}
+} */
 
 html,
 body {
@@ -146,77 +148,77 @@ section {
   padding: 2px 6px;
 }
 
-/* ==== Modal crear turnos ==== */
+/* ==== SweetAlert formularios ==== */
 
-.modal-turno.oculto {
-  display: none;
+.tt-swal-formulario {
+  text-align: left;
 }
 
-.modal-turno {
-  position: fixed;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-}
-
-.modal-turno-contenido {
-  background-color: white;
-  border-radius: 8px;
-  padding: 20px;
-  width: 100%;
-  max-width: 500px;
-  box-sizing: border-box;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-}
-
-.oculto-boton {
-  display: none;
-}
-
-.btn-eliminar {
-  background-color: #d32f2f;
-  color: white;
-  border: 1px solid #b71c1c;
-  padding: 8px 12px;
-  cursor: pointer;
-}
-
-.campo-formulario {
-  margin-bottom: 15px;
-}
-
-.campo-formulario label {
+.tt-swal-label {
   display: block;
   margin-bottom: 6px;
   font-weight: 600;
+  color: #212529;
 }
 
-.campo-formulario input,
-.campo-formulario select,
-.campo-formulario textarea {
-  width: 100%;
-  padding: 8px;
+.tt-swal-input {
+  width: 100% !important;
+  margin: 0 0 16px 0 !important;
   box-sizing: border-box;
 }
 
-.error-campo {
-  color: #d32f2f;
-  font-size: 0.8rem;
+.tt-swal-textarea {
+  width: 100% !important;
+  min-height: 140px;
+  margin: 0 !important;
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+.tt-swal-info {
+  margin-bottom: 16px;
+  padding: 10px 12px;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+}
+
+.tt-swal-info-titulo {
   display: block;
-  margin-top: 4px;
+  font-weight: 600;
+  color: #212529;
+  margin-bottom: 4px;
 }
 
-.input-error {
-  border: 1px solid #d32f2f;
+.tt-swal-info-valor {
+  display: block;
+  color: #495057;
 }
 
-.acciones-modal {
+/* ==== Fechas en línea ==== */
+
+.tt-swal-fechas {
   display: flex;
-  justify-content: flex-end;
-  gap: 10px;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.tt-swal-fecha-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Sub-label (Inicio / Fin) */
+.tt-swal-sub-label {
+  font-size: 12px;
+  margin-bottom: 4px;
+  color: #6c757d;
+}
+
+/* Sombreado horario */
+.fc .horario-rango-fondo {
+  background-color: rgba(221, 72, 20, 0.12);
 }
 
 /* ==== RESPONSIVE login/registro ==== */
@@ -233,7 +235,9 @@ section {
    no llega. Prefijo tt- para evitar conflictos.
    ============================================================ */
 
-html, body, main {
+html,
+body,
+main {
   height: 100%;
 }
 
@@ -243,26 +247,28 @@ html, body, main {
   min-width: 240px;
   height: 100vh;
   background-color: #0f1623;
-  border-right: 1px solid rgba(255,255,255,0.1);
-  transition: width 0.25s ease, min-width 0.25s ease;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  transition:
+    width 0.25s ease,
+    min-width 0.25s ease;
   overflow: hidden;
 }
 
 .tt-sidebar-border-bottom {
-  border-bottom: 1px solid rgba(255,255,255,0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .tt-sidebar-border-top {
-  border-top: 1px solid rgba(255,255,255,0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .tt-sidebar-hint {
-  background-color: rgba(255,255,255,0.04);
+  background-color: rgba(255, 255, 255, 0.04);
 }
 
 .tt-sidebar-hint-text {
   font-size: 11px;
-  color: rgba(255,255,255,0.25);
+  color: rgba(255, 255, 255, 0.25);
 }
 
 .tt-sidebar.tt-collapsed {
@@ -296,11 +302,11 @@ html, body, main {
 }
 
 .tt-sidebar .border-bottom {
-  border-bottom-color: rgba(255,255,255,0.07) !important;
+  border-bottom-color: rgba(255, 255, 255, 0.07) !important;
 }
 
 .tt-logo-name {
-  font-family: 'Manrope', sans-serif;
+  font-family: "Manrope", sans-serif;
   font-size: 15px;
   color: #ffffff;
   white-space: nowrap;
@@ -311,23 +317,23 @@ html, body, main {
   text-transform: uppercase;
   letter-spacing: 1.5px;
   white-space: nowrap;
-  color: rgba(255,255,255,0.35) !important;
+  color: rgba(255, 255, 255, 0.35) !important;
   font-weight: 600;
 }
 
 /* --- Nav item --- */
 .tt-nav-link {
-  color: rgba(255,255,255,0.5);
+  color: rgba(255, 255, 255, 0.5);
   padding: 10px 12px;
 }
 
 .tt-nav-link:hover {
-  background-color: rgba(255,255,255,0.06);
-  color: rgba(255,255,255,0.85);
+  background-color: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .tt-nav-link.active {
-  background-color: rgba(0,122,255,0.2);
+  background-color: rgba(0, 122, 255, 0.2);
   color: #4da3ff;
   font-weight: 600;
 }
@@ -338,16 +344,16 @@ html, body, main {
 
 /* --- Pie del sidebar oscuro --- */
 .tt-sidebar-footer .bg-light {
-  background-color: rgba(255,255,255,0.04) !important;
+  background-color: rgba(255, 255, 255, 0.04) !important;
 }
 
 .tt-sidebar-footer small {
-  color: rgba(255,255,255,0.25) !important;
+  color: rgba(255, 255, 255, 0.25) !important;
 }
 
 /* --- Topbar --- */
 .tt-topbar-title {
-  font-family: 'Manrope', sans-serif;
+  font-family: "Manrope", sans-serif;
   font-size: 16px;
   font-weight: 800;
   color: #191c1d;

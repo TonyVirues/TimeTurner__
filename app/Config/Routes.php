@@ -10,10 +10,10 @@ $routes->get('/login', 'AuthController::login');
 $routes->get('/registro', 'AuthController::registro');
 
 // Rutas Contenido principal
-$routes->get('/calendario', 'Home::calendario');
+$routes->get('/', 'HomeController::calendario'); //@mar Esto está temporal, porque quiero que se abra calendario del tiron
+$routes->get('/calendario', 'HomeController::calendario');
 
 // Rutas de horarios
-$routes->get('horarios', 'HorariosController::index');
 $routes->get('horarios/mostrar/(:num)', 'HorariosController::mostrar/$1');
 $routes->post('horarios/crear', 'HorariosController::crear');
 $routes->post('horarios/actualizar/(:num)', 'HorariosController::actualizar/$1');

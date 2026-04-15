@@ -545,15 +545,67 @@ async function abrirSwalHorario(modo, horario = null) {
   const resultado = await Swal.fire({
     title: esEdicion ? "Editar horario" : "Crear horario",
     html: `
-      <input id="swal_hor_nombre" class="swal2-input" placeholder="Nombre del horario" value="${escaparHtml(horario?.hor_nombre || "")}">
-      <input id="swal_hor_fecha_inicio" type="date" class="swal2-input" value="${horario?.hor_fecha_inicio || ""}">
-      <input id="swal_hor_fecha_fin" type="date" class="swal2-input" value="${horario?.hor_fecha_fin || ""}">
-      <select id="swal_hor_estado" class="swal2-input">
-        <option value="borrador" ${(horario?.hor_estado || "borrador") === "borrador" ? "selected" : ""}>Borrador</option>
-        <option value="publicado" ${horario?.hor_estado === "publicado" ? "selected" : ""}>Publicado</option>
-        <option value="cerrado" ${horario?.hor_estado === "cerrado" ? "selected" : ""}>Cerrado</option>
-      </select>
-      <textarea id="swal_hor_descripcion" class="swal2-textarea" placeholder="Descripción">${escaparHtml(horario?.hor_descripcion || "")}</textarea>
+      <div class="tt-swal-formulario">
+
+        <label for="swal_hor_nombre" class="tt-swal-label">
+          Nombre del horario:
+        </label>
+        <input
+          id="swal_hor_nombre"
+          class="swal2-input tt-swal-input"
+          placeholder="Nombre del horario"
+          value="${escaparHtml(horario?.hor_nombre || "")}"
+        >
+
+        <label class="tt-swal-label">
+          Fecha:
+        </label>
+
+        <div class="tt-swal-fechas">
+          <div class="tt-swal-fecha-item">
+            <label for="swal_hor_fecha_inicio" class="tt-swal-sub-label">
+              Inicio
+            </label>
+            <input
+              id="swal_hor_fecha_inicio"
+              type="date"
+              class="swal2-input tt-swal-input"
+              value="${horario?.hor_fecha_inicio || ""}"
+            >
+          </div>
+
+          <div class="tt-swal-fecha-item">
+            <label for="swal_hor_fecha_fin" class="tt-swal-sub-label">
+              Fin
+            </label>
+            <input
+              id="swal_hor_fecha_fin"
+              type="date"
+              class="swal2-input tt-swal-input"
+              value="${horario?.hor_fecha_fin || ""}"
+            >
+          </div>
+        </div>
+
+        <label for="swal_hor_estado" class="tt-swal-label">
+          Estado del calendario:
+        </label>
+        <select id="swal_hor_estado" class="swal2-input tt-swal-input">
+          <option value="borrador" ${(horario?.hor_estado || "borrador") === "borrador" ? "selected" : ""}>Borrador</option>
+          <option value="publicado" ${horario?.hor_estado === "publicado" ? "selected" : ""}>Publicado</option>
+          <option value="cerrado" ${horario?.hor_estado === "cerrado" ? "selected" : ""}>Cerrado</option>
+        </select>
+
+        <label for="swal_hor_descripcion" class="tt-swal-label">
+          Descripción:
+        </label>
+        <textarea
+          id="swal_hor_descripcion"
+          class="swal2-textarea tt-swal-textarea"
+          placeholder="Descripción"
+        >${escaparHtml(horario?.hor_descripcion || "")}</textarea>
+
+      </div>
     `,
     focusConfirm: false,
     showCancelButton: true,
@@ -960,28 +1012,70 @@ async function abrirSwalTurno(modo, opciones) {
 
   const resultado = await Swal.fire({
     title: esEdicion ? "Editar turno" : "Crear turno",
+    width: 550,
     html: `
-      <div style="text-align: left; margin-bottom: 12px;">
-        <strong>Horario seleccionado:</strong> ${escaparHtml(horarioSeleccionado.hor_nombre)}
+      <div class="tt-swal-formulario">
+
+        <div class="tt-swal-info">
+          <span class="tt-swal-info-titulo">Horario seleccionado:</span>
+          <span class="tt-swal-info-valor">${escaparHtml(horarioSeleccionado.hor_nombre)}</span>
+        </div>
+
+        <label class="tt-swal-label">
+          Fecha y hora:
+        </label>
+
+        <div class="tt-swal-fechas">
+          <div class="tt-swal-fecha-item">
+            <label for="swal_tur_inicio" class="tt-swal-sub-label">
+              Inicio
+            </label>
+            <input
+              id="swal_tur_inicio"
+              type="datetime-local"
+              class="swal2-input tt-swal-input"
+              value="${valorInicio}"
+              min="${horarioSeleccionado.hor_fecha_inicio}T00:00"
+              max="${horarioSeleccionado.hor_fecha_fin}T23:59"
+            >
+          </div>
+
+          <div class="tt-swal-fecha-item">
+            <label for="swal_tur_fin" class="tt-swal-sub-label">
+              Fin
+            </label>
+            <input
+              id="swal_tur_fin"
+              type="datetime-local"
+              class="swal2-input tt-swal-input"
+              value="${valorFin}"
+              min="${horarioSeleccionado.hor_fecha_inicio}T00:00"
+              max="${horarioSeleccionado.hor_fecha_fin}T23:59"
+            >
+          </div>
+        </div>
+
+        <label for="swal_tur_estado" class="tt-swal-label">
+          Estado del turno:
+        </label>
+        <select id="swal_tur_estado" class="swal2-input tt-swal-input">
+          <option value="disponible" ${(turno?.tur_estado || "disponible") === "disponible" ? "selected" : ""}>Disponible</option>
+          <option value="asignado" ${turno?.tur_estado === "asignado" ? "selected" : ""}>Asignado</option>
+          <option value="pendiente_cambio" ${turno?.tur_estado === "pendiente_cambio" ? "selected" : ""}>Pendiente de cambio</option>
+          <option value="cambiado" ${turno?.tur_estado === "cambiado" ? "selected" : ""}>Cambiado</option>
+          <option value="cancelado" ${turno?.tur_estado === "cancelado" ? "selected" : ""}>Cancelado</option>
+        </select>
+
+        <label for="swal_tur_observaciones" class="tt-swal-label">
+          Observaciones:
+        </label>
+        <textarea
+          id="swal_tur_observaciones"
+          class="swal2-textarea tt-swal-textarea"
+          placeholder="Observaciones"
+        >${escaparHtml(turno?.tur_observaciones || "")}</textarea>
+
       </div>
-
-      <label for="swal_tur_inicio" style="display:block; text-align:left; margin-bottom:4px;">Inicio</label>
-      <input id="swal_tur_inicio" type="datetime-local" class="swal2-input" value="${valorInicio}" min="${horarioSeleccionado.hor_fecha_inicio}T00:00" max="${horarioSeleccionado.hor_fecha_fin}T23:59">
-
-      <label for="swal_tur_fin" style="display:block; text-align:left; margin-bottom:4px;">Fin</label>
-      <input id="swal_tur_fin" type="datetime-local" class="swal2-input" value="${valorFin}" min="${horarioSeleccionado.hor_fecha_inicio}T00:00" max="${horarioSeleccionado.hor_fecha_fin}T23:59">
-
-      <label for="swal_tur_estado" style="display:block; text-align:left; margin-bottom:4px;">Estado</label>
-      <select id="swal_tur_estado" class="swal2-input">
-        <option value="disponible" ${(turno?.tur_estado || "disponible") === "disponible" ? "selected" : ""}>Disponible</option>
-        <option value="asignado" ${turno?.tur_estado === "asignado" ? "selected" : ""}>Asignado</option>
-        <option value="pendiente_cambio" ${turno?.tur_estado === "pendiente_cambio" ? "selected" : ""}>Pendiente de cambio</option>
-        <option value="cambiado" ${turno?.tur_estado === "cambiado" ? "selected" : ""}>Cambiado</option>
-        <option value="cancelado" ${turno?.tur_estado === "cancelado" ? "selected" : ""}>Cancelado</option>
-      </select>
-
-      <label for="swal_tur_observaciones" style="display:block; text-align:left; margin-bottom:4px;">Observaciones</label>
-      <textarea id="swal_tur_observaciones" class="swal2-textarea" placeholder="Observaciones">${escaparHtml(turno?.tur_observaciones || "")}</textarea>
     `,
     focusConfirm: false,
     showCancelButton: true,
@@ -1005,11 +1099,9 @@ async function abrirSwalTurno(modo, opciones) {
         return false;
       }
 
-      // Llama a la función para convertir el formato de hora
       const inicioSql = convertirDatetimeLocalAFormatoSql(inicio);
       const finSql = convertirDatetimeLocalAFormatoSql(fin);
 
-      // Valida que la fecha fin sea posterior a la de inicio
       if (finSql <= inicioSql) {
         Swal.showValidationMessage("Debe ser posterior a la fecha de inicio.");
         return false;
@@ -1018,7 +1110,6 @@ async function abrirSwalTurno(modo, opciones) {
       const inicioHorario = `${horarioSeleccionado.hor_fecha_inicio} 00:00:00`;
       const finHorario = `${horarioSeleccionado.hor_fecha_fin} 23:59:59`;
 
-      // Valida que las fechas y horarios del turno no se salgan del rango del horario
       if (inicioSql < inicioHorario) {
         Swal.showValidationMessage(
           "La fecha de inicio está fuera del rango del horario.",

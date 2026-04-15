@@ -81,6 +81,10 @@ document.addEventListener("DOMContentLoaded", function () {
      * @returns
      */
     eventContent: function (arg) {
+      // Si es el evento de fondo de horario, sale de la función
+      if (arg.event.display === "background") {
+        return {};
+      }
       const usuario = arg.event.extendedProps.usuario ?? "Sin asignar";
 
       const container = document.createElement("div");
@@ -157,8 +161,8 @@ document.addEventListener("DOMContentLoaded", function () {
     },
 
     /**
-     * Carga los turnos del calendario desde el backend
-     * según el horario seleccionado y los pasa a FullCalendar
+     * Carga los turnos del calendario desde el backend según el horario seleccionado
+     * y los pasa a FullCalendar
      * @param {*} _fetchInfo
      * @param {*} successCallback
      * @param {*} failureCallback
@@ -172,6 +176,11 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
 
+      const horarioSeleccionado = obtenerHorarioPorId(
+        horariosDisponibles,
+        horarioId,
+      );
+
       fetch(`/turnos/eventos?horario_id=${encodeURIComponent(horarioId)}`)
         .then(function (response) {
           if (!response.ok) {
@@ -180,9 +189,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
           return response.json();
         })
-        .then(function (data) {
-          // Pasa los turnos al calendario
-          successCallback(data);
+        .then(function (turnos) {
+          const eventos = Array.isArray(turnos) ? [...turnos] : [];
+
+          if (horarioSeleccionado) {
+            eventos.push(crearEventoFondoHorario(horarioSeleccionado));
+          }
+
+          successCallback(eventos);
         })
         .catch(function (error) {
           console.error("Error cargando turnos:", error);
@@ -1241,6 +1255,36 @@ function obtenerHorarioPorId(horariosDisponibles, horarioId) {
   return horariosDisponibles.find(function (h) {
     return String(h.hor_id_horario) === String(horarioId);
   });
+}
+
+/**
+ * Crea un evento de fondo para sombrear el rango del horario seleccionado
+ * @param {*} horario
+ * @returns
+ */
+function crearEventoFondoHorario(horario) {
+  const fechaFinExclusiva = sumarDiasAFechaTexto(horario.hor_fecha_fin, 1);
+
+  return {
+    id: `fondo-horario-${horario.hor_id_horario}`,
+    start: horario.hor_fecha_inicio,
+    end: fechaFinExclusiva,
+    display: "background",
+    allDay: true,
+    className: "horario-rango-fondo",
+  };
+}
+
+/**
+ * Suma días a una fecha en formato YYYY-MM-DD
+ * @param {*} fechaTexto
+ * @param {*} dias
+ * @returns
+ */
+function sumarDiasAFechaTexto(fechaTexto, dias) {
+  const fecha = new Date(`${fechaTexto}T00:00:00`);
+  fecha.setDate(fecha.getDate() + dias);
+  return formatearFechaSoloDia(fecha);
 }
 
 /**

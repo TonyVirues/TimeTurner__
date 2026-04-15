@@ -216,6 +216,11 @@ section {
   color: #6c757d;
 }
 
+/* Sombreado horario */
+.fc .horario-rango-fondo {
+  background-color: rgba(221, 72, 20, 0.12);
+}
+
 /* ==== RESPONSIVE login/registro ==== */
 
 @media (max-width: 629px) {

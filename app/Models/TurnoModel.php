@@ -107,4 +107,29 @@ class TurnoModel extends Model
 
     return $eventos;
   }
+
+  /**
+   * Comprueba si un usuario ya tiene otro turno que se solapa con el rango indicado
+   * @param int $usuarioId
+   * @param string $inicio
+   * @param string $fin
+   * @param int|null $turnoIdExcluir
+   * @return bool
+   */
+  public function existeSolapeUsuario(
+    int $usuarioId,
+    string $inicio,
+    string $fin,
+    ?int $turnoIdExcluir = null
+  ): bool {
+    $builder = $this->where('tur_id_usuario', $usuarioId)
+      ->where('tur_inicio <', $fin)
+      ->where('tur_fin >', $inicio);
+
+    if ($turnoIdExcluir !== null) {
+      $builder->where('tur_id_turno !=', $turnoIdExcluir);
+    }
+
+    return $builder->countAllResults() > 0;
+  }
 }

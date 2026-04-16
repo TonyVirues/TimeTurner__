@@ -140,6 +140,11 @@ class TurnosController extends BaseController
       return $errorCoherencia;
     }
 
+    $errorSolape = $this->validarSolapeTurnoUsuario($usuarioId, $inicio, $fin);
+    if ($errorSolape !== null) {
+      return $errorSolape;
+    }
+
     $datos = [
       'tur_id_horario' => $horarioId,
       'tur_id_usuario' => $usuarioId,
@@ -182,7 +187,7 @@ class TurnosController extends BaseController
       return $this->responderNoEncontrado();
     }
 
-    if (! $this->validate($this->obtenerReglasTurno(true))) {
+    if (! $this->validate($this->obtenerReglasTurno())) {
       return $this->responderErrorValidacion();
     }
 
@@ -219,6 +224,11 @@ class TurnosController extends BaseController
     $errorCoherencia = $this->validarCoherenciaUsuarioYEstado($usuarioId, $estado);
     if ($errorCoherencia !== null) {
       return $errorCoherencia;
+    }
+
+    $errorSolape = $this->validarSolapeTurnoUsuario($usuarioId, $inicio, $fin, (int) $id);
+    if ($errorSolape !== null) {
+      return $errorSolape;
     }
 
     $datos = [
@@ -280,19 +290,16 @@ class TurnosController extends BaseController
   /**
    * Aplica las reglas de validación para turnos
    * tur_estado es obligatorio o no según el parámetro que reciba
-   * @param bool $estadoObligatorio
-   * @return array<string, string>
+   * @return array{tur_estado: string, tur_fin: string, tur_id_horario: string, tur_id_usuario: string, tur_inicio: string}
    */
-  private function obtenerReglasTurno(bool $estadoObligatorio = false): array
+  private function obtenerReglasTurno(): array
   {
     return [
       'tur_id_horario' => 'required|integer',
       'tur_id_usuario' => 'permit_empty|integer',
       'tur_inicio' => 'required|valid_date',
       'tur_fin' => 'required|valid_date',
-      'tur_estado' => $estadoObligatorio
-        ? 'required|in_list[asignado,disponible,pendiente_cambio,cambiado,cancelado]'
-        : 'permit_empty|in_list[asignado,disponible,pendiente_cambio,cambiado,cancelado]',
+      'tur_estado' => 'permit_empty|in_list[asignado,disponible,pendiente_cambio,cambiado,cancelado]',
     ];
   }
 
@@ -388,6 +395,32 @@ class TurnosController extends BaseController
       return $this->response->setStatusCode(400)->setJSON([
         'status' => 'error',
         'message' => 'Un turno con usuario no puede estar disponible.',
+      ]);
+    }
+
+    return null;
+  }
+
+  /**
+   * Comprueba que el usuario no tenga otro turno solapado en la misma franja
+   * @param int|null $usuarioId
+   * @param string $inicio
+   * @param string $fin
+   * @param int|null $turnoIdExcluir
+   * @return ResponseInterface|null
+   */
+  private function validarSolapeTurnoUsuario(?int $usuarioId, string $inicio, string $fin, ?int $turnoIdExcluir = null): ?ResponseInterface
+  {
+    if ($usuarioId === null) {
+      return null;
+    }
+
+    $haySolape = $this->turnoModel->existeSolapeUsuario($usuarioId, $inicio, $fin, $turnoIdExcluir);
+
+    if ($haySolape) {
+      return $this->response->setStatusCode(400)->setJSON([
+        'status' => 'error',
+        'message' => 'El usuario ya tiene otro turno asignado en una franja horaria solapada.',
       ]);
     }
 

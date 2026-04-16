@@ -11,6 +11,7 @@ $routes->post('/login', 'AuthController::autenticar');
 $routes->get('/logout', 'AuthController::logout');
 $routes->get('/registro', 'AuthController::registro');
 $routes->post('/registro', 'AuthController::registrar');
+$routes->get('/logout', 'AuthController::logout');
 
 // Rutas Contenido principal
 $routes->get('/', 'AuthController::login');

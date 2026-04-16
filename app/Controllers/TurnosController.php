@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\TurnoModel;
 use App\Models\HorarioModel;
+use App\Models\UsuarioModel;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
@@ -12,10 +13,11 @@ class TurnosController extends BaseController
 {
   protected $turnoModel;
   protected $horarioModel;
+  protected $usuarioModel;
 
   /**
    * Método de CodeIgniter que inicia el controlador
-   * Crea una instancia de los modelos TurnoModel y HorarioModel
+   * Crea una instancia de los modelos TurnoModel, HorarioModel y UsuarioModel
    * @param RequestInterface $request
    * @param ResponseInterface $response
    * @param LoggerInterface $logger
@@ -26,6 +28,7 @@ class TurnosController extends BaseController
     parent::initController($request, $response, $logger);
     $this->turnoModel = new TurnoModel();
     $this->horarioModel = new HorarioModel();
+    $this->usuarioModel = new UsuarioModel();
   }
 
   /**
@@ -105,10 +108,20 @@ class TurnosController extends BaseController
     $inicio = $this->request->getPost('tur_inicio');
     $fin = $this->request->getPost('tur_fin');
 
+    $usuarioIdPost = $this->request->getPost('tur_id_usuario');
+    $usuarioId = $usuarioIdPost !== null && $usuarioIdPost !== ''
+      ? (int) $usuarioIdPost
+      : null;
+
     $errorHorario = $this->validarHorarioExistente($horarioId);
     //La función validarHorarioExistente devuelve una respuesta HTTP si hay error y null si todo va bien
     if ($errorHorario !== null) {
       return $errorHorario;
+    }
+
+    $errorUsuario = $this->validarUsuarioExistente($usuarioId);
+    if ($errorUsuario !== null) {
+      return $errorUsuario;
     }
 
     $errorFechas = $this->validarRangoFechasHoras($inicio, $fin);
@@ -116,11 +129,23 @@ class TurnosController extends BaseController
       return $errorFechas;
     }
 
+    $estado = $this->request->getPost('tur_estado');
+
+    if (! $estado) {
+      $estado = $usuarioId === null ? 'disponible' : 'asignado';
+    }
+
+    $errorCoherencia = $this->validarCoherenciaUsuarioYEstado($usuarioId, $estado);
+    if ($errorCoherencia !== null) {
+      return $errorCoherencia;
+    }
+
     $datos = [
       'tur_id_horario' => $horarioId,
+      'tur_id_usuario' => $usuarioId,
       'tur_inicio' => $inicio,
       'tur_fin' => $fin,
-      'tur_estado' => $this->request->getPost('tur_estado') ?: 'disponible',
+      'tur_estado' => $estado,
       'tur_observaciones' => $this->request->getPost('tur_observaciones'),
     ];
 
@@ -165,9 +190,19 @@ class TurnosController extends BaseController
     $inicio = $this->request->getPost('tur_inicio');
     $fin = $this->request->getPost('tur_fin');
 
+    $usuarioIdPost = $this->request->getPost('tur_id_usuario');
+    $usuarioId = $usuarioIdPost !== null && $usuarioIdPost !== ''
+      ? (int) $usuarioIdPost
+      : null;
+
     $errorHorario = $this->validarHorarioExistente($horarioId);
     if ($errorHorario !== null) {
       return $errorHorario;
+    }
+
+    $errorUsuario = $this->validarUsuarioExistente($usuarioId);
+    if ($errorUsuario !== null) {
+      return $errorUsuario;
     }
 
     $errorFechas = $this->validarRangoFechasHoras($inicio, $fin);
@@ -175,11 +210,23 @@ class TurnosController extends BaseController
       return $errorFechas;
     }
 
+    $estado = $this->request->getPost('tur_estado');
+
+    if (! $estado) {
+      $estado = $usuarioId === null ? 'disponible' : 'asignado';
+    }
+
+    $errorCoherencia = $this->validarCoherenciaUsuarioYEstado($usuarioId, $estado);
+    if ($errorCoherencia !== null) {
+      return $errorCoherencia;
+    }
+
     $datos = [
       'tur_id_horario' => $horarioId,
+      'tur_id_usuario' => $usuarioId,
       'tur_inicio' => $inicio,
       'tur_fin' => $fin,
-      'tur_estado' => $this->request->getPost('tur_estado'),
+      'tur_estado' => $estado,
       'tur_observaciones' => $this->request->getPost('tur_observaciones'),
     ];
 
@@ -240,6 +287,7 @@ class TurnosController extends BaseController
   {
     return [
       'tur_id_horario' => 'required|integer',
+      'tur_id_usuario' => 'permit_empty|integer',
       'tur_inicio' => 'required|valid_date',
       'tur_fin' => 'required|valid_date',
       'tur_estado' => $estadoObligatorio
@@ -292,6 +340,54 @@ class TurnosController extends BaseController
       return $this->response->setStatusCode(404)->setJSON([
         'status' => 'error',
         'message' => 'Horario no encontrado.',
+      ]);
+    }
+
+    return null;
+  }
+
+  /**
+   * Comprueba que el usuario exista si se ha enviado uno
+   * @param int|null $usuarioId
+   * @return ResponseInterface|null
+   */
+  private function validarUsuarioExistente(?int $usuarioId): ?ResponseInterface
+  {
+    if ($usuarioId === null) {
+      return null;
+    }
+
+    $usuario = $this->usuarioModel->find($usuarioId);
+
+    if (! $usuario) {
+      return $this->response->setStatusCode(404)->setJSON([
+        'status' => 'error',
+        'message' => 'Usuario no encontrado.',
+      ]);
+    }
+
+    return null;
+  }
+
+  /**
+   * Comprueba que el estado del turno sea coherente con el usuario asignado
+   * @param int|null $usuarioId
+   * @param string $estado
+   * @return ResponseInterface|null
+   */
+  private function validarCoherenciaUsuarioYEstado(?int $usuarioId, string $estado): ?ResponseInterface
+  {
+    if ($usuarioId === null && $estado === 'asignado') {
+      return $this->response->setStatusCode(400)->setJSON([
+        'status' => 'error',
+        'message' => 'Un turno sin usuario no puede estar asignado.',
+      ]);
+    }
+
+    if ($usuarioId !== null && $estado === 'disponible') {
+      return $this->response->setStatusCode(400)->setJSON([
+        'status' => 'error',
+        'message' => 'Un turno con usuario no puede estar disponible.',
       ]);
     }
 

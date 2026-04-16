@@ -1019,6 +1019,8 @@ async function abrirSwalTurno(modo, opciones) {
   const { turno, horarioSeleccionado, fechaInicio, fechaFin } = opciones;
   const esEdicion = modo === "editar";
 
+  const usuarios = await cargarUsuariosDisponibles();
+
   const valorInicio = turno
     ? formatearFechaParaInputDesdeIso(turno.tur_inicio)
     : formatearFechaParaDatetimeLocal(fechaInicio);
@@ -1026,6 +1028,28 @@ async function abrirSwalTurno(modo, opciones) {
   const valorFin = turno
     ? formatearFechaParaInputDesdeIso(turno.tur_fin)
     : formatearFechaParaDatetimeLocal(fechaFin);
+
+  let opcionesUsuarios = '<option value="">Sin asignar</option>';
+
+  usuarios.forEach(function (usuario) {
+    const nombreCompleto =
+      `${usuario.usu_nombre ?? ""} ${usuario.usu_apellidos ?? ""}`.trim();
+    const textoOpcion =
+      nombreCompleto ||
+      usuario.usu_email ||
+      `Usuario ${usuario.usu_id_usuario}`;
+
+    const selected =
+      String(usuario.usu_id_usuario) === String(turno?.tur_id_usuario ?? "")
+        ? "selected"
+        : "";
+
+    opcionesUsuarios += `
+      <option value="${usuario.usu_id_usuario}" ${selected}>
+        ${escaparHtml(textoOpcion)}
+      </option>
+    `;
+  });
 
   const resultado = await Swal.fire({
     title: esEdicion ? "Editar turno" : "Crear turno",
@@ -1072,6 +1096,13 @@ async function abrirSwalTurno(modo, opciones) {
           </div>
         </div>
 
+        <label for="swal_tur_id_usuario" class="tt-swal-label">
+          Usuario asignado:
+        </label>
+        <select id="swal_tur_id_usuario" class="swal2-input tt-swal-input">
+          ${opcionesUsuarios}
+        </select>
+
         <label for="swal_tur_estado" class="tt-swal-label">
           Estado del turno:
         </label>
@@ -1098,9 +1129,29 @@ async function abrirSwalTurno(modo, opciones) {
     showCancelButton: true,
     confirmButtonText: esEdicion ? "Guardar cambios" : "Guardar turno",
     cancelButtonText: "Cancelar",
+    didOpen: function () {
+      const selectUsuario = document.getElementById("swal_tur_id_usuario");
+      const selectEstado = document.getElementById("swal_tur_estado");
+
+      if (!selectUsuario || !selectEstado) {
+        return;
+      }
+
+      selectUsuario.addEventListener("change", function () {
+        if (selectUsuario.value) {
+          selectEstado.value = "asignado";
+          return;
+        }
+
+        if (selectEstado.value === "asignado") {
+          selectEstado.value = "disponible";
+        }
+      });
+    },
     preConfirm: function () {
       const inicio = document.getElementById("swal_tur_inicio").value;
       const fin = document.getElementById("swal_tur_fin").value;
+      const usuarioId = document.getElementById("swal_tur_id_usuario").value;
       const estado = document.getElementById("swal_tur_estado").value;
       const observaciones = document
         .getElementById("swal_tur_observaciones")
@@ -1141,8 +1192,23 @@ async function abrirSwalTurno(modo, opciones) {
         return false;
       }
 
+      if (!usuarioId && estado === "asignado") {
+        Swal.showValidationMessage(
+          "No puedes marcar el turno como asignado si no has seleccionado un usuario.",
+        );
+        return false;
+      }
+
+      if (usuarioId && estado === "disponible") {
+        Swal.showValidationMessage(
+          "Un turno con usuario asignado no puede estar en estado disponible.",
+        );
+        return false;
+      }
+
       return {
         tur_id_horario: horarioSeleccionado.hor_id_horario,
+        tur_id_usuario: usuarioId,
         tur_inicio: inicioSql,
         tur_fin: finSql,
         tur_estado: estado,
@@ -1314,6 +1380,24 @@ function construirFormData(objeto) {
   });
 
   return datos;
+}
+
+/**
+ * Carga la lista de usuarios desde backend
+ * @returns {Promise<Array>}
+ */
+function cargarUsuariosDisponibles() {
+  return fetch("/usuarios/listado")
+    .then(parsearRespuestaFetch)
+    .then(function (resultado) {
+      if (!resultado.ok || resultado.data.status !== "success") {
+        throw new Error(
+          resultado.data.message || "No se pudieron cargar los usuarios.",
+        );
+      }
+
+      return Array.isArray(resultado.data.data) ? resultado.data.data : [];
+    });
 }
 
 /**

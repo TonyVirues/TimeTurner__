@@ -20,12 +20,13 @@ class CreateUsuarios extends Migration
         'type' => 'INT',
         'constraint' => 10,
         'unsigned' => true,
-        'null' => true,
+        'null' => false,
       ],
       'usu_tipo_cuenta' => [
         'type' => 'ENUM',
         'constraint' => ['empresa', 'personal'],
         'null' => false,
+        'default' => 'empresa',
       ],
       'usu_nombre' => [
         'type' => 'VARCHAR',

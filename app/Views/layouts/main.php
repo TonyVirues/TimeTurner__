@@ -22,11 +22,19 @@
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
 </head>
 
-<body class="">
+<body class="h-100">
 
-  <main>
+  <main class="h-100">
     <?= $this->renderSection('content') ?>
   </main>
+
+    <!-- Footer -->
+    <footer class="border-top px-4 py-2 bg-white mt-auto">
+      <small class="text-muted">
+        &copy; TimeTurner | Gestor de turnos | Antonio J. Marín Virues | Mar Sánchez Sevillano | <?= date('Y') ?>
+        &nbsp;|&nbsp; Environment: <?= ENVIRONMENT ?>
+      </small>
+    </footer>
 
   <!--Script-->
   <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>

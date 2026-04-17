@@ -433,3 +433,67 @@ html, body, main {
 .tt-calendario-inner #calendar {
   height: 100%;
 }
+
+
+
+
+/*=====ADD EL 16/04/by tony ==========*/
+/*<-----------css para el menu----------->
+
+/* ==== Sidebar — secciones y badges ==== */
+
+.tt-nav-section {
+  display: block;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: rgba(255,255,255,0.2);
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.tt-nav-badge {
+  font-size: 10px;
+  padding: 1px 7px;
+  border-radius: 10px;
+  background: rgba(255,138,0,0.2);
+  color: #ffaa44;
+}
+
+.tt-nav-badge-blue {
+  font-size: 10px;
+  padding: 1px 7px;
+  border-radius: 10px;
+  background: rgba(0,122,255,0.2);
+  color: #5aacff;
+}
+
+/* ==== Sidebar — bloque usuario ==== */
+
+.tt-user-block {
+  cursor: pointer;
+}
+
+.tt-user-block:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+.tt-user-avatar {
+  width: 30px;
+  height: 30px;
+  min-width: 30px;
+  background: #1e3a5f;
+  border: 1.5px solid rgba(90,172,255,0.3);
+  font-size: 12px;
+  font-weight: 600;
+  color: #5aacff;
+}
+
+.tt-user-name {
+  font-size: 12px;
+  color: rgba(255,255,255,0.75);
+}
+
+
+/*===== FIN ADD EL 16/04/by tony ==========*/
+/*<----------- fin css para el menu----------->

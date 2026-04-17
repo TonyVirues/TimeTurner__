@@ -3,7 +3,7 @@
 <?= $this->section('content') ?>
 
 <!-- Shell principal: sidebar + contenido en fila -->
-<div class="d-flex" style="height: 100vh; overflow: hidden;"> <!--cuerpo de la pagina-->
+<div class="d-flex vh-100 overflow-hidden"> <!--cuerpo de la pagina-->
 
 
   <!--Menú-->
@@ -34,25 +34,9 @@
     </header>
 
     <!-- Contenido de la vista hija -->
-<div class="container">
-        <div class="col-12"> 
-            <div class="row">
-            <?= $this->renderSection('calendario') ?>
-            </div>
-
-        </div>
-</div>
-
-
-
-
-    <!-- Footer -->
-    <footer class="border-top px-4 py-2 bg-white mt-auto">
-      <small class="text-muted">
-        &copy; TimeTurner | Gestor de turnos | Antonio J. Marín Virues | Mar Sánchez Sevillano | <?= date('Y') ?>
-        &nbsp;|&nbsp; Environment: <?= ENVIRONMENT ?>
-      </small>
-    </footer>
+    <div class="d-flex flex-column flex-grow-1 overflow-hidden">
+      <?= $this->renderSection('calendario') ?>
+    </div>
 
   </div>
 </div>

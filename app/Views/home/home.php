@@ -26,9 +26,10 @@
         <small class="text-muted d-none d-sm-inline ms-2 tt-topbar-sub">Gestor de turnos</small>
       </div>
 
-      <!-- Avatar -->
-      <div class="tt-avatar rounded-circle d-flex align-items-center justify-content-center" title="Mi perfil">
-        <span class="material-symbols-outlined">account_circle</span>
+      <!-- Notificaciones -->
+      <div class="tt-topbar-notif" title="Notificaciones">
+        <span class="material-symbols-outlined">notifications</span>
+        <span class="tt-notif-dot"></span>
       </div>
 
     </header>

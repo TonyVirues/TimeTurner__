@@ -6,16 +6,16 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 // Rutas Login , registro
-$routes->get('/login', 'AuthController::login');
-$routes->post('/login', 'AuthController::autenticar');
-$routes->get('/logout', 'AuthController::logout');
-$routes->get('/registro', 'AuthController::registro');
-$routes->post('/registro', 'AuthController::registrar');
-$routes->get('/logout', 'AuthController::logout');
+$routes->get('login', 'AuthController::login');
+$routes->post('login', 'AuthController::autenticar');
+$routes->get('logout', 'AuthController::logout');
+$routes->get('registro', 'AuthController::registro');
+$routes->post('registro', 'AuthController::registrar');
+$routes->get('logout', 'AuthController::logout');
 
 // Rutas Contenido principal
 $routes->get('/', 'AuthController::login');
-$routes->get('/calendario', 'HomeController::calendario');
+$routes->get('calendario', 'HomeController::calendario');
 
 // Rutas de horarios
 $routes->get('horarios/mostrar/(:num)', 'HorariosController::mostrar/$1');
@@ -34,3 +34,11 @@ $routes->post('turnos/eliminar/(:num)', 'TurnosController::eliminar/$1');
 
 // Rutas de usuarios
 $routes->get('usuarios/listado', 'UsuariosController::listado');
+
+// Rutas solicitudes cambio de turno
+$routes->get('solicitudes/mostrar/(:num)', 'SolicitudesCambioTurnoController::mostrar/$1');
+$routes->get('solicitudes/listado', 'SolicitudesCambioTurnoController::listado');
+$routes->post('solicitudes/crear', 'SolicitudesCambioTurnoController::crear');
+$routes->post('solicitudes/aceptar/(:num)', 'SolicitudesCambioTurnoController::aceptar/$1');
+$routes->post('solicitudes/rechazar/(:num)', 'SolicitudesCambioTurnoController::rechazar/$1');
+$routes->post('solicitudes/cancelar/(:num)', 'SolicitudesCambioTurnoController::cancelar/$1');

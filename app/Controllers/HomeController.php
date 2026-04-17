@@ -4,8 +4,12 @@ namespace App\Controllers;
 
 class HomeController extends BaseController
 {
-  public function index(): string
+  public function calendario()
   {
-    return view('home/index');
+    if (!session()->get('isLoggedIn')) {
+      return redirect()->to('/login');
+    }
+
+    return view('home/calendario');
   }
 }

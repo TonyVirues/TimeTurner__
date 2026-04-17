@@ -3,7 +3,7 @@
 
   <!-- Logo -->
   <div class="d-flex align-items-center gap-2 px-3 tt-sidebar-border-bottom" style="height: 60px; min-height: 60px;">
-    <div class="tt-logo-icon">
+    <div class="tt-logo-icon" id="ttLogoBtn">
       <img src="/assets/imagen/logo.jpg" alt="Logo TimeTurner">
     </div>
     <div class="tt-logo-text" style="flex: 1; overflow: hidden;">

@@ -266,14 +266,34 @@ html, body, main {
 }
 
 .tt-sidebar.tt-collapsed {
-  width: 64px;
-  min-width: 64px;
+  width: 60px;
+  min-width: 60px;
 }
 
 .tt-sidebar.tt-collapsed .tt-logo-text,
 .tt-sidebar.tt-collapsed .tt-nav-label,
-.tt-sidebar.tt-collapsed .tt-sidebar-footer {
+.tt-sidebar.tt-collapsed .tt-nav-section,
+.tt-sidebar.tt-collapsed .tt-nav-badge,
+.tt-sidebar.tt-collapsed .tt-nav-badge-blue,
+.tt-sidebar.tt-collapsed .tt-sidebar-footer,
+.tt-sidebar.tt-collapsed ul {
   display: none;
+}
+  /* --- Sidebar colapsado — logo como botón --- */
+
+.tt-sidebar.tt-collapsed .tt-logo-icon {
+  background-color: rgba(0,122,255,0.2);
+  border-radius: 10px;
+  cursor: pointer;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tt-sidebar.tt-collapsed .tt-logo-icon:hover {
+  background-color: rgba(0,122,255,0.35);
 }
 
 /* --- Logo --- */

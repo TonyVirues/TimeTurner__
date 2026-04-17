@@ -6,6 +6,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const btnEditarHorario = document.getElementById("btnEditarHorario");
   const btnEliminarHorario = document.getElementById("btnEliminarHorario");
 
+  const esAdministrador = window.ttUsuario?.rol === "administrador";
+
   // Array que guarda los horarios cargados desde backend
   let horariosDisponibles = [];
 
@@ -36,8 +38,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     locale: "es",
     firstDay: 1, //lunes
-    selectable: true,
-    editable: true,
+    selectable: esAdministrador,
+    editable: esAdministrador,
     nowIndicator: true,
     allDaySlot: false,
     // Muestra hora principio/fin de turno
@@ -147,6 +149,10 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
 
+      if (!esAdministrador) {
+        return;
+      }
+
       editarTurnoDesdeEvento(turnoId, horariosDisponibles, calendar).catch(
         function (error) {
           console.error("Error cargando turno:", error);
@@ -182,15 +188,16 @@ document.addEventListener("DOMContentLoaded", function () {
       );
 
       fetch(`/turnos/eventos?horario_id=${encodeURIComponent(horarioId)}`)
-        .then(function (response) {
-          if (!response.ok) {
-            throw new Error("Error al cargar los turnos");
+        .then(parsearRespuestaFetch)
+        .then(function (resultado) {
+          if (!resultado.ok) {
+            throw new Error(
+              resultado.data.message || "Error al cargar los turnos",
+            );
           }
 
-          return response.json();
-        })
-        .then(function (turnos) {
-          const eventos = Array.isArray(turnos) ? [...turnos] : [];
+          const turnos = Array.isArray(resultado.data) ? resultado.data : [];
+          const eventos = [...turnos];
 
           if (horarioSeleccionado) {
             eventos.push(crearEventoFondoHorario(horarioSeleccionado));
@@ -266,14 +273,16 @@ document.addEventListener("DOMContentLoaded", function () {
  */
 function cargarHorariosEnSelector(horarioSelect) {
   return fetch("/horarios/listado")
-    .then(function (response) {
-      if (!response.ok) {
-        throw new Error("Error al cargar los horarios");
+    .then(parsearRespuestaFetch)
+    .then(function (resultado) {
+      if (!resultado.ok) {
+        throw new Error(
+          resultado.data.message || "Error al cargar los horarios",
+        );
       }
 
-      return response.json();
-    })
-    .then(function (horarios) {
+      const horarios = Array.isArray(resultado.data) ? resultado.data : [];
+
       renderizarOpcionesHorarios(horarioSelect, horarios);
 
       return {

@@ -16,6 +16,12 @@
           <h1 class="fw-bold mb-4">TimeTurner</h1>
           <h2 class="mb-4">Inicia sesión</h2>
 
+          <?php if (session()->getFlashdata('error')): ?>
+            <div class="alert alert-danger">
+              <?= esc(session()->getFlashdata('error')) ?>
+            </div>
+          <?php endif; ?>
+
           <form action="<?= base_url('login') ?>" method="post">
             <!-- Seguridad -->
             <?= csrf_field() ?>
@@ -24,7 +30,7 @@
             <div class="mb-3 position-relative">
               <label class="form-label">Usuario / Email</label>
               <span class="material-symbols-outlined input-icon">person</span>
-              <input type="text" name="email" class="form-control ps-5" placeholder="mar@outlook.com" value="<?= old('usu_nombre') ?>" required>
+              <input type="text" name="email" class="form-control ps-5" placeholder="mar@outlook.com" value="<?= old('email') ?>" required>
             </div>
 
             <!-- Input de contraseña -->
@@ -46,6 +52,11 @@
 
             <!--botón-->
             <button type="submit" class="btn btn-primary w-100">Continuar</button>
+
+            <div class="text-center mt-3">
+              <span class="text-muted">¿No tienes cuenta?</span>
+              <a href="<?= base_url('registro') ?>" class="ms-1">Crear cuenta</a>
+            </div>
           </form>
         </div>
       </div>

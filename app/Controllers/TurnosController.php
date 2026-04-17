@@ -11,9 +11,9 @@ use Psr\Log\LoggerInterface;
 
 class TurnosController extends BaseController
 {
-  protected $turnoModel;
-  protected $horarioModel;
-  protected $usuarioModel;
+  protected TurnoModel $turnoModel;
+  protected HorarioModel $horarioModel;
+  protected UsuarioModel $usuarioModel;
 
   /**
    * Método de CodeIgniter que inicia el controlador
@@ -23,8 +23,11 @@ class TurnosController extends BaseController
    * @param LoggerInterface $logger
    * @return void
    */
-  public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
-  {
+  public function initController(
+    RequestInterface $request,
+    ResponseInterface $response,
+    LoggerInterface $logger
+  ) {
     parent::initController($request, $response, $logger);
     $this->turnoModel = new TurnoModel();
     $this->horarioModel = new HorarioModel();
@@ -33,15 +36,28 @@ class TurnosController extends BaseController
 
   /**
    * Devuelve un turno concreto, por su id, en formato JSON
+   * Solo si pertenece a la empresa del usuario logueado
    * @param mixed $id
    * @return ResponseInterface
    */
-  public function mostrar($id)
+  public function mostrar($id): ResponseInterface
   {
+    $errorLogin = $this->exigirLogin();
+
+    if ($errorLogin !== null) {
+      return $errorLogin;
+    }
+
     $turno = $this->turnoModel->getTurno((int) $id);
 
-    if (! $turno) {
+    if (!$turno) {
       return $this->responderNoEncontrado();
+    }
+
+    $errorEmpresa = $this->validarTurnoPerteneceAEmpresaActual($turno);
+
+    if ($errorEmpresa !== null) {
+      return $errorEmpresa;
     }
 
     return $this->response->setJSON($turno);
@@ -49,12 +65,19 @@ class TurnosController extends BaseController
 
   /**
    * Devuelve la lista de turnos de un horario en formato JSON
+   * Solo si el horario pertenece a la empresa del usuario logueado
    * @param mixed $horarioId
    * @return ResponseInterface
    */
-  public function listadoPorHorario($horarioId)
+  public function listadoPorHorario($horarioId): ResponseInterface
   {
-    $errorHorario = $this->validarHorarioExistente((int) $horarioId);
+    $errorLogin = $this->exigirLogin();
+
+    if ($errorLogin !== null) {
+      return $errorLogin;
+    }
+
+    $errorHorario = $this->validarHorarioExistenteYDeEmpresaActual((int) $horarioId);
 
     if ($errorHorario !== null) {
       return $errorHorario;
@@ -68,10 +91,17 @@ class TurnosController extends BaseController
   /**
    * Devuelve los turnos de un horario en formato compatible con FullCalendar
    * Recibe horario_id por query string
+   * Solo si el horario pertenece a la empresa del usuario logueado
    * @return ResponseInterface
    */
-  public function eventos()
+  public function eventos(): ResponseInterface
   {
+    $errorLogin = $this->exigirLogin();
+
+    if ($errorLogin !== null) {
+      return $errorLogin;
+    }
+
     $horarioId = (int) $this->request->getGet('horario_id');
 
     if ($horarioId <= 0) {
@@ -81,7 +111,7 @@ class TurnosController extends BaseController
       ]);
     }
 
-    $errorHorario = $this->validarHorarioExistente($horarioId);
+    $errorHorario = $this->validarHorarioExistenteYDeEmpresaActual($horarioId);
 
     if ($errorHorario !== null) {
       return $errorHorario;
@@ -93,54 +123,62 @@ class TurnosController extends BaseController
   }
 
   /**
-   * Llama a los métodos para validar los datos que recibe del front
-   * Crea un turno nuevo en la db
-   * Lo devuelve en formato JSON
+   * Crea un turno nuevo en la empresa del administrador logueado
    * @return ResponseInterface
    */
-  public function crear()
+  public function crear(): ResponseInterface
   {
-    if (! $this->validate($this->obtenerReglasTurno())) {
+    $errorPermisos = $this->exigirAdministrador();
+
+    if ($errorPermisos !== null) {
+      return $errorPermisos;
+    }
+
+    if (!$this->validate($this->obtenerReglasTurno())) {
       return $this->responderErrorValidacion();
     }
 
     $horarioId = (int) $this->request->getPost('tur_id_horario');
-    $inicio = $this->request->getPost('tur_inicio');
-    $fin = $this->request->getPost('tur_fin');
+    $inicio = (string) $this->request->getPost('tur_inicio');
+    $fin = (string) $this->request->getPost('tur_fin');
 
     $usuarioIdPost = $this->request->getPost('tur_id_usuario');
     $usuarioId = $usuarioIdPost !== null && $usuarioIdPost !== ''
       ? (int) $usuarioIdPost
       : null;
 
-    $errorHorario = $this->validarHorarioExistente($horarioId);
-    //La función validarHorarioExistente devuelve una respuesta HTTP si hay error y null si todo va bien
+    $errorHorario = $this->validarHorarioExistenteYDeEmpresaActual($horarioId);
+
     if ($errorHorario !== null) {
       return $errorHorario;
     }
 
-    $errorUsuario = $this->validarUsuarioExistente($usuarioId);
+    $errorUsuario = $this->validarUsuarioExistenteYDeEmpresaActual($usuarioId);
+
     if ($errorUsuario !== null) {
       return $errorUsuario;
     }
 
     $errorFechas = $this->validarRangoFechasHoras($inicio, $fin);
+
     if ($errorFechas !== null) {
       return $errorFechas;
     }
 
     $estado = $this->request->getPost('tur_estado');
 
-    if (! $estado) {
+    if (!$estado) {
       $estado = $usuarioId === null ? 'disponible' : 'asignado';
     }
 
     $errorCoherencia = $this->validarCoherenciaUsuarioYEstado($usuarioId, $estado);
+
     if ($errorCoherencia !== null) {
       return $errorCoherencia;
     }
 
     $errorSolape = $this->validarSolapeTurnoUsuario($usuarioId, $inicio, $fin);
+
     if ($errorSolape !== null) {
       return $errorSolape;
     }
@@ -156,7 +194,7 @@ class TurnosController extends BaseController
 
     $id = $this->turnoModel->insert($datos);
 
-    if (! $id) {
+    if (!$id) {
       return $this->response->setStatusCode(500)->setJSON([
         'status' => 'error',
         'message' => 'No se pudo crear el turno.',
@@ -173,60 +211,75 @@ class TurnosController extends BaseController
   }
 
   /**
-   * Busca un turno por su id
-   * Llama a los métodos para validar los datos
-   * Actualiza el turno en la db y lo devuelve en formato JSON
+   * Actualiza un turno existente de la empresa del administrador logueado
    * @param mixed $id
    * @return ResponseInterface
    */
-  public function actualizar($id)
+  public function actualizar($id): ResponseInterface
   {
+    $errorPermisos = $this->exigirAdministrador();
+
+    if ($errorPermisos !== null) {
+      return $errorPermisos;
+    }
+
     $turno = $this->turnoModel->getTurno((int) $id);
 
-    if (! $turno) {
+    if (!$turno) {
       return $this->responderNoEncontrado();
     }
 
-    if (! $this->validate($this->obtenerReglasTurno())) {
+    $errorEmpresaTurno = $this->validarTurnoPerteneceAEmpresaActual($turno);
+
+    if ($errorEmpresaTurno !== null) {
+      return $errorEmpresaTurno;
+    }
+
+    if (!$this->validate($this->obtenerReglasTurno())) {
       return $this->responderErrorValidacion();
     }
 
     $horarioId = (int) $this->request->getPost('tur_id_horario');
-    $inicio = $this->request->getPost('tur_inicio');
-    $fin = $this->request->getPost('tur_fin');
+    $inicio = (string) $this->request->getPost('tur_inicio');
+    $fin = (string) $this->request->getPost('tur_fin');
 
     $usuarioIdPost = $this->request->getPost('tur_id_usuario');
     $usuarioId = $usuarioIdPost !== null && $usuarioIdPost !== ''
       ? (int) $usuarioIdPost
       : null;
 
-    $errorHorario = $this->validarHorarioExistente($horarioId);
+    $errorHorario = $this->validarHorarioExistenteYDeEmpresaActual($horarioId);
+
     if ($errorHorario !== null) {
       return $errorHorario;
     }
 
-    $errorUsuario = $this->validarUsuarioExistente($usuarioId);
+    $errorUsuario = $this->validarUsuarioExistenteYDeEmpresaActual($usuarioId);
+
     if ($errorUsuario !== null) {
       return $errorUsuario;
     }
 
     $errorFechas = $this->validarRangoFechasHoras($inicio, $fin);
+
     if ($errorFechas !== null) {
       return $errorFechas;
     }
 
     $estado = $this->request->getPost('tur_estado');
 
-    if (! $estado) {
+    if (!$estado) {
       $estado = $usuarioId === null ? 'disponible' : 'asignado';
     }
 
     $errorCoherencia = $this->validarCoherenciaUsuarioYEstado($usuarioId, $estado);
+
     if ($errorCoherencia !== null) {
       return $errorCoherencia;
     }
 
     $errorSolape = $this->validarSolapeTurnoUsuario($usuarioId, $inicio, $fin, (int) $id);
+
     if ($errorSolape !== null) {
       return $errorSolape;
     }
@@ -242,7 +295,7 @@ class TurnosController extends BaseController
 
     $actualizado = $this->turnoModel->update((int) $id, $datos);
 
-    if (! $actualizado) {
+    if (!$actualizado) {
       return $this->response->setStatusCode(500)->setJSON([
         'status' => 'error',
         'message' => 'No se pudo actualizar el turno.',
@@ -259,22 +312,33 @@ class TurnosController extends BaseController
   }
 
   /**
-   * Busca un turno por id, lo elimina de la db
-   * Devuelve respuesta JSON de si lo borra o de error
+   * Elimina un turno de la empresa del administrador logueado
    * @param mixed $id
    * @return ResponseInterface
    */
-  public function eliminar($id)
+  public function eliminar($id): ResponseInterface
   {
+    $errorPermisos = $this->exigirAdministrador();
+
+    if ($errorPermisos !== null) {
+      return $errorPermisos;
+    }
+
     $turno = $this->turnoModel->getTurno((int) $id);
 
-    if (! $turno) {
+    if (!$turno) {
       return $this->responderNoEncontrado();
+    }
+
+    $errorEmpresaTurno = $this->validarTurnoPerteneceAEmpresaActual($turno);
+
+    if ($errorEmpresaTurno !== null) {
+      return $errorEmpresaTurno;
     }
 
     $eliminado = $this->turnoModel->delete((int) $id);
 
-    if (! $eliminado) {
+    if (!$eliminado) {
       return $this->response->setStatusCode(500)->setJSON([
         'status' => 'error',
         'message' => 'No se pudo eliminar el turno.',
@@ -290,7 +354,7 @@ class TurnosController extends BaseController
   /**
    * Aplica las reglas de validación para turnos
    * tur_estado es obligatorio o no según el parámetro que reciba
-   * @return array{tur_estado: string, tur_fin: string, tur_id_horario: string, tur_id_usuario: string, tur_inicio: string}
+   * @return array
    */
   private function obtenerReglasTurno(): array
   {
@@ -304,7 +368,45 @@ class TurnosController extends BaseController
   }
 
   /**
-   * Devuelve una respuesta JSON con los errores de validación si los datos del usuario no cumplen las reglas
+   * Comprueba que el usuario haya iniciado sesión
+   * @return ResponseInterface|null
+   */
+  private function exigirLogin(): ?ResponseInterface
+  {
+    if (!session()->get('isLoggedIn')) {
+      return $this->response->setStatusCode(401)->setJSON([
+        'status' => 'error',
+        'message' => 'Debes iniciar sesión.',
+      ]);
+    }
+
+    return null;
+  }
+
+  /**
+   * Comprueba que el usuario logueado sea administrador
+   * @return ResponseInterface|null
+   */
+  private function exigirAdministrador(): ?ResponseInterface
+  {
+    $errorLogin = $this->exigirLogin();
+
+    if ($errorLogin !== null) {
+      return $errorLogin;
+    }
+
+    if (session()->get('usu_rol') !== 'administrador') {
+      return $this->response->setStatusCode(403)->setJSON([
+        'status' => 'error',
+        'message' => 'No tienes permisos para realizar esta acción.',
+      ]);
+    }
+
+    return null;
+  }
+
+  /**
+   * Devuelve una respuesta JSON con los errores de validación
    * @return ResponseInterface
    */
   private function responderErrorValidacion(): ResponseInterface
@@ -317,7 +419,6 @@ class TurnosController extends BaseController
 
   /**
    * Comprueba que la fecha y hora de fin no sea anterior ni igual a la de inicio
-   * Devuelve JSON con el error
    * @param string $inicio
    * @param string $fin
    * @return ResponseInterface|null
@@ -335,18 +436,25 @@ class TurnosController extends BaseController
   }
 
   /**
-   * Comprueba que el horario al que pertenece el turno exista
+   * Comprueba que el horario exista y pertenezca a la empresa actual
    * @param int $horarioId
    * @return ResponseInterface|null
    */
-  private function validarHorarioExistente(int $horarioId): ?ResponseInterface
+  private function validarHorarioExistenteYDeEmpresaActual(int $horarioId): ?ResponseInterface
   {
     $horario = $this->horarioModel->getHorario($horarioId);
 
-    if (! $horario) {
+    if (!$horario) {
       return $this->response->setStatusCode(404)->setJSON([
         'status' => 'error',
         'message' => 'Horario no encontrado.',
+      ]);
+    }
+
+    if ((int) $horario['hor_id_empresa'] !== (int) session()->get('usu_id_empresa')) {
+      return $this->response->setStatusCode(403)->setJSON([
+        'status' => 'error',
+        'message' => 'No tienes acceso a este horario.',
       ]);
     }
 
@@ -354,22 +462,29 @@ class TurnosController extends BaseController
   }
 
   /**
-   * Comprueba que el usuario exista si se ha enviado uno
+   * Comprueba que el usuario exista y pertenezca a la empresa actual
    * @param int|null $usuarioId
    * @return ResponseInterface|null
    */
-  private function validarUsuarioExistente(?int $usuarioId): ?ResponseInterface
+  private function validarUsuarioExistenteYDeEmpresaActual(?int $usuarioId): ?ResponseInterface
   {
     if ($usuarioId === null) {
       return null;
     }
 
-    $usuario = $this->usuarioModel->find($usuarioId);
+    $usuario = $this->usuarioModel->getUsuarioPorId($usuarioId);
 
-    if (! $usuario) {
+    if (!$usuario) {
       return $this->response->setStatusCode(404)->setJSON([
         'status' => 'error',
         'message' => 'Usuario no encontrado.',
+      ]);
+    }
+
+    if ((int) $usuario['usu_id_empresa'] !== (int) session()->get('usu_id_empresa')) {
+      return $this->response->setStatusCode(403)->setJSON([
+        'status' => 'error',
+        'message' => 'No tienes acceso a este usuario.',
       ]);
     }
 
@@ -409,18 +524,53 @@ class TurnosController extends BaseController
    * @param int|null $turnoIdExcluir
    * @return ResponseInterface|null
    */
-  private function validarSolapeTurnoUsuario(?int $usuarioId, string $inicio, string $fin, ?int $turnoIdExcluir = null): ?ResponseInterface
-  {
+  private function validarSolapeTurnoUsuario(
+    ?int $usuarioId,
+    string $inicio,
+    string $fin,
+    ?int $turnoIdExcluir = null
+  ): ?ResponseInterface {
     if ($usuarioId === null) {
       return null;
     }
 
-    $haySolape = $this->turnoModel->existeSolapeUsuario($usuarioId, $inicio, $fin, $turnoIdExcluir);
+    $haySolape = $this->turnoModel->existeSolapeUsuario(
+      $usuarioId,
+      $inicio,
+      $fin,
+      $turnoIdExcluir
+    );
 
     if ($haySolape) {
       return $this->response->setStatusCode(400)->setJSON([
         'status' => 'error',
         'message' => 'El usuario ya tiene otro turno asignado en una franja horaria solapada.',
+      ]);
+    }
+
+    return null;
+  }
+
+  /**
+   * Comprueba que el turno pertenezca a la empresa actual a través de su horario
+   * @param array $turno
+   * @return ResponseInterface|null
+   */
+  private function validarTurnoPerteneceAEmpresaActual(array $turno): ?ResponseInterface
+  {
+    $horario = $this->horarioModel->getHorario((int) $turno['tur_id_horario']);
+
+    if (!$horario) {
+      return $this->response->setStatusCode(404)->setJSON([
+        'status' => 'error',
+        'message' => 'El horario del turno no existe.',
+      ]);
+    }
+
+    if ((int) $horario['hor_id_empresa'] !== (int) session()->get('usu_id_empresa')) {
+      return $this->response->setStatusCode(403)->setJSON([
+        'status' => 'error',
+        'message' => 'No tienes acceso a este turno.',
       ]);
     }
 

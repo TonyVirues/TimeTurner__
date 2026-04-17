@@ -7,10 +7,14 @@ use CodeIgniter\Router\RouteCollection;
  */
 // Rutas Login , registro
 $routes->get('/login', 'AuthController::login');
+$routes->post('/login', 'AuthController::autenticar');
+$routes->get('/logout', 'AuthController::logout');
 $routes->get('/registro', 'AuthController::registro');
+$routes->post('/registro', 'AuthController::registrar');
+$routes->get('/logout', 'AuthController::logout');
 
 // Rutas Contenido principal
-$routes->get('/', 'HomeController::calendario'); //@mar Esto está temporal, porque quiero que se abra calendario del tiron
+$routes->get('/', 'AuthController::login');
 $routes->get('/calendario', 'HomeController::calendario');
 
 // Rutas de horarios

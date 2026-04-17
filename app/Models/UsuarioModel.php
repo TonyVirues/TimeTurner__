@@ -32,7 +32,7 @@ class UsuarioModel extends Model
 
   protected array $casts = [
     'usu_id_usuario' => 'integer',
-    'usu_id_empresa' => '?integer',
+    'usu_id_empresa' => 'integer',
     'usu_activo' => 'integer',
   ];
 

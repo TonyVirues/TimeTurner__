@@ -9,7 +9,7 @@ use Psr\Log\LoggerInterface;
 
 class HorariosController extends BaseController
 {
-  protected $horarioModel;
+  protected HorarioModel $horarioModel;
 
   /**
    * Método de CodeIgniter que inicia el controlador
@@ -19,60 +19,83 @@ class HorariosController extends BaseController
    * @param LoggerInterface $logger
    * @return void
    */
-  public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
-  {
+  public function initController(
+    RequestInterface $request,
+    ResponseInterface $response,
+    LoggerInterface $logger
+  ) {
     parent::initController($request, $response, $logger);
     $this->horarioModel = new HorarioModel();
   }
 
   /**
-   * Devuelve un horario concreto, por su id, en formato JSON
+   * Devuelve un horario concreto de la empresa del usuario logueado
    * @param mixed $id
    * @return ResponseInterface
    */
-  public function mostrar($id)
+  public function mostrar($id): ResponseInterface
   {
+    $errorLogin = $this->exigirLogin();
+
+    if ($errorLogin !== null) {
+      return $errorLogin;
+    }
+
     $horario = $this->horarioModel->getHorario((int) $id);
 
-    if (! $horario) {
+    if (!$horario) {
       return $this->responderNoEncontrado();
     }
 
-    return $this->response->setJSON($horario);
+    $errorEmpresa = $this->validarHorarioPerteneceAEmpresaActual($horario);
+
+    if ($errorEmpresa !== null) {
+      return $errorEmpresa;
+    }
+
+    return $this->response->setJSON([
+      'status' => 'success',
+      'data' => $horario,
+    ]);
   }
 
   /**
-   * Llama a los métodos para validar los datos que recibe del front
-   * Crea un horario nuevo en la db
-   * Lo devuelve en formato JSON
+   * Crea un horario nuevo en la empresa del administrador logueado
    * @return ResponseInterface
    */
-  public function crear()
+  public function crear(): ResponseInterface
   {
-    if (! $this->validate($this->obtenerReglasHorario())) {
+    $errorPermisos = $this->exigirAdministrador();
+
+    if ($errorPermisos !== null) {
+      return $errorPermisos;
+    }
+
+    if (!$this->validate($this->obtenerReglasHorario())) {
       return $this->responderErrorValidacion();
     }
 
-    $fechaInicio = $this->request->getPost('hor_fecha_inicio');
-    $fechaFin = $this->request->getPost('hor_fecha_fin');
+    $fechaInicio = (string) $this->request->getPost('hor_fecha_inicio');
+    $fechaFin = (string) $this->request->getPost('hor_fecha_fin');
 
     $errorFechas = $this->validarRangoFechas($fechaInicio, $fechaFin);
+
     if ($errorFechas !== null) {
       return $errorFechas;
     }
 
     $datos = [
+      'hor_id_empresa' => (int) session()->get('usu_id_empresa'),
       'hor_nombre' => $this->request->getPost('hor_nombre'),
       'hor_fecha_inicio' => $fechaInicio,
       'hor_fecha_fin' => $fechaFin,
       'hor_descripcion' => $this->request->getPost('hor_descripcion'),
       'hor_estado' => $this->request->getPost('hor_estado') ?: 'borrador',
-      'hor_id_empresa' => 1, //@mar harcodeo, cambiar 1
     ];
 
     $id = $this->horarioModel->insert($datos);
 
-    if (! $id) {
+    if (!$id) {
       return $this->response->setStatusCode(500)->setJSON([
         'status' => 'error',
         'message' => 'No se pudo crear el horario.',
@@ -89,28 +112,39 @@ class HorariosController extends BaseController
   }
 
   /**
-   * Busca un horario por su id
-   * Llama a los métodos para validar los datos
-   * Actualiza el horario en la db y lo devuelve en formato JSON
+   * Actualiza un horario existente de la empresa del administrador logueado
    * @param mixed $id
    * @return ResponseInterface
    */
-  public function actualizar($id)
+  public function actualizar($id): ResponseInterface
   {
+    $errorPermisos = $this->exigirAdministrador();
+
+    if ($errorPermisos !== null) {
+      return $errorPermisos;
+    }
+
     $horario = $this->horarioModel->getHorario((int) $id);
 
-    if (! $horario) {
+    if (!$horario) {
       return $this->responderNoEncontrado();
     }
 
-    if (! $this->validate($this->obtenerReglasHorario(true))) {
+    $errorEmpresa = $this->validarHorarioPerteneceAEmpresaActual($horario);
+
+    if ($errorEmpresa !== null) {
+      return $errorEmpresa;
+    }
+
+    if (!$this->validate($this->obtenerReglasHorario(true))) {
       return $this->responderErrorValidacion();
     }
 
-    $fechaInicio = $this->request->getPost('hor_fecha_inicio');
-    $fechaFin = $this->request->getPost('hor_fecha_fin');
+    $fechaInicio = (string) $this->request->getPost('hor_fecha_inicio');
+    $fechaFin = (string) $this->request->getPost('hor_fecha_fin');
 
     $errorFechas = $this->validarRangoFechas($fechaInicio, $fechaFin);
+
     if ($errorFechas !== null) {
       return $errorFechas;
     }
@@ -125,7 +159,7 @@ class HorariosController extends BaseController
 
     $actualizado = $this->horarioModel->update((int) $id, $datos);
 
-    if (! $actualizado) {
+    if (!$actualizado) {
       return $this->response->setStatusCode(500)->setJSON([
         'status' => 'error',
         'message' => 'No se pudo actualizar el horario.',
@@ -140,23 +174,35 @@ class HorariosController extends BaseController
       'data' => $horarioActualizado,
     ]);
   }
+
   /**
-   * Busca un horario por id, lo elimina de la db
-   * Devuelve respuesta JSON de si lo borra o de error
+   * Elimina un horario de la empresa del administrador logueado
    * @param mixed $id
    * @return ResponseInterface
    */
-  public function eliminar($id)
+  public function eliminar($id): ResponseInterface
   {
+    $errorPermisos = $this->exigirAdministrador();
+
+    if ($errorPermisos !== null) {
+      return $errorPermisos;
+    }
+
     $horario = $this->horarioModel->getHorario((int) $id);
 
-    if (! $horario) {
+    if (!$horario) {
       return $this->responderNoEncontrado();
+    }
+
+    $errorEmpresa = $this->validarHorarioPerteneceAEmpresaActual($horario);
+
+    if ($errorEmpresa !== null) {
+      return $errorEmpresa;
     }
 
     $eliminado = $this->horarioModel->delete((int) $id);
 
-    if (! $eliminado) {
+    if (!$eliminado) {
       return $this->response->setStatusCode(500)->setJSON([
         'status' => 'error',
         'message' => 'No se pudo eliminar el horario.',
@@ -170,12 +216,23 @@ class HorariosController extends BaseController
   }
 
   /**
-   * Obtiene la lista de horarios desde el modelo y la devuelve en JSON para que la use el selector
+   * Devuelve la lista de horarios de la empresa del usuario logueado
    * @return ResponseInterface
    */
-  public function listado()
+  public function listado(): ResponseInterface
   {
-    $horarios = $this->horarioModel->getHorariosListado();
+    $errorLogin = $this->exigirLogin();
+
+    if ($errorLogin !== null) {
+      return $errorLogin;
+    }
+
+    $idEmpresa = (int) session()->get('usu_id_empresa');
+
+    $horarios = $this->horarioModel
+      ->where('hor_id_empresa', $idEmpresa)
+      ->orderBy('hor_fecha_inicio', 'ASC')
+      ->findAll();
 
     return $this->response->setJSON($horarios);
   }
@@ -184,7 +241,7 @@ class HorariosController extends BaseController
    * Aplica las reglas de validación para horarios
    * hor_estado es obligatorio o no según el parámetro que reciba
    * @param bool $estadoObligatorio
-   * @return array{hor_estado: string, hor_fecha_fin: string, hor_fecha_inicio: string, hor_nombre: string}
+   * @return array
    */
   private function obtenerReglasHorario(bool $estadoObligatorio = false): array
   {
@@ -192,25 +249,52 @@ class HorariosController extends BaseController
       'hor_nombre' => 'required|min_length[3]|max_length[150]',
       'hor_fecha_inicio' => 'required|valid_date',
       'hor_fecha_fin' => 'required|valid_date',
-      'hor_estado' => $estadoObligatorio ? 'required|in_list[borrador,publicado,cerrado]' : 'permit_empty|in_list[borrador,publicado,cerrado]',
+      'hor_estado' => $estadoObligatorio
+        ? 'required|in_list[borrador,publicado,cerrado]'
+        : 'permit_empty|in_list[borrador,publicado,cerrado]',
     ];
   }
 
   /**
-   * Devuelve una respuesta JSON con los errores de validación si los datos del usuario no cumplen las reglas
-   * @return ResponseInterface
+   * Comprueba que el usuario haya iniciado sesión
+   * @return ResponseInterface|null
    */
-  private function responderErrorValidacion(): ResponseInterface
+  private function exigirLogin(): ?ResponseInterface
   {
-    return $this->response->setStatusCode(400)->setJSON([
-      'status' => 'error',
-      'errors' => $this->validator->getErrors(),
-    ]);
+    if (!session()->get('isLoggedIn')) {
+      return $this->response->setStatusCode(401)->setJSON([
+        'status' => 'error',
+        'message' => 'Debes iniciar sesión.',
+      ]);
+    }
+
+    return null;
+  }
+
+  /**
+   * Comprueba que el usuario logueado sea administrador
+   * @return ResponseInterface|null
+   */
+  private function exigirAdministrador(): ?ResponseInterface
+  {
+    $errorLogin = $this->exigirLogin();
+
+    if ($errorLogin !== null) {
+      return $errorLogin;
+    }
+
+    if (session()->get('usu_rol') !== 'administrador') {
+      return $this->response->setStatusCode(403)->setJSON([
+        'status' => 'error',
+        'message' => 'No tienes permisos para realizar esta acción.',
+      ]);
+    }
+
+    return null;
   }
 
   /**
    * Comprueba que la fecha de fin no sea anterior a la de inicio
-   * Devuelve JSON con el error
    * @param string $fechaInicio
    * @param string $fechaFin
    * @return ResponseInterface|null
@@ -225,6 +309,35 @@ class HorariosController extends BaseController
     }
 
     return null;
+  }
+
+  /**
+   * Comprueba que el horario pertenezca a la empresa de la sesión
+   * @param array $horario
+   * @return ResponseInterface|null
+   */
+  private function validarHorarioPerteneceAEmpresaActual(array $horario): ?ResponseInterface
+  {
+    if ((int) $horario['hor_id_empresa'] !== (int) session()->get('usu_id_empresa')) {
+      return $this->response->setStatusCode(403)->setJSON([
+        'status' => 'error',
+        'message' => 'No tienes acceso a este horario.',
+      ]);
+    }
+
+    return null;
+  }
+
+  /**
+   * Devuelve una respuesta JSON con los errores de validación
+   * @return ResponseInterface
+   */
+  private function responderErrorValidacion(): ResponseInterface
+  {
+    return $this->response->setStatusCode(400)->setJSON([
+      'status' => 'error',
+      'errors' => $this->validator->getErrors(),
+    ]);
   }
 
   /**

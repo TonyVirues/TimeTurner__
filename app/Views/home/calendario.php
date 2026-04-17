@@ -2,6 +2,14 @@
 
 <?= $this->section('calendario') ?>
 
+<?php $esAdministrador = session()->get('usu_rol') === 'administrador'; ?>
+
+<script>
+  window.ttUsuario = {
+    rol: "<?= esc((string) session()->get('usu_rol')) ?>",
+  };
+</script>
+
 <div class="tt-calendario-wrapper">
 
   <!-- Selector de horario -->
@@ -12,17 +20,19 @@
       <option value="">Selecciona un horario</option>
     </select>
 
-    <button type="button" id="btnNuevoHorario" class="btn btn-sm btn-primary">
-      Nuevo horario
-    </button>
+    <?php if ($esAdministrador): ?>
+      <button type="button" id="btnNuevoHorario" class="btn btn-sm btn-primary">
+        Nuevo horario
+      </button>
 
-    <button type="button" id="btnEditarHorario" class="btn btn-sm btn-outline-secondary">
-      Editar horario
-    </button>
+      <button type="button" id="btnEditarHorario" class="btn btn-sm btn-outline-secondary">
+        Editar horario
+      </button>
 
-    <button type="button" id="btnEliminarHorario" class="btn btn-sm btn-outline-danger">
-      Eliminar horario
-    </button>
+      <button type="button" id="btnEliminarHorario" class="btn btn-sm btn-outline-danger">
+        Eliminar horario
+      </button>
+    <?php endif; ?>
   </div>
 
   <!-- Calendario -->

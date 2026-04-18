@@ -1,6 +1,6 @@
 <?= $this->extend('layouts/main') ?>
 
-<?= $this->section('content') ?>
+<?= $this->section('vista') ?>
 
 <!-- Shell principal: sidebar + contenido en fila -->
 <div class="d-flex vh-100 overflow-hidden"> <!--cuerpo de la pagina-->
@@ -36,7 +36,7 @@
 
     <!-- Contenido de la vista hija -->
     <div class="d-flex flex-column flex-grow-1 overflow-hidden">
-      <?= $this->renderSection('calendario') ?>
+      <?= $this->include($vista_contenido) ?>
     </div>
 
   </div>

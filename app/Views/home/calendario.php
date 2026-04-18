@@ -1,6 +1,3 @@
-<?= $this->extend('home/home') ?>
-
-<?= $this->section('calendario') ?>
 
 <div class="tt-calendario-wrapper">
 
@@ -66,4 +63,3 @@
   </div>
 </div>
 
-<?= $this->endSection() ?>

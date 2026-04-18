@@ -1,3 +1,4 @@
+<?php $rutaActual = service('request')->getUri()->getPath(); ?>
 <!-- ===== SIDEBAR ===== -->
 <nav class="tt-sidebar d-flex flex-column flex-shrink-0" id="ttSidebar">
 
@@ -15,7 +16,8 @@
   <!--Menú de navegación-->
   <ul class="nav flex-column px-2 py-3 flex-grow-1">
     <li class="nav-item">
-      <a href="/home" class="nav-link tt-nav-link active d-flex align-items-center gap-2 rounded-3">
+      <a href="/calendario" class="nav-link tt-nav-link d-flex align-items-center gap-2 rounded-3 
+      <?= str_contains($rutaActual, 'calendario') ? 'active' : '' ?>">
         <span class="material-symbols-outlined">calendar_month</span>
         <span class="tt-nav-label">Calendario</span>
       </a>
@@ -25,7 +27,8 @@
       <small class="tt-nav-section px-2">Compañeros</small>
     </li>
     <li class="nav-item">
-      <a href="#" class="nav-link tt-nav-link d-flex align-items-center gap-2 rounded-3">
+      <a href="/usuarios" class="nav-link tt-nav-link d-flex align-items-center gap-2 rounded-3
+      <?= str_contains($rutaActual, 'usuarios') ? 'active' : '' ?>">
         <span class="material-symbols-outlined">group</span>
         <span class="tt-nav-label">Compañeros</span>
       </a>

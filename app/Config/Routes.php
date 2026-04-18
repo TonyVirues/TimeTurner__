@@ -11,6 +11,7 @@ $routes->get('/registro', 'AuthController::registro');
 
 // Rutas Contenido principal
 $routes->get('/calendario', 'Home::calendario');
+$routes->get('/usuarios','Home::usuarios');
 
 // Rutas de horarios
 $routes->get('horarios', 'Horarios::index');

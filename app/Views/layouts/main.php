@@ -25,7 +25,7 @@
 <body class="h-100">
 
   <main class="h-100">
-    <?= $this->renderSection('content') ?>
+    <?= $this->renderSection('vista') ?>
   </main>
 
     <!-- Footer -->

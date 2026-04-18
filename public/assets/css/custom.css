@@ -551,3 +551,43 @@ html, body, main {
   border: 2px solid white;
 }
 /*====fin de notificaciones====*/
+
+/* ==== Vista usuarios — compañeros ==== */
+
+.tt-usuario-card {
+  border-radius: 12px;
+  border-color: rgba(0,0,0,0.08) !important;
+  transition: box-shadow 0.2s ease;
+}
+
+.tt-usuario-card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+}
+
+.tt-usuario-avatar {
+  width: 56px;
+  height: 56px;
+  min-width: 56px;
+  background: #1e3a5f;
+  border: 2px solid rgba(90,172,255,0.3);
+  font-size: 16px;
+  font-weight: 600;
+  color: #5aacff;
+  letter-spacing: 1px;
+}
+
+.tt-badge-activo {
+  background-color: rgba(76,175,80,0.15);
+  color: #2e7d32;
+  font-weight: 500;
+  font-size: 11px;
+}
+
+.tt-badge-inactivo {
+  background-color: rgba(97,97,97,0.15);
+  color: #424242;
+  font-weight: 500;
+  font-size: 11px;
+}
+
+/*=================FIN DE VISTA USUARIOS============*/

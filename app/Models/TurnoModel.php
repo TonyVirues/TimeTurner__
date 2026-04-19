@@ -138,11 +138,28 @@ class TurnoModel extends Model
  * @param int $usuarioId
  * @return array
  */
-public function getTurnosPorUsuario(int $usuarioId): array
-{
+public function getTurnosPorUsuario(int $usuarioId): array{
     return $this->where('tur_id_usuario', $usuarioId)
         ->whereIn('tur_estado', ['asignado', 'pendiente_cambio'])
         ->orderBy('tur_inicio', 'ASC')
         ->findAll();
 }
+
+/**
+ * Devuelve los turnos asignados a un usuario concreto de la misma empresa
+ * @param int $usuarioId
+ * @param int $idEmpresa
+ * @return array
+ */
+public function getTurnosPorUsuarioYEmpresa(int $usuarioId, int $idEmpresa): array{
+    return $this->select('turnos.*')
+        ->join('horarios', 'horarios.hor_id_horario = turnos.tur_id_horario')
+        ->where('turnos.tur_id_usuario', $usuarioId)
+        ->where('horarios.hor_id_empresa', $idEmpresa)
+        ->whereIn('turnos.tur_estado', ['asignado', 'pendiente_cambio'])
+        ->orderBy('turnos.tur_inicio', 'ASC')
+        ->findAll();
+}
+
+
 }

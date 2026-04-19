@@ -1,7 +1,3 @@
-<?= $this->extend('home/home') ?>
-
-<?= $this->section('calendario') ?>
-
 <?php $esAdministrador = session()->get('usu_rol') === 'administrador'; ?>
 
 <script>
@@ -41,5 +37,3 @@
   </div>
 
 </div>
-
-<?= $this->endSection() ?>

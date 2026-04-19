@@ -28,13 +28,13 @@
     <?= $this->renderSection('vista') ?>
   </main>
 
-    <!-- Footer -->
-    <footer class="border-top px-4 py-2 bg-white mt-auto">
-      <small class="text-muted">
-        &copy; TimeTurner | Gestor de turnos | Antonio J. Marín Virues | Mar Sánchez Sevillano | <?= date('Y') ?>
-        &nbsp;|&nbsp; Environment: <?= ENVIRONMENT ?>
-      </small>
-    </footer>
+  <!-- Footer -->
+  <footer class="border-top px-4 py-2 bg-white mt-auto">
+    <small class="text-muted">
+      &copy; TimeTurner | Gestor de turnos | Antonio J. Marín Virues | Mar Sánchez Sevillano | <?= date('Y') ?>
+      &nbsp;|&nbsp; Environment: <?= ENVIRONMENT ?>
+    </small>
+  </footer>
 
   <!--Script-->
   <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
@@ -42,6 +42,8 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src='/assets/main_calendar/calendar.js'></script>
   <script src='/assets/javascript/js.js'></script>
+  <!-- Scripts específicos de cada vista -->
+  <?= $this->renderSection('scripts') ?>
 
 </body>
 

@@ -5,22 +5,19 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
-// Rutas Login , registro
-$routes->get('/', 'AuthController::login');
-$routes->get('/registro', 'AuthController::registro');
 
-// Rutas Contenido principal
-$routes->get('/calendario', 'Home::calendario');
-$routes->get('/usuarios','Home::usuarios');
+// Rutas login y registro
+$routes->get('/', 'AuthController::login');
 $routes->get('login', 'AuthController::login');
 $routes->post('login', 'AuthController::autenticar');
-$routes->get('logout', 'AuthController::logout');
 $routes->get('registro', 'AuthController::registro');
 $routes->post('registro', 'AuthController::registrar');
 $routes->get('logout', 'AuthController::logout');
 
-// Rutas Contenido principal
+// Rutas contenido principal
 $routes->get('calendario', 'HomeController::calendario');
+$routes->get('usuarios', 'HomeController::usuarios');
+$routes->get('solicitudes', 'HomeController::solicitudes');
 
 // Rutas de horarios
 $routes->get('horarios/mostrar/(:num)', 'HorariosController::mostrar/$1');

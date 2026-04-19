@@ -69,21 +69,21 @@
   </ul>
 
 <!-- Pie del sidebar — usuario -->
-  <div class="px-2 pb-3 tt-sidebar-footer tt-sidebar-border-top">
-    <div class="d-flex align-items-center gap-2 px-2 py-2 rounded-3 tt-user-block">
-      <div class="tt-user-avatar d-flex align-items-center justify-content-center rounded-circle">
-        <?= strtoupper(substr(session()->get('nombre') ?? 'U', 0, 1)) ?>
-      </div>
-      <div style="overflow: hidden;">
-        <span class="d-block tt-user-name text-truncate">
-          <?= session()->get('nombre') ?? 'Usuario' ?>
-        </span>
-        <small class="tt-user-role">
-          <?= session()->get('rol') ?? 'Operario' ?>
-        </small>
-      </div>
+<div class="px-2 pb-3 tt-sidebar-footer tt-sidebar-border-top">
+  <div class="d-flex align-items-center gap-2 px-2 py-2 rounded-3 tt-user-block">
+    <div class="tt-user-avatar d-flex align-items-center justify-content-center rounded-circle">
+      <?= strtoupper(substr(session('usu_nombre') ?? 'U', 0, 1)) ?>
+    </div>
+    <div style="overflow: hidden; flex: 1;">
+      <span class="d-block tt-user-name text-truncate">
+        <?= esc(session('usu_nombre') ?? 'Usuario') ?>
+      </span>
+      <a href="<?= base_url('logout') ?>" class="tt-logout-link">
+        Cerrar sesión
+      </a>
     </div>
   </div>
+</div>
 
 </nav>
 

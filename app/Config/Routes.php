@@ -28,6 +28,7 @@ $routes->get('horarios/listado', 'HorariosController::listado');
 
 // Rutas de turnos
 $routes->get('turnos/mis-turnos', 'TurnosController::misTurnos');
+$routes->get('turnos/mis-turnos-de/(:num)', 'TurnosController::misTurnosDe/$1');
 $routes->get('turnos/mostrar/(:num)', 'TurnosController::mostrar/$1');
 $routes->get('turnos/listado/horario/(:num)', 'TurnosController::listadoPorHorario/$1');
 $routes->get('turnos/eventos', 'TurnosController::eventos');

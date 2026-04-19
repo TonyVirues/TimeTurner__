@@ -95,5 +95,5 @@ $idUsuario = (int) session()->get('usu_id_usuario');
 </div>
 
 <?= $this->section('scripts') ?>
-<script src="/javascript/solicitudes.js"></script>
+<script src="/assets/javascript/solicitudes.js"></script>
 <?= $this->endSection() ?>

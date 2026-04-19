@@ -46,3 +46,39 @@ window.addEventListener("resize", function () {
     sidebar.classList.remove("tt-collapsed");
   }
 });
+
+
+//funcion que actualiza las notificacioens en el menu para solicitudes
+
+// ============================================================
+// BADGE SOLICITUDES PENDIENTES
+// ============================================================
+
+function actualizarBadgeSolicitudes() {
+  const badge = document.querySelector('.tt-nav-badge');
+
+  if (!badge) return;
+
+  fetch('/solicitudes/listado?sol_estado=pendiente')
+    .then(function (response) {
+      if (!response.ok) return;
+      return response.json();
+    })
+    .then(function (data) {
+      if (!data || !data.ok) return;
+
+      const total = data.data.length;
+
+      if (total === 0) {
+        badge.style.display = 'none';
+      } else {
+        badge.style.display = '';
+        badge.textContent = total;
+      }
+    })
+    .catch(function () {
+      badge.style.display = 'none';
+    });
+}
+
+actualizarBadgeSolicitudes();

@@ -53,6 +53,17 @@
                   <span class="badge tt-badge-inactivo">Inactivo</span>
                 <?php endif; ?>
 
+                <!-- Botón solicitar cambio — solo si no es el propio usuario -->
+                <?php if ($usuario['usu_id_usuario'] !== session()->get('usu_id_usuario')) : ?>
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-outline-primary mt-2 tt-btn-solicitar"
+                    data-id="<?= esc($usuario['usu_id_usuario']) ?>"
+                    data-nombre="<?= esc($usuario['usu_nombre'] . ' ' . $usuario['usu_apellidos']) ?>">
+                    Solicitar cambio
+                  </button>
+                <?php endif; ?>
+
               </div>
             </div>
           </div>

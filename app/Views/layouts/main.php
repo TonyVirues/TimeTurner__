@@ -6,7 +6,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="..."> <!--Para verse en moviles-->
   <title><?= $title ?? 'TimeTurner' ?></title>
-
+  <link rel="icon" type="image/svg+xml" href="<?= base_url('assets/imagen/logo.svg') ?>">
   <!--Bootstrap-->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -15,7 +15,7 @@
   <!--CSS global-->
   <link rel="stylesheet" href="/assets/css/custom.css">
   <!--CSS específico de cada vista-->
-  <?= $this->renderSection('styles') ?>
+  <?= $this->renderSection('styles') ?><!--Unificar proximamente-->
   <!--letras google-->
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <!--iconos-->

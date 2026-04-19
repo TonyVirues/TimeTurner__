@@ -3,9 +3,9 @@
 <nav class="tt-sidebar d-flex flex-column flex-shrink-0" id="ttSidebar">
 
   <!-- Logo -->
-  <div class="d-flex align-items-center gap-2 px-3 tt-sidebar-border-bottom" style="height: 60px; min-height: 60px;">
+  <div class="d-flex align-items-center justify-content-center gap-2 px-3 tt-sidebar-border-bottom" style="height: 60px; min-height: 60px;">
     <div class="tt-logo-icon" id="ttLogoBtn">
-      <img src="/assets/imagen/logo.jpg" alt="Logo TimeTurner">
+      <img src="<?= base_url('assets/imagen/logo.svg') ?>" alt="Logo TimeTurner">
     </div>
     <div class="tt-logo-text" style="flex: 1; overflow: hidden;">
       <span class="d-block tt-logo-name">TimeTurner</span>
@@ -64,8 +64,6 @@
         <span class="tt-nav-label">Horarios</span>
       </a>
     </li>
-
-  </ul>
   </ul>
 
   <!-- Pie del sidebar — usuario -->

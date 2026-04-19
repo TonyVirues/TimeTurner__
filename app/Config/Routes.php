@@ -6,7 +6,7 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 // Rutas Login , registro
-$routes->get('/login', 'AuthController::login');
+$routes->get('/', 'AuthController::login');
 $routes->get('/registro', 'AuthController::registro');
 
 // Rutas Contenido principal

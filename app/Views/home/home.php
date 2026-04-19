@@ -21,10 +21,22 @@
         <small class="text-muted d-none d-sm-inline ms-2 tt-topbar-sub">Gestor de turnos</small>
       </div>
 
-      <!-- Notificaciones -->
-      <div class="tt-topbar-notif" title="Notificaciones">
-        <span class="material-symbols-outlined">notifications</span>
-        <span class="tt-notif-dot"></span>
+      <!-- Usuario + Logout -->
+      <div class="d-flex align-items-center gap-2">
+
+        <span class="text-muted" style="font-size: 14px;">
+          <?= esc(session('usu_nombre')) ?>
+        </span>
+
+        <a href="<?= base_url('logout') ?>" class="btn btn-sm btn-outline-danger">
+          Cerrar sesión
+        </a>
+
+        <!-- Avatar -->
+        <div class="tt-avatar rounded-circle d-flex align-items-center justify-content-center" title="Mi perfil">
+          <span class="material-symbols-outlined">account_circle</span>
+        </div>
+
       </div>
 
     </header>

@@ -17,6 +17,7 @@ class TurnoModel extends Model
    */
   protected $allowedFields = [
     'tur_id_horario',
+    'tur_id_usuario',
     'tur_inicio',
     'tur_fin',
     'tur_estado',
@@ -52,26 +53,52 @@ class TurnoModel extends Model
   }
 
   /**
+   * Devuelve los turnos de un horario junto al nombre del usuario asignado si existe
+   * @param int $horarioId
+   * @return array
+   */
+  public function getTurnosConUsuarioPorHorario(int $horarioId): array
+  {
+    return $this->select('
+        turnos.tur_id_turno,
+        turnos.tur_id_horario,
+        turnos.tur_id_usuario,
+        turnos.tur_inicio,
+        turnos.tur_fin,
+        turnos.tur_estado,
+        turnos.tur_observaciones,
+        usuarios.usu_nombre,
+        usuarios.usu_apellidos
+      ')
+      ->join('usuarios', 'usuarios.usu_id_usuario = turnos.tur_id_usuario', 'left')
+      ->where('turnos.tur_id_horario', $horarioId)
+      ->orderBy('turnos.tur_inicio', 'ASC')
+      ->findAll();
+  }
+
+  /**
    * Devuelve los turnos de un horario en formato compatible con FullCalendar
    * @param int $horarioId
-   * @return array<int, array<string, int|string|null>>
+   * @return array<int, array<string, mixed>>
    */
   public function getTurnosParaCalendario(int $horarioId): array
   {
-    $turnos = $this->getTurnosPorHorario($horarioId);
+    $turnos = $this->getTurnosConUsuarioPorHorario($horarioId);
 
     $eventos = [];
 
     foreach ($turnos as $turno) {
+      $nombreCompleto = trim(($turno['usu_nombre'] ?? '') . ' ' . ($turno['usu_apellidos'] ?? ''));
+
       $eventos[] = [
         'id' => $turno['tur_id_turno'],
-        'title' => 'Turno',
+        'title' => $nombreCompleto !== '' ? $nombreCompleto : 'Sin asignar',
         'start' => date('c', strtotime($turno['tur_inicio'])),
         'end' => date('c', strtotime($turno['tur_fin'])),
-
         'extendedProps' => [
           'estado' => $turno['tur_estado'],
-          'usuario' => $turno['usu_nombre'] ?? null,
+          'usuario' => $nombreCompleto !== '' ? $nombreCompleto : null,
+          'tur_id_usuario' => $turno['tur_id_usuario'],
           'observaciones' => $turno['tur_observaciones'],
           'tur_id_horario' => $turno['tur_id_horario'],
         ],
@@ -79,5 +106,30 @@ class TurnoModel extends Model
     }
 
     return $eventos;
+  }
+
+  /**
+   * Comprueba si un usuario ya tiene otro turno que se solapa con el rango indicado
+   * @param int $usuarioId
+   * @param string $inicio
+   * @param string $fin
+   * @param int|null $turnoIdExcluir
+   * @return bool
+   */
+  public function existeSolapeUsuario(
+    int $usuarioId,
+    string $inicio,
+    string $fin,
+    ?int $turnoIdExcluir = null
+  ): bool {
+    $builder = $this->where('tur_id_usuario', $usuarioId)
+      ->where('tur_inicio <', $fin)
+      ->where('tur_fin >', $inicio);
+
+    if ($turnoIdExcluir !== null) {
+      $builder->where('tur_id_turno !=', $turnoIdExcluir);
+    }
+
+    return $builder->countAllResults() > 0;
   }
 }

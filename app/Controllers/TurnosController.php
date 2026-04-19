@@ -89,6 +89,27 @@ class TurnosController extends BaseController
   }
 
   /**
+ * Devuelve los turnos del usuario logueado en sesión 
+ * @return ResponseInterface
+ */
+public function misTurnos(): ResponseInterface
+{
+    $errorLogin = $this->exigirLogin();
+
+    if ($errorLogin !== null) {
+        return $errorLogin;
+    }
+
+    $idUsuario = (int) session()->get('usu_id_usuario');
+    $turnos = $this->turnoModel->getTurnosPorUsuario($idUsuario);
+
+    return $this->response->setJSON([
+        'status' => 'success',
+        'data' => $turnos,
+    ]);
+}
+
+  /**
    * Devuelve los turnos de un horario en formato compatible con FullCalendar
    * Recibe horario_id por query string
    * Solo si el horario pertenece a la empresa del usuario logueado

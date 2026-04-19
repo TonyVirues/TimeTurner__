@@ -132,4 +132,17 @@ class TurnoModel extends Model
 
     return $builder->countAllResults() > 0;
   }
+
+  /**
+ * Devuelve los turnos asignados al usuario indicado
+ * @param int $usuarioId
+ * @return array
+ */
+public function getTurnosPorUsuario(int $usuarioId): array
+{
+    return $this->where('tur_id_usuario', $usuarioId)
+        ->whereIn('tur_estado', ['asignado', 'pendiente_cambio'])
+        ->orderBy('tur_inicio', 'ASC')
+        ->findAll();
+}
 }

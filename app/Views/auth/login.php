@@ -30,7 +30,7 @@
             <div class="mb-3 position-relative">
               <label class="form-label">Usuario / Email</label>
               <span class="material-symbols-outlined input-icon">person</span>
-              <input type="text" name="email" class="form-control ps-5" placeholder="mar@outlook.com" value="<?= old('email') ?>" required>
+              <input type="text" name="email" class="form-control ps-5" placeholder="mar@gmail.com" value="<?= old('email') ?>" required>
             </div>
 
             <!-- Input de contraseña -->

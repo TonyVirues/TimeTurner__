@@ -37,14 +37,14 @@
             <div class="mb-3 position-relative">
               <label class="form-label">Apellidos</label>
               <span class="material-symbols-outlined input-icon">person</span>
-              <input type="text" name="usu_apellidos" class="form-control ps-5" placeholder="Marun" value="<?= old('usu_apellidos') ?>" required>
+              <input type="text" name="usu_apellidos" class="form-control ps-5" placeholder="Sanchez" value="<?= old('usu_apellidos') ?>" required>
             </div>
 
             <!--Input del email-->
             <div class="mb-3 position-relative">
               <label class="form-label">Email</label>
               <span class="material-symbols-outlined input-icon">mail</span>
-              <input type="email" name="usu_email" class="form-control ps-5" placeholder="mar@outlook.com" value="<?= old('usu_email') ?>" required>
+              <input type="email" name="usu_email" class="form-control ps-5" placeholder="mar@gmail.com" value="<?= old('usu_email') ?>" required>
             </div>
 
             <!--Input de contraseña-->

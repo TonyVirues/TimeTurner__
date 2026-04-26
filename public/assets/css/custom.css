@@ -1,3 +1,12 @@
+/*=====Variables de paleta timeturner=====*/
+/* ==== Paleta TimeTurner ==== */
+:root {
+  --tt-primary: #2563EB;
+  --tt-accent: #7C3AED;
+  --tt-danger: #EF4444;
+  --tt-alert: #ff6b35;
+}
+
 /* ==== Base ==== */
 
 * {
@@ -446,6 +455,7 @@ main {
   flex-direction: column;
   flex: 1;
   overflow: hidden;
+  background-color: #F1F5F9;
 }
 
 /* El calendario crece para ocupar todo el espacio restante */
@@ -618,3 +628,7 @@ main {
   border: 1px solid rgba(0, 0, 0, 0.06);
   white-space: pre-wrap;
 }
+
+
+
+/*===================DISEÑO CALENDARIO=================*/

@@ -1,6 +1,6 @@
 <!--Layouts que usamos como referencia, para el resto de vistas.-->
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-bs-theme="light">
 
 <head>
   <meta charset="UTF-8">

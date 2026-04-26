@@ -5,6 +5,11 @@
   --tt-accent: #7C3AED;
   --tt-danger: #EF4444;
   --tt-alert: #ff6b35;
+  --fc-today-bg-color: rgba(37, 99, 235, 0.08);
+
+  /*==Variables boostrap==*/
+
+
 }
 
 /* ==== Base ==== */
@@ -455,7 +460,7 @@ main {
   flex-direction: column;
   flex: 1;
   overflow: hidden;
-  background-color: #F1F5F9;
+  background-color: #EBF5FF;
 }
 
 /* El calendario crece para ocupar todo el espacio restante */
@@ -468,6 +473,10 @@ main {
 /* FullCalendar ocupa el 100% del contenedor */
 .tt-calendario-inner #calendar {
   height: 100%;
+}
+
+.tt-calendario-wrapper .card {
+  background-color: #F1F5F9;
 }
 
 /*=====ADD EL 16/04/by tony ==========*/
@@ -628,7 +637,3 @@ main {
   border: 1px solid rgba(0, 0, 0, 0.06);
   white-space: pre-wrap;
 }
-
-
-
-/*===================DISEÑO CALENDARIO=================*/

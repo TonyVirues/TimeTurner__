@@ -7,10 +7,10 @@
 </script>
 
 <div class="tt-calendario-wrapper p-3">
-  <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden d-flex flex-column">
-
+  <div class="card h-100  border-2 shadow rounded-4 overflow-hidden d-flex flex-column">
+    
     <!-- Selector de horario -->
-    <div class="tt-horario-selector d-flex align-items-center gap-2 px-3 py-2 border-bottom bg-white flex-wrap">
+    <div class="tt-horario-selector d-flex align-items-center gap-2 px-3 py-2 border-bottom  flex-wrap">
       <label for="horarioSelect" class="mb-0 text-muted" style="font-size: 13px; white-space: nowrap;">Selecciona un horario:</label>
 
       <select id="horarioSelect" class="form-select form-select-sm" style="max-width: 420px;">

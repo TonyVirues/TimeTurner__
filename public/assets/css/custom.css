@@ -6,6 +6,12 @@
   --tt-danger: #EF4444;
   --tt-alert: #ff6b35;
   --fc-today-bg-color: rgba(37, 99, 235, 0.08);
+--fc-button-bg-color: #2563EB;
+--fc-button-border-color: #2563EB;
+--fc-button-hover-bg-color: #1d4ed8;
+--fc-button-hover-border-color: #1d4ed8;
+--fc-button-active-bg-color: #1e40af;
+--fc-button-active-border-color: #1e40af;
 
   /*==Variables boostrap==*/
 
@@ -461,6 +467,12 @@ main {
   flex: 1;
   overflow: hidden;
   background-color: #EBF5FF;
+}
+.tt-calendario-wrapper .fc-toolbar-title {
+  font-family: 'Manrope', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #0F172A;
 }
 
 /* El calendario crece para ocupar todo el espacio restante */

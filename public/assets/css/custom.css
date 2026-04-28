@@ -272,14 +272,34 @@ main {
 }
 
 .tt-sidebar.tt-collapsed {
-  width: 64px;
-  min-width: 64px;
+  width: 60px;
+  min-width: 60px;
 }
 
 .tt-sidebar.tt-collapsed .tt-logo-text,
 .tt-sidebar.tt-collapsed .tt-nav-label,
-.tt-sidebar.tt-collapsed .tt-sidebar-footer {
+.tt-sidebar.tt-collapsed .tt-nav-section,
+.tt-sidebar.tt-collapsed .tt-nav-badge,
+.tt-sidebar.tt-collapsed .tt-nav-badge-blue,
+.tt-sidebar.tt-collapsed .tt-sidebar-footer,
+.tt-sidebar.tt-collapsed ul {
   display: none;
+}
+  /* --- Sidebar colapsado — logo como botón --- */
+
+.tt-sidebar.tt-collapsed .tt-logo-icon {
+  background-color: rgba(0,122,255,0.2);
+  border-radius: 10px;
+  cursor: pointer;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tt-sidebar.tt-collapsed .tt-logo-icon:hover {
+  background-color: rgba(0,122,255,0.35);
 }
 
 /* --- Logo --- */
@@ -439,3 +459,141 @@ main {
 .tt-calendario-inner #calendar {
   height: 100%;
 }
+
+
+
+
+/*=====ADD EL 16/04/by tony ==========*/
+/*<-----------css para el menu----------->
+
+/* ==== Sidebar — secciones y badges ==== */
+
+.tt-nav-section {
+  display: block;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: rgba(255,255,255,0.2);
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.tt-nav-badge {
+  font-size: 10px;
+  padding: 1px 7px;
+  border-radius: 10px;
+  background: rgba(255,138,0,0.2);
+  color: #ffaa44;
+}
+
+.tt-nav-badge-blue {
+  font-size: 10px;
+  padding: 1px 7px;
+  border-radius: 10px;
+  background: rgba(0,122,255,0.2);
+  color: #5aacff;
+}
+
+/* ==== Sidebar — bloque usuario ==== */
+
+.tt-user-block {
+  cursor: pointer;
+}
+
+.tt-user-block:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+.tt-user-avatar {
+  width: 30px;
+  height: 30px;
+  min-width: 30px;
+  background: #1e3a5f;
+  border: 1.5px solid rgba(90,172,255,0.3);
+  font-size: 12px;
+  font-weight: 600;
+  color: #5aacff;
+}
+
+.tt-user-name {
+  font-size: 12px;
+  color: rgba(255,255,255,0.75);
+}
+
+
+/*===== FIN ADD EL 16/04/by tony ==========*/
+/*<----------- fin css para el menu----------->
+
+/* ==== Topbar — notificaciones ==== */
+
+.tt-topbar-notif {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  background-color: #f0f2f5;
+  border: 1px solid #e0e3e8;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.tt-topbar-notif .material-symbols-outlined {
+  font-size: 20px;
+  color: #c9952a;
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.tt-notif-dot {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 8px;
+  height: 8px;
+  background: #ff6b35;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+/*====fin de notificaciones====*/
+
+/* ==== Vista usuarios — compañeros ==== */
+
+.tt-usuario-card {
+  border-radius: 12px;
+  border-color: rgba(0,0,0,0.08) !important;
+  transition: box-shadow 0.2s ease;
+}
+
+.tt-usuario-card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+}
+
+.tt-usuario-avatar {
+  width: 56px;
+  height: 56px;
+  min-width: 56px;
+  background: #1e3a5f;
+  border: 2px solid rgba(90,172,255,0.3);
+  font-size: 16px;
+  font-weight: 600;
+  color: #5aacff;
+  letter-spacing: 1px;
+}
+
+.tt-badge-activo {
+  background-color: rgba(76,175,80,0.15);
+  color: #2e7d32;
+  font-weight: 500;
+  font-size: 11px;
+}
+
+.tt-badge-inactivo {
+  background-color: rgba(97,97,97,0.15);
+  color: #424242;
+  font-weight: 500;
+  font-size: 11px;
+}
+
+/*=================FIN DE VISTA USUARIOS============*/

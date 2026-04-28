@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="/assets/css/login.css">
 <?= $this->endSection() ?>
 
-<?= $this->section('content') ?>
+<?= $this->section('vista') ?>
 <div class="login-page">
   <div class="container-fluid d-flex justify-content-center py-5 rounded">
     <div class="row registro-wrapper mx-auto">

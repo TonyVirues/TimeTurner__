@@ -25,9 +25,17 @@
       <div class="tt-topbar-notif" title="Notificaciones">
         <span class="material-symbols-outlined">notifications</span>
         <span class="tt-notif-dot"></span>
+        
       </div>
 
     </header>
+    
+    <script>
+        window.ttUsuario = {
+          id: <?= (int) session()->get('usu_id_usuario') ?>,
+          rol: "<?= esc((string) session()->get('usu_rol')) ?>"
+        };
+    </script>
 
     <!-- Contenido de la vista hija -->
     <div class="d-flex flex-column flex-grow-1 overflow-hidden">

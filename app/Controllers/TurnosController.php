@@ -89,13 +89,67 @@ class TurnosController extends BaseController
   }
 
   /**
+ * Devuelve los turnos del usuario logueado en sesión 
+ * @return ResponseInterface
+ */
+public function misTurnos(): ResponseInterface{
+    $errorLogin = $this->exigirLogin();
+
+    if ($errorLogin !== null) {
+        return $errorLogin;
+    }
+
+    $idUsuario = (int) session()->get('usu_id_usuario');
+    $turnos = $this->turnoModel->getTurnosPorUsuario($idUsuario);
+
+    return $this->response->setJSON([
+        'status' => 'success',
+        'data' => $turnos,
+    ]);
+}
+
+/**
+ * Devuelve los turnos de un compañero de la misma empresa
+ * @param int $idUsuario
+ * @return ResponseInterface
+ */
+public function misTurnosDe(int $idUsuario): ResponseInterface{
+    $errorLogin = $this->exigirLogin();
+
+    if ($errorLogin !== null) {
+        return $errorLogin;
+    }
+
+    $idEmpresa = (int) session()->get('usu_id_empresa');
+
+    $usuario = $this->usuarioModel->getUsuarioPorId($idUsuario);
+
+    if (!$usuario) {
+        return $this->responderNoEncontrado();
+    }
+
+    if ((int) $usuario['usu_id_empresa'] !== $idEmpresa) {
+        return $this->response->setStatusCode(403)->setJSON([
+            'status' => 'error',
+            'message' => 'No tienes acceso a los turnos de este usuario.',
+        ]);
+    }
+
+    $turnos = $this->turnoModel->getTurnosPorUsuarioYEmpresa($idUsuario, $idEmpresa);
+
+    return $this->response->setJSON([
+        'status' => 'success',
+        'data' => $turnos,
+    ]);
+}
+
+  /**
    * Devuelve los turnos de un horario en formato compatible con FullCalendar
    * Recibe horario_id por query string
    * Solo si el horario pertenece a la empresa del usuario logueado
    * @return ResponseInterface
    */
-  public function eventos(): ResponseInterface
-  {
+  public function eventos(): ResponseInterface{
     $errorLogin = $this->exigirLogin();
 
     if ($errorLogin !== null) {

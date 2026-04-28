@@ -6,7 +6,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="..."> <!--Para verse en moviles-->
   <title><?= $title ?? 'TimeTurner' ?></title>
-
+  <link rel="icon" type="image/svg+xml" href="<?= base_url('assets/imagen/logo.svg') ?>">
   <!--Bootstrap-->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -15,7 +15,7 @@
   <!--CSS global-->
   <link rel="stylesheet" href="/assets/css/custom.css">
   <!--CSS específico de cada vista-->
-  <?= $this->renderSection('styles') ?>
+  <?= $this->renderSection('styles') ?><!--Unificar proximamente-->
   <!--letras google-->
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <!--iconos-->
@@ -28,13 +28,13 @@
     <?= $this->renderSection('vista') ?>
   </main>
 
-    <!-- Footer -->
-    <footer class="border-top px-4 py-2 bg-white mt-auto">
-      <small class="text-muted">
-        &copy; TimeTurner | Gestor de turnos | Antonio J. Marín Virues | Mar Sánchez Sevillano | <?= date('Y') ?>
-        &nbsp;|&nbsp; Environment: <?= ENVIRONMENT ?>
-      </small>
-    </footer>
+  <!-- Footer -->
+  <footer class="border-top px-4 py-2 bg-white mt-auto">
+    <small class="text-muted">
+      &copy; TimeTurner | Gestor de turnos | Antonio J. Marín Virues | Mar Sánchez Sevillano | <?= date('Y') ?>
+      &nbsp;|&nbsp; Environment: <?= ENVIRONMENT ?>
+    </small>
+  </footer>
 
   <!--Script-->
   <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
@@ -42,6 +42,8 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src='/assets/main_calendar/calendar.js'></script>
   <script src='/assets/javascript/js.js'></script>
+  <!-- Scripts específicos de cada vista -->
+  <?= $this->renderSection('scripts') ?>
 
 </body>
 

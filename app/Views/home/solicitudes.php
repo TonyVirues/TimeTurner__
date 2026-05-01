@@ -13,7 +13,7 @@ $idUsuario = (int) session()->get('usu_id_usuario');
 <div class="tt-calendario-wrapper">
 
   <!-- Cabecera -->
-  <div class="d-flex align-items-center justify-content-between px-4 py-3 bg-white border-bottom flex-wrap gap-3">
+  <div class="d-flex align-items-center justify-content-between px-4 py-3  border-bottom flex-wrap gap-3">
     <div>
       <h5 class="mb-0 fw-bold">Solicitudes de cambio</h5>
       <small class="text-muted">Gestiona las solicitudes de intercambio de turnos</small>
@@ -41,7 +41,7 @@ $idUsuario = (int) session()->get('usu_id_usuario');
   </div>
 
   <!-- Resumen -->
-  <div class="px-4 py-3 bg-light border-bottom">
+  <div class="px-4 py-3 border-bottom">
     <div class="row g-3">
       <div class="col-12 col-md-3">
         <div class="card border-0 shadow-sm h-100">

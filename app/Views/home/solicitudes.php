@@ -41,7 +41,7 @@ $idUsuario = (int) session()->get('usu_id_usuario');
   </div>
 
   <!-- Resumen -->
-  <div class="px-4 py-3 border-bottom">
+  <div class="px-4 py-3 border-bottom"> <!--Encontrado-->
     <div class="row g-3">
       <div class="col-12 col-md-3">
         <div class="card border-0 shadow-sm h-100">
@@ -82,7 +82,7 @@ $idUsuario = (int) session()->get('usu_id_usuario');
   </div>
 
   <!-- Contenido -->
-  <div class="p-4 overflow-auto flex-grow-1 bg-body-tertiary">
+  <div class="p-4 overflow-auto flex-grow-1">
     <div id="contenedorSolicitudes" class="row g-3"></div>
 
     <div id="estadoVacioSolicitudes" class="d-none d-flex flex-column align-items-center justify-content-center h-100 text-center py-5">

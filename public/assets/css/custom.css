@@ -47,8 +47,8 @@
   --tt-sidebar-user-bg: #1e3a5f;
   --tt-sidebar-user-color: #5aacff;
   --tt-sidebar-user-name: rgba(255, 255, 255, 0.75);
-  --tt-app-bg: #0B1120;
-  --tt-card-bg: #0f1623;
+  --tt-app-bg: #0f1623;
+  --tt-card-bg: #1a2235;
   --tt-topbar-bg: #0f1623;
   --tt-topbar-title: #ffffff;
   --tt-notif-bg: #1a2235;
@@ -84,7 +84,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
 }
-
+[data-bs-theme="dark"] h5,
+[data-bs-theme="dark"] h6 {
+  color: #F1F5F9;
+}
 /* ==== Header — solo login/registro ==== */
 /* Acotado a .auth-page para no afectar al header del home */
 
@@ -545,12 +548,7 @@ main {
   overflow: hidden;
   background-color: var(--tt-app-bg);
 }
-.tt-calendario-wrapper .fc-toolbar-title {
-  font-family: 'Manrope', sans-serif;
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #0F172A;
-}
+
 
 /* El calendario crece para ocupar todo el espacio restante */
 .tt-calendario-inner {
@@ -563,9 +561,24 @@ main {
 .tt-calendario-inner #calendar {
   height: 100%;
 }
+/*Mes y año de calendario*/
+.tt-calendario-wrapper .fc-toolbar-title {
+  font-family: 'Manrope', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #0F172A;
+}
+[data-bs-theme="dark"] .tt-calendario-wrapper .fc-toolbar-title {
+  color: #F1F5F9;
+}
 
 .tt-calendario-wrapper .card {
   background-color: var(--tt-card-bg);
+}
+/*Numeros y letras del propio calendario*/
+[data-bs-theme="dark"] .fc .fc-daygrid-day-number,
+[data-bs-theme="dark"] .fc .fc-col-header-cell-cushion {
+  color: #94a3b8;
 }
 
 /*<-----------css para el menu----------->
@@ -624,7 +637,6 @@ main {
   color: var(--tt-sidebar-user-name);
 }
 
-/*===== FIN ADD EL 16/04/by tony ==========*/
 /*<----------- fin css para el menu----------->
 
 
@@ -688,4 +700,8 @@ main {
   background: var(--tt-solicitud-bloque-bg);
   border: 1px solid rgba(0, 0, 0, 0.06);
   white-space: pre-wrap;
+}
+[data-bs-theme="dark"] #contenedorSolicitudes,
+[data-bs-theme="dark"] #estadoVacioSolicitudes {
+  background-color: #0f1623;
 }

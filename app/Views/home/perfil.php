@@ -8,7 +8,16 @@
     </div>
 
     <!-- Cuerpo -->
-    <div class="flex-grow-1 overflow-auto p-4">
+    <div class="flex-grow-1 overflow-auto p-4 position-relative">
+
+      <!-- Toggle tema -->
+      <div style="position: absolute; top: 16px; right: 16px;">
+        <span class="material-symbols-outlined" id="tt-toggle-tema" 
+          style="cursor: pointer; font-size: 32px;" title="Cambiar tema">
+          light_mode
+        </span>
+      </div>
+
       <div class="row justify-content-center">
         <div class="col-12 col-md-6">
 

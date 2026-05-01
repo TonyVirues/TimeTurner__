@@ -29,7 +29,7 @@
   </main>
 
   <!-- Footer -->
-  <footer class="border-top px-4 py-2 bg-white mt-auto">
+  <footer class="border-top px-4 py-2 mt-auto">
     <small class="text-muted">
       &copy; TimeTurner | Gestor de turnos | Antonio J. Marín Virues | Mar Sánchez Sevillano | <?= date('Y') ?>
       &nbsp;|&nbsp; Environment: <?= ENVIRONMENT ?>

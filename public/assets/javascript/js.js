@@ -351,5 +351,30 @@ if (password || passwordConfirm) {
   }
 });
 
+// ============================================================
+// MODO DARK / LIGHT
+// ============================================================
+
+const toggleTema = document.getElementById('tt-toggle-tema');
+const htmlEl = document.documentElement;
+
+// Aplicar tema guardado al cargar la página
+const temaGuardado = localStorage.getItem('tt-tema') ?? 'light';
+htmlEl.setAttribute('data-bs-theme', temaGuardado);
+if (toggleTema) {
+  toggleTema.textContent = temaGuardado === 'dark' ? 'light_mode' : 'dark_mode';
+}
+
+// Cambiar tema al hacer clic
+if (toggleTema) {
+  toggleTema.addEventListener('click', function () {
+    const temaActual = htmlEl.getAttribute('data-bs-theme');
+    const nuevoTema = temaActual === 'dark' ? 'light' : 'dark';
+
+    htmlEl.setAttribute('data-bs-theme', nuevoTema);
+    localStorage.setItem('tt-tema', nuevoTema);
+    toggleTema.textContent = nuevoTema === 'dark' ? 'light_mode' : 'dark_mode';
+  });
+}
 //Llamada de la función para actualizar las notificaciones de solicitudes
 actualizarBadgeSolicitudes();

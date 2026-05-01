@@ -6,6 +6,9 @@
 const sidebar  = document.getElementById("ttSidebar");
 const overlay  = document.getElementById("ttSidebarOverlay");
 const logoBtn  = document.getElementById("ttLogoBtn");
+let btnGuardarPerfil = document.getElementById('tt-btn-guardar-perfil');
+const userAvatar = document.querySelector('.tt-user-avatar');
+const userName = document.querySelector('.tt-user-name');
 
 // Sidebar cerrado por defecto al cargar la página
 if (sidebar) {
@@ -244,6 +247,109 @@ async function abrirSwalSolicitudCambio(idDestinatario, nombreDestinatario) {
   }
 }
 
+// ============================================================
+// PERFIL DE USUARIO
+// ============================================================
+
+if (btnGuardarPerfil) {
+  btnGuardarPerfil.addEventListener('click', async function () {
+    const btn = this;
+    const mensaje = document.getElementById('tt-perfil-mensaje');
+
+    btn.disabled = true;
+    btn.textContent = 'Guardando...';
+
+    const password = document.getElementById('usu_password').value.trim();
+    const passwordConfirm = document.getElementById('usu_password_confirm').value.trim();
+
+// Limpiar mensajes de error previos bajo los inputs
+document.querySelectorAll('.tt-input-error').forEach(el => el.remove());
+
+if (password || passwordConfirm) {
+  let hayError = false;
+
+  if (!password) {
+    const err = document.createElement('small');
+    err.className = 'tt-input-error text-danger';
+    err.textContent = 'Campo necesario.';
+    document.getElementById('usu_password').after(err);
+    hayError = true;
+  }
+
+  if (!passwordConfirm) {
+    const err = document.createElement('small');
+    err.className = 'tt-input-error text-danger';
+    err.textContent = 'Campo necesario.';
+    document.getElementById('usu_password_confirm').after(err);
+    hayError = true;
+  }
+
+  if (hayError) {
+    btn.disabled = false;
+    btn.textContent = 'Guardar cambios';
+    return;
+  }
+
+  if (password !== passwordConfirm) {
+    mensaje.style.display = 'block';
+    mensaje.className = 'alert alert-danger mb-3';
+    mensaje.textContent = 'Las contraseñas no coinciden.';
+    btn.disabled = false;
+    btn.textContent = 'Guardar cambios';
+    return;
+  }
+}
+
+    const datos = new FormData();
+    datos.append('usu_nombre', document.getElementById('usu_nombre').value.trim());
+    datos.append('usu_apellidos', document.getElementById('usu_apellidos').value.trim());
+    datos.append('usu_email', document.getElementById('usu_email').value.trim());
+
+    if (password) {
+      datos.append('usu_password', password);
+      datos.append('usu_password_confirm', passwordConfirm);
+    }
+
+    try {
+      const res = await fetch('/perfil/actualizar', {
+        method: 'POST',
+        body: datos,
+      });
+
+      const data = await res.json();
+      mensaje.style.display = 'block';
+
+      if (data.status === 'success') {
+        mensaje.className = 'alert alert-success mb-3';
+        mensaje.textContent = data.message;
+        document.getElementById('usu_password').value = '';
+      } else {
+        mensaje.className = 'alert alert-danger mb-3';
+        mensaje.textContent = data.message ?? 'Error al guardar los cambios.';
+      }
+
+    } catch (e) {
+      mensaje.style.display = 'block';
+      mensaje.className = 'alert alert-danger mb-3';
+      mensaje.textContent = 'Error de conexión. Inténtalo de nuevo.';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Guardar cambios';
+    }
+  });
+}
+// ============================================================
+// ACCESO AL PERFIL DESDE EL SIDEBAR
+// ============================================================
+
+[userAvatar, userName].forEach(function (el) {
+  if (el) {
+    el.style.cursor = 'pointer';
+    el.addEventListener('click', function () {
+      window.location.href = '/perfil';
+    });
+  }
+});
 
 //Llamada de la función para actualizar las notificaciones de solicitudes
 actualizarBadgeSolicitudes();

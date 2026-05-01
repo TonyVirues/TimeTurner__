@@ -38,6 +38,9 @@ $routes->post('turnos/eliminar/(:num)', 'TurnosController::eliminar/$1');
 
 // Rutas de usuarios
 $routes->get('usuarios/listado', 'UsuariosController::listado');
+//Rutas gestion de perfil
+$routes->get('perfil', 'PerfilController::perfil');
+$routes->post('perfil/actualizar', 'PerfilController::actualizar');
 
 // Rutas solicitudes cambio de turno
 $routes->get('solicitudes/mostrar/(:num)', 'SolicitudesCambioTurnoController::mostrar/$1');

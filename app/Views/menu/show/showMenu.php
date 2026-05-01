@@ -73,7 +73,7 @@
       </div>
       <div style="overflow: hidden; flex: 1;">
         <span class="d-block tt-user-name text-truncate">
-          <?= esc(session('usu_nombre') ?? 'Usuario') ?>
+          <?= (session('usu_nombre') ?? 'Usuario') ?>
         </span>
         <a href="<?= base_url('logout') ?>" class="tt-logout-link">
           Cerrar sesión

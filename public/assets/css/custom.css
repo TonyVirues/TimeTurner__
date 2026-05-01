@@ -28,7 +28,7 @@
   --tt-sidebar-user-name: rgba(0, 0, 0, 0.75);
   --tt-app-bg: #EBF5FF;
   --tt-card-bg: #F1F5F9;
-  --tt-topbar-bg: #ffffff;
+  --tt-topbar-bg: #EBF5FF;
   --tt-topbar-title: #191c1d;
   --tt-notif-bg: #f0f2f5;
   --tt-notif-border: #e0e3e8;
@@ -432,27 +432,19 @@ main {
   color: rgba(255, 255, 255, 0.25) !important;
 }
 
+/*=================TOPBAR============*/
 /* --- Topbar --- */
-.tt-topbar-title {
-  font-family: "Manrope", sans-serif;
-  font-size: 16px;
-  font-weight: 800;
-  color: var(--tt-topbar-title);
-}
-
-.tt-topbar-sub {
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 1.2px;
+header {
+  background-color: var(--tt-topbar-bg);
 }
 
 /* ==== Topbar — notificaciones ==== */
 
 .tt-topbar-notif {
   position: relative;
-  width: 36px;
-  height: 36px;
-  min-width: 36px;
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
   background-color: var(--tt-notif-bg);
   border: 1px solid var(--tt-notif-border);
   border-radius: 50%;
@@ -463,13 +455,17 @@ main {
 }
 
 .tt-topbar-notif .material-symbols-outlined {
-  font-size: 20px;
+  font-size: 28px;
   color: #c9952a;
   font-variation-settings:
     "FILL" 1,
     "wght" 400,
     "GRAD" 0,
     "opsz" 24;
+}
+[data-bs-theme="dark"] .tt-topbar-notif {
+  background-color: var(--tt-notif-bg);
+  border-color: var(--tt-notif-border);
 }
 
 .tt-notif-dot {
@@ -482,7 +478,7 @@ main {
   border-radius: 50%;
   border: 2px solid white;
 }
-/*====fin de notificaciones====*/
+/* ====Fin de topbar==== */
 
 
 /* --- Avatar --- */
@@ -678,11 +674,9 @@ main {
   font-weight: 500;
   font-size: 11px;
 }
+/* ====Fin de vista usuarios==== */
 
-/*=================FIN DE VISTA USUARIOS============*/
-
-/* ==== Vista solicitudes ==== */
-
+/*=================VISTA DE SOLICITUDES============*/
 .tt-solicitud-card {
   border-radius: 14px;
 }
@@ -705,3 +699,4 @@ main {
 [data-bs-theme="dark"] #estadoVacioSolicitudes {
   background-color: #0f1623;
 }
+/* ====Fin de vista solicitudes==== */

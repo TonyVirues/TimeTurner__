@@ -13,20 +13,13 @@
   <div class="d-flex flex-column flex-grow-1 overflow-hidden">
 
     <!-- Topbar -->
-    <header class="d-flex align-items-center gap-3 px-4 bg-white border-bottom" style="height: 60px; min-height: 60px;">
+    <header class="d-flex justify-content-end px-3 py-2">
 
-      <!-- Título -->
-      <div class="flex-grow-1">
-        <span class="fw-bold tt-topbar-title">TimeTurner</span>
-        <small class="text-muted d-none d-sm-inline ms-2 tt-topbar-sub">Gestor de turnos</small>
-      </div>
-
-      <!-- Notificaciones -->
-      <div class="tt-topbar-notif" title="Notificaciones">
-        <span class="material-symbols-outlined">notifications</span>
-        <span class="tt-notif-dot"></span>
-        
-      </div>
+    <!-- Notificaciones -->
+    <div class="tt-topbar-notif" title="Notificaciones">
+    <span class="material-symbols-outlined">notifications</span>
+    <span class="tt-notif-dot"></span>
+    </div>
 
     </header>
     

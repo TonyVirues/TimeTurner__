@@ -467,7 +467,7 @@ async function editarHorarioDesdeBoton(
           );
         }
 
-        return resultado.data;
+        return resultado.data.data;
       });
 
     const datosHorario = await abrirSwalHorario("editar", horario);

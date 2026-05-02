@@ -5,7 +5,7 @@
   --tt-accent: #7C3AED;
   --tt-danger: #EF4444;
   --tt-alert: #ff6b35;
-  --fc-today-bg-color: rgba(37, 99, 235, 0.08);
+
   --fc-button-bg-color: #2563EB;
   --fc-button-border-color: #2563EB;
   --fc-button-hover-bg-color: #1d4ed8;
@@ -33,6 +33,8 @@
   --tt-notif-bg: #f0f2f5;
   --tt-notif-border: #e0e3e8;
   --tt-solicitud-bloque-bg: #f8f9fa;
+  --fc-highlight-color: rgba(37, 99, 235, 0.15);
+  --fc-today-bg-color: rgba(37, 99, 235, 0.08);
 }
 
 [data-bs-theme="dark"] {
@@ -54,6 +56,8 @@
   --tt-notif-bg: #1a2235;
   --tt-notif-border: rgba(255, 255, 255, 0.08);
   --tt-solicitud-bloque-bg: #1a2235;
+  --fc-highlight-color: rgba(37, 99, 235, 0.35);
+  --fc-today-bg-color: rgba(124, 58, 237, 0.45);
 }
 
 /* ==== Base ==== */
@@ -280,6 +284,10 @@ section {
 /* Sombreado horario */
 .fc .horario-rango-fondo {
   background-color: rgba(221, 72, 20, 0.12);
+}
+
+[data-bs-theme="dark"] .fc .horario-rango-fondo {
+  background-color: rgba(16, 185, 129, 0.45);
 }
 
 /* ==== RESPONSIVE login/registro ==== */
@@ -563,6 +571,7 @@ header {
   font-size: 1.8rem;
   font-weight: 700;
   color: #0F172A;
+  text-transform: capitalize;
 }
 [data-bs-theme="dark"] .tt-calendario-wrapper .fc-toolbar-title {
   color: #F1F5F9;
@@ -649,6 +658,16 @@ header {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
 
+[data-bs-theme="dark"] .tt-usuario-card {
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  background-color: var(--tt-card-bg);
+}
+
+[data-bs-theme="dark"] .tt-usuario-card:hover {
+  box-shadow: 0 4px 16px rgba(255, 255, 255, 0.08);
+  background-color: #1E3A5F;
+}
+
 .tt-usuario-avatar {
   width: 56px;
   height: 56px;
@@ -700,3 +719,26 @@ header {
   background-color: #0f1623;
 }
 /* ====Fin de vista solicitudes==== */
+
+/* ==== SweetAlert2 — dark mode ==== */
+[data-bs-theme="dark"] .swal2-input,
+[data-bs-theme="dark"] .swal2-select,
+[data-bs-theme="dark"] .swal2-textarea {
+  background-color: #2a3f57;
+  color: #F1F5F9;
+}
+
+[data-bs-theme="dark"] .swal2-popup {
+  background-color: #1e2d40;
+  color: #F1F5F9;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+[data-bs-theme="dark"] .swal2-label,
+[data-bs-theme="dark"] .swal2-title,
+[data-bs-theme="dark"] .swal2-html-container,
+[data-bs-theme="dark"] .swal2-html-container label,
+[data-bs-theme="dark"] .swal2-html-container span {
+  color: #F1F5F9;
+}

@@ -54,7 +54,7 @@
             <button type="submit" class="btn btn-primary w-100">Continuar</button>
 
             <div class="text-center mt-3">
-              <span class="text-muted">¿No tienes cuenta?</span>
+              <span>¿No tienes cuenta?</span>
               <a href="<?= base_url('registro') ?>" class="ms-1">Crear cuenta</a>
             </div>
           </form>

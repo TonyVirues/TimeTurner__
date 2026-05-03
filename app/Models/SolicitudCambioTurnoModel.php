@@ -25,6 +25,7 @@ class SolicitudCambioTurnoModel extends Model
     'sol_estado',
     'sol_fecha_resolucion',
     'sol_comentario_resolucion',
+    'sol_visto',
   ];
 
   /**
@@ -914,5 +915,31 @@ class SolicitudCambioTurnoModel extends Model
     if ($destinatario !== null && $destinatario !== '' && (int) $destinatario !== $idUsuarioSesion) {
       throw new Exception('No tienes permiso para filtrar por otro usuario destinatario.', 403);
     }
+  }
+
+    /**
+   * Cuenta las solicitudes no vistas del usuario destinatario
+   * @param int $idUsuario
+   * @return int
+   */
+  public function contarNoVistas(int $idUsuario): int
+  {
+      return $this->db->table('solicitudes_cambio_turno')
+          ->where('sol_id_usuario_destinatario', $idUsuario)
+          ->where('sol_visto', 0)
+          ->countAllResults();
+  }
+
+  /**
+   * Marca como vistas todas las solicitudes donde el usuario es destinatario
+   * @param int $idUsuario
+   * @return void
+   */
+  public function marcarTodasComoVistas(int $idUsuario): void
+  {
+      $this->db->table('solicitudes_cambio_turno')
+          ->where('sol_id_usuario_destinatario', $idUsuario)
+          ->where('sol_visto', 0)
+          ->update(['sol_visto' => 1]);
   }
 }

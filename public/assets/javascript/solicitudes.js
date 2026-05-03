@@ -26,6 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   cargarSolicitudes();
+  marcarSolicitudesVistas();
 
   if (filtroTipoSolicitud) {
     filtroTipoSolicitud.addEventListener("change", aplicarFiltrosYRenderizar);
@@ -489,6 +490,15 @@ document.addEventListener("DOMContentLoaded", function () {
       confirmButtonText: "Aceptar",
     });
   }
+
+  async function marcarSolicitudesVistas() {
+  try {
+    await fetch('/solicitudes/marcar-vistas', { method: 'POST' });
+    actualizarBadgeSolicitudes();
+  } catch (e) {
+    // silencioso — no interrumpimos la carga de solicitudes
+  }
+}
 });
 
 /**

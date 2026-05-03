@@ -38,7 +38,8 @@ $routes->post('turnos/eliminar/(:num)', 'TurnosController::eliminar/$1');
 
 // Rutas de usuarios
 $routes->get('usuarios/listado', 'UsuariosController::listado');
-//Rutas gestion de perfil
+
+// Rutas gestion de perfil
 $routes->get('perfil', 'PerfilController::perfil');
 $routes->post('perfil/actualizar', 'PerfilController::actualizar');
 
@@ -49,3 +50,7 @@ $routes->post('solicitudes/crear', 'SolicitudesCambioTurnoController::crear');
 $routes->post('solicitudes/aceptar/(:num)', 'SolicitudesCambioTurnoController::aceptar/$1');
 $routes->post('solicitudes/rechazar/(:num)', 'SolicitudesCambioTurnoController::rechazar/$1');
 $routes->post('solicitudes/cancelar/(:num)', 'SolicitudesCambioTurnoController::cancelar/$1');
+
+// Rutas notificaciones solicitudes
+$routes->get('solicitudes/contar-no-vistas', 'SolicitudesCambioTurnoController::contarNoVistas');
+$routes->post('solicitudes/marcar-vistas', 'SolicitudesCambioTurnoController::marcarVistas');

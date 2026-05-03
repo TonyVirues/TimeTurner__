@@ -57,11 +57,12 @@ window.addEventListener("resize", function () {
 // BADGE SOLICITUDES PENDIENTES
 // ============================================================
 
-function actualizarBadgeSolicitudes() {
+function actualizarBadgeSolicitudes() 
+{
   const badge = document.querySelector('.tt-nav-badge');
   const campana = document.getElementById('ttCampanaBadge');
 
-  fetch('/solicitudes/listado?sol_estado=pendiente')
+  fetch('/solicitudes/contar-no-vistas')
     .then(function (response) {
       if (!response.ok) return;
       return response.json();
@@ -69,7 +70,7 @@ function actualizarBadgeSolicitudes() {
     .then(function (data) {
       if (!data || !data.ok) return;
 
-      const total = data.data.length;
+      const total = data.total;
 
       // Badge sidebar
       if (badge) {

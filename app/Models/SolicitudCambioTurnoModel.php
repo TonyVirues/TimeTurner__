@@ -26,6 +26,7 @@ class SolicitudCambioTurnoModel extends Model
     'sol_fecha_resolucion',
     'sol_comentario_resolucion',
     'sol_visto',
+    'sol_visto_solicitante',
   ];
 
   /**
@@ -941,5 +942,32 @@ class SolicitudCambioTurnoModel extends Model
           ->where('sol_id_usuario_destinatario', $idUsuario)
           ->where('sol_visto', 0)
           ->update(['sol_visto' => 1]);
+  }
+    /**
+   * Cuenta las respuestas no vistas por el solicitante (aceptadas o rechazadas)
+   * @param int $idUsuario
+   * @return int
+   */
+  public function contarRespuestasNoVistas(int $idUsuario): int
+  {
+      return $this->db->table('solicitudes_cambio_turno')
+          ->where('sol_id_usuario_solicitante', $idUsuario)
+          ->where('sol_visto_solicitante', 0)
+          ->whereIn('sol_estado', ['aceptada', 'rechazada'])
+          ->countAllResults();
+  }
+
+  /**
+   * Marca como vistas las respuestas del solicitante
+   * @param int $idUsuario
+   * @return void
+   */
+  public function marcarRespuestasComoVistas(int $idUsuario): void
+  {
+      $this->db->table('solicitudes_cambio_turno')
+          ->where('sol_id_usuario_solicitante', $idUsuario)
+          ->where('sol_visto_solicitante', 0)
+          ->whereIn('sol_estado', ['aceptada', 'rechazada'])
+          ->update(['sol_visto_solicitante' => 1]);
   }
 }

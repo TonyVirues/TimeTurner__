@@ -237,11 +237,12 @@ public function contarNoVistas(): ResponseInterface
     try {
         $idUsuarioSesion = $this->obtenerIdUsuarioSesion();
 
-        $total = $this->solicitudCambioTurnoModel->contarNoVistas($idUsuarioSesion);
+        $comoDestinatario = $this->solicitudCambioTurnoModel->contarNoVistas($idUsuarioSesion);
+        $comoSolicitante = $this->solicitudCambioTurnoModel->contarRespuestasNoVistas($idUsuarioSesion);
 
         return $this->response->setJSON([
             'ok' => true,
-            'total' => $total,
+            'total' => $comoDestinatario + $comoSolicitante,
         ]);
     } catch (Exception $e) {
         return $this->response->setStatusCode($this->obtenerCodigoHttpDesdeExcepcion($e))->setJSON([
@@ -261,10 +262,11 @@ public function marcarVistas(): ResponseInterface
         $idUsuarioSesion = $this->obtenerIdUsuarioSesion();
 
         $this->solicitudCambioTurnoModel->marcarTodasComoVistas($idUsuarioSesion);
+        $this->solicitudCambioTurnoModel->marcarRespuestasComoVistas($idUsuarioSesion);
 
         return $this->response->setJSON([
             'ok' => true,
-            'mensaje' => 'Solicitudes marcadas como vistas.',
+            'mensaje' => 'Notificaciones marcadas como vistas.',
         ]);
     } catch (Exception $e) {
         return $this->response->setStatusCode($this->obtenerCodigoHttpDesdeExcepcion($e))->setJSON([

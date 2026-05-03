@@ -18,4 +18,9 @@ class EmpresaModel extends Model
     'emp_cif',
     'emp_activa',
   ];
+  
+  /**Comprobacion de CIF exite */
+  public function existeCif(string $cif): bool{
+    return $this->where('emp_cif', $cif)->countAllResults() > 0;
+}
 }

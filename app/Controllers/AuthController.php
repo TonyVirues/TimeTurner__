@@ -104,6 +104,7 @@ class AuthController extends BaseController
     $cif = trim((string) $this->request->getPost('emp_cif'));
     $cpassword = (string) $this->request->getPost('cpassword');
 
+    /**Campos obligatorios */
     if (
       $nombre === '' ||
       $apellidos === '' ||
@@ -113,32 +114,54 @@ class AuthController extends BaseController
     ) {
       return redirect()->back()
         ->withInput()
-        ->with('error', 'Debes rellenar todos los campos obligatorios.');
+        ->with('error', 'Debes rellenar todos los campos obligatorios.')
+        ->with('errorCampo', 'obligatorios');
     }
 
+    /**Contraseñas no coinciden */
     if ($password !== $cpassword) {
       return redirect()->back()
         ->withInput()
-        ->with('error', 'Las contraseñas no coinciden.');
+        ->with('error', 'Las contraseñas no coinciden.')
+        ->with('errorCampo', 'password');
     }
+    /**Email inválido */
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
       return redirect()->back()
         ->withInput()
-        ->with('error', 'El email no es válido.');
+        ->with('error', 'El email no es válido.')
+        ->with('errorCampo', 'email');
     }
-
+    /**Contraseña corta */
     if (strlen($password) < 8) {
       return redirect()->back()
         ->withInput()
-        ->with('error', 'La contraseña debe tener al menos 8 caracteres.');
+        ->with('error', 'La contraseña debe tener al menos 8 caracteres.')
+        ->with('errorCampo', 'password');
     }
-
+    /**Email duplicado */
     if ($this->usuarioModel->existeEmail($email)) {
       return redirect()->back()
         ->withInput()
-        ->with('error', 'Ya existe un usuario con ese email.');
+        ->with('error', 'Ya existe un usuario con ese email.')
+        ->with('errorCampo', 'email');
+    }
+    /**Nombre y apellido no pude contener números */
+    if (preg_match('/\d/', $nombre) || preg_match('/\d/', $apellidos)) {
+        return redirect()->back()
+            ->withInput()
+            ->with('error', 'El nombre y los apellidos no pueden contener números.')
+            ->with('errorCampo', 'nombre');
+    }
+    /**El CIF ya existe */
+    if ($cif !== '' && $this->empresaModel->existeCif($cif)) {
+    return redirect()->back()
+        ->withInput()
+        ->with('error', 'Ya existe una empresa registrada con ese CIF.')
+        ->with('errorCampo', 'cif');
     }
 
+    /**Array para validad las credenciales de esta */
     $idEmpresa = $this->empresaModel->insert([
       'emp_nombre' => $nombreEmpresa,
       'emp_cif' => $cif !== '' ? $cif : null,

@@ -29,12 +29,44 @@
   </main>
 
   <!-- Footer -->
-  <footer class="border-top px-4 py-2 mt-auto">
+<!-- Footer -->
+<footer class="border-top mt-auto">
+
+  <!-- Aviso cookies -->
+  <div id="ttCookieBanner" class="px-4 py-2 border-bottom" style="display: none;">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+      <small class="text-muted">
+        Esta aplicación usa cookies de sesión y almacenamiento local para funcionar correctamente y recordar tus preferencias. Al continuar usándola, aceptas su uso.
+      </small>
+      <button id="ttCookieAceptar" class="btn btn-primary btn-sm">Aceptar</button>
+    </div>
+  </div>
+
+  <!-- Copyright -->
+  <div class="px-4 py-2">
     <small class="text-muted">
       &copy; TimeTurner | Gestor de turnos | Antonio J. Marín Virues | Mar Sánchez Sevillano | <?= date('Y') ?>
       &nbsp;|&nbsp; Environment: <?= ENVIRONMENT ?>
     </small>
-  </footer>
+  </div>
+
+</footer>
+
+<script>
+  (function () {
+    const banner = document.getElementById('ttCookieBanner');
+    const btn = document.getElementById('ttCookieAceptar');
+
+    if (!localStorage.getItem('tt-cookies-aceptadas')) {
+      banner.style.display = 'block';
+    }
+
+    btn.addEventListener('click', function () {
+      localStorage.setItem('tt-cookies-aceptadas', '1');
+      banner.style.display = 'none';
+    });
+  })();
+</script>
 
   <!--Script-->
   <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>

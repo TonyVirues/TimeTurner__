@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Models\UsuarioModel;
+use App\Models\TurnoModel;
+use App\Models\SolicitudCambioTurnoModel;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
@@ -10,6 +12,8 @@ use Psr\Log\LoggerInterface;
 class UsuariosController extends BaseController
 {
   protected UsuarioModel $usuarioModel;
+  protected TurnoModel $turnoModel;
+  protected SolicitudCambioTurnoModel $solicitudModel;
 
   public function initController(
     RequestInterface $request,
@@ -18,6 +22,8 @@ class UsuariosController extends BaseController
   ) {
     parent::initController($request, $response, $logger);
     $this->usuarioModel = new UsuarioModel();
+    $this->turnoModel = new TurnoModel();
+    $this->solicitudModel = new SolicitudCambioTurnoModel();
   }
 
   /**
@@ -161,11 +167,13 @@ class UsuariosController extends BaseController
       return $errorEmpresa;
     }
 
-    if (!$this->validate($this->obtenerReglasUsuario(false))) {
-      return $this->responderErrorValidacion();
+    $datos = $this->request->getPost();
+    $soloActivo = count($datos) === 1 && array_key_exists('usu_activo', $datos);
+
+    if (!$soloActivo && !$this->validate($this->obtenerReglasUsuario(false))) {
+        return $this->responderErrorValidacion();
     }
 
-    $datos = $this->request->getPost();
     $datosActualizar = [];
 
     if (array_key_exists('usu_nombre', $datos)) {
@@ -236,40 +244,185 @@ class UsuariosController extends BaseController
    * @param int $idUsuario
    * @return ResponseInterface
    */
-  public function eliminar(int $idUsuario): ResponseInterface
-  {
+public function eliminar(int $idUsuario): ResponseInterface
+{
     $errorPermisos = $this->exigirAdministrador();
 
     if ($errorPermisos !== null) {
-      return $errorPermisos;
+        return $errorPermisos;
     }
 
     $usuario = $this->usuarioModel->getUsuarioPorId($idUsuario);
 
     if (!$usuario) {
-      return $this->responderNoEncontrado();
+        return $this->responderNoEncontrado();
     }
 
     $errorEmpresa = $this->validarUsuarioPerteneceAEmpresaActual($usuario);
 
     if ($errorEmpresa !== null) {
-      return $errorEmpresa;
+        return $errorEmpresa;
     }
+
+    $tieneTurnos = count($this->turnoModel->getTurnosPorUsuario($idUsuario)) > 0;
+
+    if ($tieneTurnos) {
+        return $this->response->setStatusCode(409)->setJSON([
+            'status' => 'tiene_turnos',
+            'message' => 'El empleado tiene turnos asignados.',
+        ]);
+    }
+
+    $this->cancelarSolicitudesPendientesDelUsuario($idUsuario);
 
     $eliminado = $this->usuarioModel->delete($idUsuario);
 
     if (!$eliminado) {
-      return $this->response->setStatusCode(500)->setJSON([
-        'status' => 'error',
-        'message' => 'No se pudo eliminar el usuario.',
-      ]);
+        return $this->response->setStatusCode(500)->setJSON([
+            'status' => 'error',
+            'message' => 'No se pudo eliminar el usuario.',
+        ]);
     }
 
     return $this->response->setJSON([
-      'status' => 'success',
-      'message' => 'Usuario eliminado correctamente.',
+        'status' => 'success',
+        'message' => 'Usuario eliminado correctamente.',
     ]);
+}
+/**
+ * Devuelve los horarios donde el empleado tiene turnos asignados
+ * @param int $idUsuario
+ * @return ResponseInterface
+ */
+public function horariosDeEmpleado(int $idUsuario): ResponseInterface
+{
+    $errorPermisos = $this->exigirAdministrador();
+
+    if ($errorPermisos !== null) {
+        return $errorPermisos;
+    }
+
+    $usuario = $this->usuarioModel->getUsuarioPorId($idUsuario);
+
+    if (!$usuario) {
+        return $this->responderNoEncontrado();
+    }
+
+    $errorEmpresa = $this->validarUsuarioPerteneceAEmpresaActual($usuario);
+
+    if ($errorEmpresa !== null) {
+        return $errorEmpresa;
+    }
+
+    $horarios = $this->turnoModel->getHorariosConTurnosPorUsuario($idUsuario);
+
+    return $this->response->setJSON([
+        'status' => 'success',
+        'data'   => $horarios,
+    ]);
+}
+
+  /**
+   * Libera turnos del empleado en los horarios seleccionados y lo desactiva
+   * @param int $idUsuario
+   * @return ResponseInterface
+   */
+  public function desactivarConLiberar(int $idUsuario): ResponseInterface
+  {
+      $errorPermisos = $this->exigirAdministrador();
+
+      if ($errorPermisos !== null) {
+          return $errorPermisos;
+      }
+
+      $usuario = $this->usuarioModel->getUsuarioPorId($idUsuario);
+
+      if (!$usuario) {
+          return $this->responderNoEncontrado();
+      }
+
+      $errorEmpresa = $this->validarUsuarioPerteneceAEmpresaActual($usuario);
+
+      if ($errorEmpresa !== null) {
+          return $errorEmpresa;
+      }
+
+      $idsHorarios = $this->request->getPost('horarios');
+
+      if (!empty($idsHorarios) && is_array($idsHorarios)) {
+          $this->turnoModel->liberarTurnosDeUsuarioPorHorarios($idUsuario, $idsHorarios);
+      }
+
+      $this->usuarioModel->update($idUsuario, ['usu_activo' => 0]);
+
+      return $this->response->setJSON([
+          'status'  => 'success',
+          'message' => 'Empleado desactivado correctamente.',
+      ]);
   }
+
+/**
+ * Libera los turnos del usuario y luego lo elimina
+ * @param int $idUsuario
+ * @return ResponseInterface
+ */
+public function liberarYEliminar(int $idUsuario): ResponseInterface
+{
+    $errorPermisos = $this->exigirAdministrador();
+
+    if ($errorPermisos !== null) {
+        return $errorPermisos;
+    }
+
+    $usuario = $this->usuarioModel->getUsuarioPorId($idUsuario);
+
+    if (!$usuario) {
+        return $this->responderNoEncontrado();
+    }
+
+    $errorEmpresa = $this->validarUsuarioPerteneceAEmpresaActual($usuario);
+
+    if ($errorEmpresa !== null) {
+        return $errorEmpresa;
+    }
+
+    $this->turnoModel->liberarTurnosDeUsuario($idUsuario);
+    $this->cancelarSolicitudesPendientesDelUsuario($idUsuario);
+
+    $eliminado = $this->usuarioModel->delete($idUsuario);
+
+    if (!$eliminado) {
+        return $this->response->setStatusCode(500)->setJSON([
+            'status' => 'error',
+            'message' => 'No se pudo eliminar el usuario.',
+        ]);
+    }
+
+    return $this->response->setJSON([
+        'status' => 'success',
+        'message' => 'Turnos liberados y usuario eliminado correctamente.',
+    ]);
+}
+
+/**
+ * Cancela todas las solicitudes pendientes relacionadas con el usuario
+ * @param int $idUsuario
+ * @return void
+ */
+private function cancelarSolicitudesPendientesDelUsuario(int $idUsuario): void
+{
+    $this->db->table('solicitudes_cambio_turno')
+        ->groupStart()
+            ->where('sol_id_usuario_solicitante', $idUsuario)
+            ->orWhere('sol_id_usuario_destinatario', $idUsuario)
+        ->groupEnd()
+        ->where('sol_estado', 'pendiente')
+        ->update([
+            'sol_estado' => 'cancelada',
+            'sol_fecha_resolucion' => date('Y-m-d H:i:s'),
+            'sol_comentario_resolucion' => 'Cancelada automáticamente por eliminación del usuario.',
+        ]);
+}
 
   /**
    * Devuelve las reglas de validación del usuario

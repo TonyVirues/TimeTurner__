@@ -35,6 +35,8 @@
       <!-- Grid de tarjetas -->
       <div class="row g-3">
         <?php foreach ($usuarios as $usuario) : ?>
+          <!--Evita que aparezca el propio usuario logeado-->
+          <?php if ($usuario['usu_id_usuario'] === session()->get('usu_id_usuario')) continue; ?>
           <div class="col-12 col-sm-6 col-md-4 col-lg-3">
             <div class="card h-100 border tt-usuario-card">
               <div class="card-body d-flex flex-column align-items-center text-center gap-2 py-4">

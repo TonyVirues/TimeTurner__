@@ -56,4 +56,5 @@ class HorarioModel extends Model
       ->orderBy('hor_fecha_inicio', 'ASC')
       ->findAll();
   }
+
 }

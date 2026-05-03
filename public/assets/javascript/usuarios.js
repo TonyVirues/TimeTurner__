@@ -192,6 +192,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
+
   // ============================================================
   // ACTIVAR / DESACTIVAR EMPLEADO
   // ============================================================
@@ -202,35 +203,165 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const id = boton.dataset.id;
     const activo = boton.dataset.activo === '1';
-    const accion = activo ? 'desactivar' : 'activar';
 
-    const confirmado = await Swal.fire({
-      icon: 'question',
-      title: `¿${activo ? 'Desactivar' : 'Activar'} empleado?`,
-      text: `El empleado ${activo ? 'no podrá iniciar sesión' : 'podrá volver a iniciar sesión'}.`,
-      showCancelButton: true,
-      confirmButtonText: activo ? 'Desactivar' : 'Activar',
-      cancelButtonText: 'Cancelar',
-      reverseButtons: true,
-    });
+    // ACTIVAR — flujo simple
+    if (!activo) {
+      const confirmado = await Swal.fire({
+        icon: 'question',
+        title: '¿Activar empleado?',
+        text: 'El empleado podrá volver a iniciar sesión.',
+        showCancelButton: true,
+        confirmButtonText: 'Activar',
+        cancelButtonText: 'Cancelar',
+      });
 
-    if (!confirmado.isConfirmed) return;
+      if (!confirmado.isConfirmed) return;
 
-    const datos = new FormData();
-    datos.append('usu_activo', activo ? '0' : '1');
+      const datos = new FormData();
+      datos.append('usu_activo', '1');
 
+      try {
+        const res = await fetch(`/usuarios/actualizar/${id}`, { method: 'POST', body: datos });
+        const data = await res.json();
+
+        if (!res.ok || data.status !== 'success') {
+          throw new Error(data.message || 'No se pudo activar el empleado.');
+        }
+
+        await Swal.fire({
+          icon: 'success',
+          title: 'Empleado activado',
+          text: 'El empleado puede volver a iniciar sesión.',
+          confirmButtonText: 'Aceptar'
+        });
+
+        window.location.reload();
+
+      } catch (error) {
+        await Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: error.message,
+          confirmButtonText: 'Aceptar'
+        });
+      }
+
+      return;
+    }
+
+    // DESACTIVAR — flujo con selección de horarios
     try {
-      const res = await fetch(`/usuarios/actualizar/${id}`, { method: 'POST', body: datos });
+      // Paso 1 — Cargamos los horarios del empleado
+      const res = await fetch(`/usuarios/horarios-de-empleado/${id}`);
       const data = await res.json();
 
       if (!res.ok || data.status !== 'success') {
-        throw new Error(data.message || `No se pudo ${accion} el empleado.`);
+        throw new Error(data.message || 'No se pudieron cargar los horarios.');
+      }
+
+      const horarios = data.data;
+
+      // Paso 2 — Construimos la tabla de horarios
+      let tablaHtml = '';
+
+      if (horarios.length === 0) {
+        tablaHtml = `<p class="text-muted">Este empleado no tiene turnos asignados en ningún horario.</p>`;
+      } else {
+        tablaHtml = `
+          <p class="mb-2" style="text-align:left">Selecciona los horarios cuyos turnos quieres liberar:</p>
+          <table class="table table-sm table-bordered" style="font-size:0.85rem">
+            <thead>
+              <tr>
+                <th style="width:40px"></th>
+                <th>Horario</th>
+                <th>Inicio</th>
+                <th>Fin</th>
+                <th>Turnos</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${horarios.map(h => `
+                <tr style="cursor:pointer" onclick="this.querySelector('input').click()">
+                  <td class="text-center">
+                    <input type="checkbox" class="tt-horario-check" value="${h.hor_id_horario}">
+                  </td>
+                  <td>${h.hor_nombre}</td>
+                  <td>${h.hor_fecha_inicio ?? '—'}</td>
+                  <td>${h.hor_fecha_fin ?? '—'}</td>
+                  <td>${h.total_turnos}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `;
+      }
+
+      // Paso 3 — Mostramos el modal
+const resultado = await Swal.fire({
+  title: 'Desactivar empleado',
+  width: 800,
+  html: `
+<p class="mb-2" style="text-align:left">Selecciona los horarios cuyos turnos quieres liberar:</p>
+  <table class="table table-sm table-bordered" style="font-size:0.85rem">
+    <thead>
+      <tr>
+        <th style="width:40px"></th>
+        <th>Horario</th>
+        <th>Inicio</th>
+        <th>Fin</th>
+        <th>Turnos</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${horarios.map(h => `
+        <tr class="tt-horario-fila" style="cursor:pointer">
+          <td class="text-center">
+            <input type="checkbox" class="tt-horario-check" value="${h.hor_id_horario}" onclick="event.stopPropagation()">
+          </td>
+          <td>${h.hor_nombre}</td>
+          <td>${h.hor_fecha_inicio ?? '—'}</td>
+          <td>${h.hor_fecha_fin ?? '—'}</td>
+          <td>${h.total_turnos}</td>
+        </tr>
+      `).join('')}
+    </tbody>
+  </table>
+  `,
+  showCancelButton: true,
+  confirmButtonText: 'Desactivar',
+  cancelButtonText: 'Cancelar',
+  didOpen: () => {
+    const filas = document.querySelectorAll('.tt-horario-fila');
+    filas.forEach(fila => {
+      fila.addEventListener('click', function () {
+        const checkbox = this.querySelector('.tt-horario-check');
+        checkbox.checked = !checkbox.checked;
+      });
+    });
+  }
+});
+
+      if (!resultado.isConfirmed) return;
+
+      // Paso 4 — Recogemos los horarios seleccionados
+      const seleccionados = [...document.querySelectorAll('.tt-horario-check:checked')]
+        .map(cb => cb.value);
+
+      // Paso 5 — Enviamos
+      const datos = new FormData();
+      seleccionados.forEach(idHorario => datos.append('horarios[]', idHorario));
+
+      const res2 = await fetch(`/usuarios/desactivar-con-liberar/${id}`, { method: 'POST', body: datos });
+      const data2 = await res2.json();
+
+      if (!res2.ok || data2.status !== 'success') {
+        throw new Error(data2.message || 'No se pudo desactivar el empleado.');
       }
 
       await Swal.fire({
         icon: 'success',
-        title: `Empleado ${activo ? 'desactivado' : 'activado'}`,
-        text: `El empleado ha sido ${activo ? 'desactivado' : 'activado'} correctamente.`,
+        title: 'Empleado desactivado',
+        text: data2.message,
         confirmButtonText: 'Aceptar'
       });
 
@@ -257,24 +388,60 @@ document.addEventListener('DOMContentLoaded', function () {
     const id = boton.dataset.id;
     const nombre = boton.dataset.nombre;
 
-    const confirmado = await Swal.fire({
+    // Paso 1 — Confirmación previa siempre
+    const confirmacionPrevia = await Swal.fire({
       icon: 'warning',
       title: '¿Eliminar empleado?',
-      text: `Esta acción eliminará a ${nombre} permanentemente y no se puede deshacer.`,
+      text: `¿Estás seguro de que quieres eliminar a ${nombre}? Esta acción no se puede deshacer.`,
       showCancelButton: true,
-      confirmButtonText: 'Eliminar',
+      confirmButtonText: 'Sí, eliminar',
       cancelButtonText: 'Cancelar',
-      reverseButtons: true,
       confirmButtonColor: '#EF4444',
     });
 
-    if (!confirmado.isConfirmed) return;
+    if (!confirmacionPrevia.isConfirmed) return;
 
+    // Paso 2 — Intentamos eliminar
     try {
       const res = await fetch(`/usuarios/eliminar/${id}`, { method: 'POST' });
       const data = await res.json();
 
-      if (!res.ok || data.status !== 'success') {
+      // Paso 3 — Si tiene turnos asignados mostramos aviso
+      if (data.status === 'tiene_turnos') {
+        const confirmado = await Swal.fire({
+          icon: 'warning',
+          title: 'Este empleado tiene turnos asignados',
+          html: `<p>${nombre} tiene turnos asignados. Debes liberarlos antes de eliminar al empleado.</p>
+                <p class="text-muted" style="font-size:0.85rem">Los turnos quedarán disponibles para ser reasignados.</p>`,
+          showCancelButton: true,
+          confirmButtonText: 'Liberar turnos y eliminar',
+          cancelButtonText: 'Cancelar',
+          confirmButtonColor: '#EF4444',
+        });
+
+        if (!confirmado.isConfirmed) return;
+
+        // Paso 4 — Liberamos turnos y eliminamos
+        const res2 = await fetch(`/usuarios/liberar-y-eliminar/${id}`, { method: 'POST' });
+        const data2 = await res2.json();
+
+        if (!res2.ok || data2.status !== 'success') {
+          throw new Error(data2.message || 'No se pudo eliminar el empleado.');
+        }
+
+        await Swal.fire({
+          icon: 'success',
+          title: 'Empleado eliminado',
+          text: data2.message,
+          confirmButtonText: 'Aceptar'
+        });
+
+        window.location.reload();
+        return;
+      }
+
+      // Paso 5 — Sin turnos, éxito directo
+      if (data.status !== 'success') {
         throw new Error(data.message || 'No se pudo eliminar el empleado.');
       }
 

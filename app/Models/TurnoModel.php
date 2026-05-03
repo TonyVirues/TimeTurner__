@@ -161,5 +161,54 @@ public function getTurnosPorUsuarioYEmpresa(int $usuarioId, int $idEmpresa): arr
         ->findAll();
 }
 
+  /**
+   * Libera todos los turnos de un usuario — los deja sin asignar
+   * @param int $idUsuario
+   * @return void
+   */
+  public function liberarTurnosDeUsuario(int $idUsuario): void
+  {
+      $this->db->table('turnos')
+          ->where('tur_id_usuario', $idUsuario)
+          ->update([
+              'tur_id_usuario' => null,
+              'tur_estado'     => 'disponible',
+          ]);
+  }
+      /**
+   * Devuelve los horarios donde el usuario tiene turnos asignados
+   * @param int $idUsuario
+   * @return array
+   */
+  public function getHorariosConTurnosPorUsuario(int $idUsuario): array
+  {
+      return $this->db->table('turnos t')
+          ->select('h.hor_id_horario, h.hor_nombre, h.hor_fecha_inicio, h.hor_fecha_fin, COUNT(t.tur_id_turno) as total_turnos')
+          ->join('horarios h', 'h.hor_id_horario = t.tur_id_horario')
+          ->where('t.tur_id_usuario', $idUsuario)
+          ->whereIn('t.tur_estado', ['asignado', 'pendiente_cambio'])
+          ->groupBy('h.hor_id_horario')
+          ->orderBy('h.hor_fecha_inicio', 'ASC')
+          ->get()
+          ->getResultArray();
+  }
+    /**
+   * Libera los turnos de un usuario en los horarios seleccionados
+   * @param int $idUsuario
+   * @param array $idsHorarios
+   * @return void
+   */
+  public function liberarTurnosDeUsuarioPorHorarios(int $idUsuario, array $idsHorarios): void
+  {
+      $this->db->table('turnos')
+          ->where('tur_id_usuario', $idUsuario)
+          ->whereIn('tur_id_horario', $idsHorarios)
+          ->whereIn('tur_estado', ['asignado', 'pendiente_cambio'])
+          ->update([
+              'tur_id_usuario' => null,
+              'tur_estado'     => 'disponible',
+          ]);
+  }
+
 
 }

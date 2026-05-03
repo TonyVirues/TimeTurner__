@@ -42,6 +42,9 @@ $routes->get('usuarios/mostrar/(:num)', 'UsuariosController::mostrar/$1');
 $routes->post('usuarios/crear', 'UsuariosController::crear');
 $routes->post('usuarios/actualizar/(:num)', 'UsuariosController::actualizar/$1');
 $routes->post('usuarios/eliminar/(:num)', 'UsuariosController::eliminar/$1');
+$routes->post('usuarios/liberar-y-eliminar/(:num)', 'UsuariosController::liberarYEliminar/$1');
+$routes->get('usuarios/horarios-de-empleado/(:num)', 'UsuariosController::horariosDeEmpleado/$1');
+$routes->post('usuarios/desactivar-con-liberar/(:num)', 'UsuariosController::desactivarConLiberar/$1');
 
 // Rutas gestion de perfil
 $routes->get('perfil', 'PerfilController::perfil');

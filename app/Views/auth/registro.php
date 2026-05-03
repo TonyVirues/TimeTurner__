@@ -102,7 +102,7 @@
             <button type="submit" class="btn btn-primary w-100">Registrarse</button>
 
             <div class="text-center mt-3">
-              <span class="text-muted">¿Ya tienes cuenta?</span>
+              <span>¿Ya tienes cuenta?</span>
               <a href="<?= base_url('login') ?>" class="ms-1">Inicia sesión</a>
             </div>
           </form>

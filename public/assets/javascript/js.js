@@ -59,8 +59,7 @@ window.addEventListener("resize", function () {
 
 function actualizarBadgeSolicitudes() {
   const badge = document.querySelector('.tt-nav-badge');
-
-  if (!badge) return;
+  const campana = document.getElementById('ttCampanaBadge');
 
   fetch('/solicitudes/listado?sol_estado=pendiente')
     .then(function (response) {
@@ -72,15 +71,29 @@ function actualizarBadgeSolicitudes() {
 
       const total = data.data.length;
 
-      if (total === 0) {
-        badge.style.display = 'none';
-      } else {
-        badge.style.display = '';
-        badge.textContent = total;
+      // Badge sidebar
+      if (badge) {
+        if (total === 0) {
+          badge.style.display = 'none';
+        } else {
+          badge.style.display = '';
+          badge.textContent = total;
+        }
+      }
+
+      // Badge campana
+      if (campana) {
+        if (total === 0) {
+          campana.classList.add('d-none');
+        } else {
+          campana.classList.remove('d-none');
+          campana.textContent = total;
+        }
       }
     })
     .catch(function () {
-      badge.style.display = 'none';
+      if (badge) badge.style.display = 'none';
+      if (campana) campana.classList.add('d-none');
     });
 }
 

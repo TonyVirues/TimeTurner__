@@ -5,8 +5,8 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('vista') ?>
-<div class="login-page">
-  <div class="container-fluid d-flex justify-content-center py-5 rounded">
+<div class="login-page auth-page">
+  <div class="container-fluid d-flex justify-content-center align-items-center min-vh-100 py-3 rounded">
     <div class="row registro-wrapper mx-auto">
 
       <!--Lado izquierdo-->

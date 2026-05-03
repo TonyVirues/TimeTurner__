@@ -304,11 +304,7 @@ section {
    no llega. Prefijo tt- para evitar conflictos.
    ============================================================ */
 
-html,
-body,
-main {
-  height: 100%;
-}
+
 
 /* --- Menu (sidebar) --- */
 .tt-sidebar {

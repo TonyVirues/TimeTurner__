@@ -22,58 +22,80 @@
             </div>
           <?php endif; ?>
 
+          <!--Variable para validación de error-->
+          <?php $errorCampo = session()->getFlashdata('errorCampo') ?? ''; ?>
           <form action="<?= base_url('registro') ?>" method="post">
             <!-- Seguridad -->
             <?= csrf_field() ?>
 
             <!-- Input del nombre -->
             <div class="mb-3 position-relative">
-              <label class="form-label">Nombre</label>
+              <label class="form-label">Nombre <span class="text-danger">*</span></label>
               <span class="material-symbols-outlined input-icon">person</span>
-              <input type="text" name="usu_nombre" class="form-control ps-5" placeholder="Mar" value="<?= old('usu_nombre') ?>" required>
+              <input type="text" name="usu_nombre" 
+                  class="form-control ps-5 
+                  <?= in_array($errorCampo, ['nombre', 'obligatorios']) ? 'is-invalid' : '' ?>" 
+                  placeholder="Mar" value="<?= old('usu_nombre') ?>" required>
+              <div class="invalid-feedback"><?= esc(session()->getFlashdata('error')) ?></div>
             </div>
 
             <!-- Input del apellido -->
             <div class="mb-3 position-relative">
-              <label class="form-label">Apellidos</label>
+              <label class="form-label">Apellidos <span class="text-danger">*</span></label>
               <span class="material-symbols-outlined input-icon">person</span>
-              <input type="text" name="usu_apellidos" class="form-control ps-5" placeholder="Sanchez" value="<?= old('usu_apellidos') ?>" required>
+              <input type="text" name="usu_apellidos" 
+                  class="form-control ps-5 <?= in_array($errorCampo, ['nombre', 'obligatorios']) ? 'is-invalid' : '' ?>" 
+                  placeholder="Sanchez" value="<?= old('usu_apellidos') ?>" required>
+              <div class="invalid-feedback"><?= esc(session()->getFlashdata('error')) ?></div>
             </div>
 
             <!--Input del email-->
             <div class="mb-3 position-relative">
-              <label class="form-label">Email</label>
+              <label class="form-label">Email<span class="text-danger">*</span></label>
               <span class="material-symbols-outlined input-icon">mail</span>
-              <input type="email" name="usu_email" class="form-control ps-5" placeholder="mar@gmail.com" value="<?= old('usu_email') ?>" required>
+              <input type="email" name="usu_email" 
+                  class="form-control ps-5 <?= in_array($errorCampo, ['email', 'obligatorios']) ? 'is-invalid' : '' ?>" 
+                  placeholder="mar@gmail.com" value="<?= old('usu_email') ?>" required>
+              <div class="invalid-feedback"><?= esc(session()->getFlashdata('error')) ?></div>
             </div>
 
             <!--Input de contraseña-->
             <div class="mb-3 position-relative">
-              <label class="form-label">Contraseña</label>
+              <label class="form-label">Contraseña <span class="text-danger">*</span></label>
               <span class="material-symbols-outlined input-icon">lock</span>
-              <input type="password" name="usu_password" class="form-control ps-5"
-                placeholder="********" required>
+              <input type="password" name="usu_password" 
+                  class="form-control ps-5 <?= in_array($errorCampo, ['password', 'obligatorios']) ? 'is-invalid' : '' ?>" 
+                  placeholder="********" required>
+              <div class="invalid-feedback"><?= esc(session()->getFlashdata('error')) ?></div>
             </div>
 
             <div class="mb-3 position-relative">
-              <label class="form-label">Confirma contraseña</label>
+              <label class="form-label">Confirma contraseña <span class="text-danger">*</span></label>
               <span class="material-symbols-outlined input-icon">lock</span>
-              <input type="password" name="cpassword" class="form-control ps-5"
-                placeholder="********" required>
+              <input type="password" name="cpassword" 
+                  class="form-control ps-5 <?= $errorCampo === 'password' ? 'is-invalid' : '' ?>" 
+                  placeholder="********" required>
+              <div class="invalid-feedback"><?= esc(session()->getFlashdata('error')) ?></div>
             </div>
 
             <!-- Input nombre empresa -->
             <div class="mb-3 position-relative">
-              <label class="form-label">Nombre de la empresa</label>
+              <label class="form-label">Nombre de la empresa <span class="text-danger">*</span></label>
               <span class="material-symbols-outlined input-icon">business</span>
-              <input type="text" name="emp_nombre" class="form-control ps-5" placeholder="Mi empresa S.L." value="<?= old('emp_nombre') ?>" required>
+              <input type="text" name="emp_nombre" 
+                  class="form-control ps-5 <?= $errorCampo === 'obligatorios' ? 'is-invalid' : '' ?>" 
+                  placeholder="Mi empresa S.L." value="<?= old('emp_nombre') ?>" required>
+              <div class="invalid-feedback"><?= esc(session()->getFlashdata('error')) ?></div>
             </div>
 
             <!-- Input CIF -->
             <div class="mb-3 position-relative">
               <label class="form-label">CIF (opcional)</label>
               <span class="material-symbols-outlined input-icon">badge</span>
-              <input type="text" name="emp_cif" class="form-control ps-5" placeholder="B12345678" value="<?= old('emp_cif') ?>">
+              <input type="text" name="emp_cif" 
+                  class="form-control ps-5 <?= $errorCampo === 'cif' ? 'is-invalid' : '' ?>" 
+                  placeholder="B12345678" value="<?= old('emp_cif') ?>">
+              <div class="invalid-feedback"><?= esc(session()->getFlashdata('error')) ?></div>
             </div>
 
             <!--botón-->

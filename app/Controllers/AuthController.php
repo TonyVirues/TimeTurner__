@@ -153,6 +153,14 @@ class AuthController extends BaseController
             ->with('error', 'El nombre y los apellidos no pueden contener números.')
             ->with('errorCampo', 'nombre');
     }
+    /**Formato CIF inválido */
+    if ($cif !== '' && !preg_match('/^[ABCDEFGHJKLMNPQRSUVW]\d{7}[0-9A-J]$/i', $cif)) {
+        return redirect()->back()
+            ->withInput()
+            ->with('error', 'El CIF no tiene un formato válido. Ejemplo: B12345678')
+            ->with('errorCampo', 'cif');
+    }
+
     /**El CIF ya existe */
     if ($cif !== '' && $this->empresaModel->existeCif($cif)) {
     return redirect()->back()
@@ -161,7 +169,7 @@ class AuthController extends BaseController
         ->with('errorCampo', 'cif');
     }
 
-    /**Array para validad las credenciales de esta */
+    /**Array para validad las credenciales de la empresa*/
     $idEmpresa = $this->empresaModel->insert([
       'emp_nombre' => $nombreEmpresa,
       'emp_cif' => $cif !== '' ? $cif : null,

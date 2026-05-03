@@ -749,3 +749,15 @@ header {
 [data-bs-theme="dark"] .swal2-html-container span {
   color: #F1F5F9;
 }
+
+/*Color boton desactivar de vista administrador*/
+[data-bs-theme="dark"] .tt-btn-toggle-activo.btn-outline-warning {
+  color: #10b981;
+  border-color: #10b981;
+}
+
+[data-bs-theme="dark"] .tt-btn-toggle-activo.btn-outline-warning:hover {
+  background-color: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  border-color: #10b981;
+}

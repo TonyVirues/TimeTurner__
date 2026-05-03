@@ -22,15 +22,21 @@
         <span class="tt-nav-label">Calendario</span>
       </a>
     </li>
-    <!-- Sección Compañeros -->
+    <!-- Sección de administracion ususarios y compañeros -->
     <li class="nav-item mt-2">
-      <small class="tt-nav-section px-2">Compañeros</small>
+      <small class="tt-nav-section px-2">
+        <?= session('usu_rol') === 'administrador' ? 'Administración' : 'Compañeros' ?>
+      </small>
     </li>
     <li class="nav-item">
       <a href="/usuarios" class="nav-link tt-nav-link d-flex align-items-center gap-2 rounded-3
       <?= str_contains($rutaActual, 'usuarios') ? 'active' : '' ?>">
-        <span class="material-symbols-outlined">group</span>
-        <span class="tt-nav-label">Compañeros</span>
+        <span class="material-symbols-outlined">
+          <?= session('usu_rol') === 'administrador' ? 'manage_accounts' : 'group' ?>
+        </span>
+        <span class="tt-nav-label">
+          <?= session('usu_rol') === 'administrador' ? 'Gestión de usuarios' : 'Compañeros' ?>
+        </span>
       </a>
     </li>
 

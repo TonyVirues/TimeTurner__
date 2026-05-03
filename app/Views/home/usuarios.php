@@ -3,10 +3,13 @@
   <!-- Cabecera -->
   <div class="d-flex align-items-center justify-content-between px-4 py-3 border-bottom">
     <div>
-      <h5 class="mb-0 fw-bold">Compañeros</h5>
-      <small class="text-muted">Usuarios registrados en el sistema</small>
+      <h5 class="mb-0 fw-bold">
+        <?= session('usu_rol') === 'administrador' ? 'Gestión de usuarios' : 'Compañeros' ?>
+      </h5>
+      <small class="text-muted">
+        <?= session('usu_rol') === 'administrador' ? 'Gestión de empleados de tu empresa' : 'Usuarios registrados en el sistema' ?>
+      </small>
     </div>
-    <!-- Buscador preparado para backend -->
     <div class="d-flex gap-2">
       <input
         type="text"
@@ -15,6 +18,12 @@
         placeholder="Buscar por nombre..."
         style="max-width: 220px;"
       >
+      <?php if (session('usu_rol') === 'administrador') : ?>
+        <button type="button" class="btn btn-primary btn-sm" id="btnNuevoEmpleado">
+          <span class="material-symbols-outlined" style="font-size: 18px; vertical-align: middle;">person_add</span>
+          Nuevo empleado
+        </button>
+      <?php endif; ?>
     </div>
   </div>
 
@@ -53,8 +62,44 @@
                   <span class="badge tt-badge-inactivo">Inactivo</span>
                 <?php endif; ?>
 
-                <!-- Botón solicitar cambio — solo si no es el propio usuario -->
-                <?php if ($usuario['usu_id_usuario'] !== session()->get('usu_id_usuario')) : ?>
+                <!-- Botones según rol -->
+<?php if (session('usu_rol') === 'administrador') : ?>
+  <div class="d-flex gap-2 mt-2 justify-content-center">
+
+    <!--Botón de editar-->
+    <button
+      type="button"
+      class="btn btn-sm btn-outline-secondary tt-btn-editar-usuario"
+      title="Editar"
+      data-id="<?= esc($usuario['usu_id_usuario']) ?>"
+      data-nombre="<?= esc($usuario['usu_nombre']) ?>"
+      data-apellidos="<?= esc($usuario['usu_apellidos']) ?>"
+      data-email="<?= esc($usuario['usu_email']) ?>"
+      data-rol="<?= esc($usuario['usu_rol']) ?>"
+      data-activo="<?= esc($usuario['usu_activo']) ?>">
+      <span class="material-symbols-outlined" style="font-size:18px">edit</span>
+    </button>
+    
+    <!--Botóbn de desactivar-->
+    <button
+      type="button"
+      class="btn btn-sm <?= $usuario['usu_activo'] ? 'btn-outline-warning' : 'btn-outline-success' ?> tt-btn-toggle-activo"
+      title="<?= $usuario['usu_activo'] ? 'Desactivar' : 'Activar' ?>"
+      data-id="<?= esc($usuario['usu_id_usuario']) ?>"
+      data-activo="<?= esc($usuario['usu_activo']) ?>">
+      <span class="material-symbols-outlined" style="font-size:18px"><?= $usuario['usu_activo'] ? 'toggle_on' : 'toggle_off' ?></span>
+    </button>
+    <button
+      type="button"
+      class="btn btn-sm btn-outline-danger tt-btn-eliminar-usuario"
+      title="Eliminar"
+      data-id="<?= esc($usuario['usu_id_usuario']) ?>"
+      data-nombre="<?= esc($usuario['usu_nombre'] . ' ' . $usuario['usu_apellidos']) ?>">
+      <span class="material-symbols-outlined" style="font-size:18px">delete</span>
+    </button>
+  </div>
+<?php elseif ($usuario['usu_id_usuario'] !== session()->get('usu_id_usuario')) : ?>
+                <?php elseif ($usuario['usu_id_usuario'] !== session()->get('usu_id_usuario')) : ?>
                   <button
                     type="button"
                     class="btn btn-sm btn-outline-primary mt-2 tt-btn-solicitar"
@@ -84,3 +129,7 @@
   </div>
 
 </div>
+
+<?= $this->section('scripts') ?>
+<script src="/assets/javascript/usuarios.js"></script>
+<?= $this->endSection() ?>

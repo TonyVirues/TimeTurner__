@@ -38,6 +38,10 @@ $routes->post('turnos/eliminar/(:num)', 'TurnosController::eliminar/$1');
 
 // Rutas de usuarios
 $routes->get('usuarios/listado', 'UsuariosController::listado');
+$routes->get('usuarios/mostrar/(:num)', 'UsuariosController::mostrar/$1');
+$routes->post('usuarios/crear', 'UsuariosController::crear');
+$routes->post('usuarios/actualizar/(:num)', 'UsuariosController::actualizar/$1');
+$routes->post('usuarios/eliminar/(:num)', 'UsuariosController::eliminar/$1');
 
 // Rutas gestion de perfil
 $routes->get('perfil', 'PerfilController::perfil');

@@ -11,18 +11,23 @@
       </small>
     </div>
     <div class="d-flex gap-2">
+      
+      <!--Crear usuario empleado-->
+      <?php if (session('usu_rol') === 'administrador') : ?>
+        <button type="button" class="btn btn-sm tt-btn-nuevo-empleado d-flex align-items-center justify-content-center" 
+          id="btnNuevoEmpleado" title="Nuevo empleado"
+          style="width: 36px; height: 36px; padding: 0;">
+          <span class="material-symbols-outlined" style="font-size: 20px;">person_add</span>
+        </button>
+      <?php endif; ?>
+      
+      <!--Buscador de usuarios-->
       <input
         type="text"
         id="buscadorUsuarios"
         class="form-control form-control-sm"
-        placeholder="Buscar por nombre..."
+        placeholder="🔍 Buscar por nombre..."
         style="max-width: 220px;">
-      <?php if (session('usu_rol') === 'administrador') : ?>
-        <button type="button" class="btn btn-primary btn-sm" id="btnNuevoEmpleado">
-          <span class="material-symbols-outlined" style="font-size: 18px; vertical-align: middle;">person_add</span>
-          Nuevo empleado
-        </button>
-      <?php endif; ?>
     </div>
   </div>
 
@@ -46,7 +51,7 @@
                   <?= strtoupper(substr($usuario['usu_nombre'], 0, 1)) ?>
                   <?= strtoupper(substr($usuario['usu_apellidos'], 0, 1)) ?>
                 </div>
-                
+
                 <!-- Badge rol -->
                 <?php if ($usuario['usu_rol'] === 'administrador') : ?>
                   <span class="badge tt-badge-admin">Administrador</span>

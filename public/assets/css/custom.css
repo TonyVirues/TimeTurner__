@@ -705,6 +705,19 @@ header {
   background-color: rgba(124, 58, 237, 0.25);
   color: #a78bfa;
 }
+
+/* ==== Botón nuevo empleado ==== */
+.tt-btn-nuevo-empleado {
+  background-color: rgba(0, 122, 255, 0.2);
+  color: #4da3ff;
+  border: none;
+  border-radius: 8px;
+}
+
+.tt-btn-nuevo-empleado:hover {
+  background-color: rgba(0, 122, 255, 0.35);
+  color: #4da3ff;
+}
 /* ====Fin de vista usuarios==== */
 
 /*=================VISTA DE SOLICITUDES============*/
@@ -755,7 +768,7 @@ header {
   color: #F1F5F9;
 }
 
-/*Color boton desactivar de vista administrador*/
+/*Color botón desactivar de vista administrador*/
 [data-bs-theme="dark"] .tt-btn-toggle-activo.btn-outline-warning {
   color: #10b981;
   border-color: #10b981;

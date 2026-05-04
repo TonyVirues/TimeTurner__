@@ -228,53 +228,52 @@ class SolicitudesCambioTurnoController extends BaseController
     }
   }
 
-/**
- * Devuelve el número de solicitudes no vistas del usuario autenticado
- * @return ResponseInterface
- */
-public function contarNoVistas(): ResponseInterface
-{
+  /**
+   * Devuelve el número de solicitudes no vistas del usuario autenticado
+   * @return ResponseInterface
+   */
+  public function contarNoVistas(): ResponseInterface
+  {
     try {
-        $idUsuarioSesion = $this->obtenerIdUsuarioSesion();
+      $idUsuarioSesion = $this->obtenerIdUsuarioSesion();
 
-        $comoDestinatario = $this->solicitudCambioTurnoModel->contarNoVistas($idUsuarioSesion);
-        $comoSolicitante = $this->solicitudCambioTurnoModel->contarRespuestasNoVistas($idUsuarioSesion);
+      $total = $this->solicitudCambioTurnoModel->contarNoVistas($idUsuarioSesion);
 
-        return $this->response->setJSON([
-            'ok' => true,
-            'total' => $comoDestinatario + $comoSolicitante,
-        ]);
+      return $this->response->setJSON([
+        'ok' => true,
+        'total' => $total,
+      ]);
     } catch (Exception $e) {
-        return $this->response->setStatusCode($this->obtenerCodigoHttpDesdeExcepcion($e))->setJSON([
-            'ok' => false,
-            'mensaje' => $e->getMessage(),
-        ]);
+      return $this->response->setStatusCode($this->obtenerCodigoHttpDesdeExcepcion($e))->setJSON([
+        'ok' => false,
+        'mensaje' => $e->getMessage(),
+      ]);
     }
-}
+  }
 
-/**
- * Marca como vistas todas las solicitudes del usuario autenticado
- * @return ResponseInterface
- */
-public function marcarVistas(): ResponseInterface
-{
+  /**
+   * Marca como vistas todas las solicitudes del usuario autenticado
+   * @return ResponseInterface
+   */
+  public function marcarVistas(): ResponseInterface
+  {
     try {
-        $idUsuarioSesion = $this->obtenerIdUsuarioSesion();
+      $idUsuarioSesion = $this->obtenerIdUsuarioSesion();
 
-        $this->solicitudCambioTurnoModel->marcarTodasComoVistas($idUsuarioSesion);
-        $this->solicitudCambioTurnoModel->marcarRespuestasComoVistas($idUsuarioSesion);
+      $this->solicitudCambioTurnoModel->marcarTodasComoVistas($idUsuarioSesion);
+      $this->solicitudCambioTurnoModel->marcarRespuestasComoVistas($idUsuarioSesion);
 
-        return $this->response->setJSON([
-            'ok' => true,
-            'mensaje' => 'Notificaciones marcadas como vistas.',
-        ]);
+      return $this->response->setJSON([
+        'ok' => true,
+        'mensaje' => 'Notificaciones marcadas como vistas.',
+      ]);
     } catch (Exception $e) {
-        return $this->response->setStatusCode($this->obtenerCodigoHttpDesdeExcepcion($e))->setJSON([
-            'ok' => false,
-            'mensaje' => $e->getMessage(),
-        ]);
+      return $this->response->setStatusCode($this->obtenerCodigoHttpDesdeExcepcion($e))->setJSON([
+        'ok' => false,
+        'mensaje' => $e->getMessage(),
+      ]);
     }
-}
+  }
 
   /**
    * Devuelve el id del usuario autenticado

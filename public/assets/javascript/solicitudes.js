@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   cargarSolicitudes();
-  marcarSolicitudesVistas();
+  actualizarBadgeSolicitudes();
 
   if (filtroTipoSolicitud) {
     filtroTipoSolicitud.addEventListener("change", aplicarFiltrosYRenderizar);
@@ -492,13 +492,13 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   async function marcarSolicitudesVistas() {
-  try {
-    await fetch('/solicitudes/marcar-vistas', { method: 'POST' });
-    actualizarBadgeSolicitudes();
-  } catch (e) {
-    // silencioso — no interrumpimos la carga de solicitudes
+    try {
+      await fetch("/solicitudes/marcar-vistas", { method: "POST" });
+      actualizarBadgeSolicitudes();
+    } catch (e) {
+      // silencioso — no interrumpimos la carga de solicitudes
+    }
   }
-}
 });
 
 /**

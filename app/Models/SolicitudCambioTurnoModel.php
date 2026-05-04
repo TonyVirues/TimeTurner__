@@ -918,17 +918,17 @@ class SolicitudCambioTurnoModel extends Model
     }
   }
 
-    /**
+  /**
    * Cuenta las solicitudes no vistas del usuario destinatario
    * @param int $idUsuario
    * @return int
    */
   public function contarNoVistas(int $idUsuario): int
   {
-      return $this->db->table('solicitudes_cambio_turno')
-          ->where('sol_id_usuario_destinatario', $idUsuario)
-          ->where('sol_visto', 0)
-          ->countAllResults();
+    return $this->db->table('solicitudes_cambio_turno')
+      ->where('sol_id_usuario_destinatario', $idUsuario)
+      ->where('sol_estado', 'pendiente')
+      ->countAllResults();
   }
 
   /**
@@ -938,23 +938,23 @@ class SolicitudCambioTurnoModel extends Model
    */
   public function marcarTodasComoVistas(int $idUsuario): void
   {
-      $this->db->table('solicitudes_cambio_turno')
-          ->where('sol_id_usuario_destinatario', $idUsuario)
-          ->where('sol_visto', 0)
-          ->update(['sol_visto' => 1]);
+    $this->db->table('solicitudes_cambio_turno')
+      ->where('sol_id_usuario_destinatario', $idUsuario)
+      ->where('sol_visto', 0)
+      ->update(['sol_visto' => 1]);
   }
-    /**
+  /**
    * Cuenta las respuestas no vistas por el solicitante (aceptadas o rechazadas)
    * @param int $idUsuario
    * @return int
    */
   public function contarRespuestasNoVistas(int $idUsuario): int
   {
-      return $this->db->table('solicitudes_cambio_turno')
-          ->where('sol_id_usuario_solicitante', $idUsuario)
-          ->where('sol_visto_solicitante', 0)
-          ->whereIn('sol_estado', ['aceptada', 'rechazada'])
-          ->countAllResults();
+    return $this->db->table('solicitudes_cambio_turno')
+      ->where('sol_id_usuario_solicitante', $idUsuario)
+      ->where('sol_visto_solicitante', 0)
+      ->whereIn('sol_estado', ['aceptada', 'rechazada'])
+      ->countAllResults();
   }
 
   /**
@@ -964,10 +964,10 @@ class SolicitudCambioTurnoModel extends Model
    */
   public function marcarRespuestasComoVistas(int $idUsuario): void
   {
-      $this->db->table('solicitudes_cambio_turno')
-          ->where('sol_id_usuario_solicitante', $idUsuario)
-          ->where('sol_visto_solicitante', 0)
-          ->whereIn('sol_estado', ['aceptada', 'rechazada'])
-          ->update(['sol_visto_solicitante' => 1]);
+    $this->db->table('solicitudes_cambio_turno')
+      ->where('sol_id_usuario_solicitante', $idUsuario)
+      ->where('sol_visto_solicitante', 0)
+      ->whereIn('sol_estado', ['aceptada', 'rechazada'])
+      ->update(['sol_visto_solicitante' => 1]);
   }
 }

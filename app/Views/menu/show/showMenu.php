@@ -50,6 +50,7 @@
       <a href="/solicitudes" class="nav-link tt-nav-link d-flex align-items-center gap-2 rounded-3 <?= str_contains($rutaActual, 'solicitudes') ? 'active' : '' ?>">
         <span class="material-symbols-outlined">swap_horiz</span>
         <span class="tt-nav-label">Solicitudes</span>
+        <span class="tt-nav-badge ms-auto" style="display: none;"></span>
       </a>
     </li>
 

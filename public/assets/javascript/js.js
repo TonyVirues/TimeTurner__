@@ -3,12 +3,12 @@
 // ============================================================
 
 // GATES
-const sidebar  = document.getElementById("ttSidebar");
-const overlay  = document.getElementById("ttSidebarOverlay");
-const logoBtn  = document.getElementById("ttLogoBtn");
-let btnGuardarPerfil = document.getElementById('tt-btn-guardar-perfil');
-const userAvatar = document.querySelector('.tt-user-avatar');
-const userName = document.querySelector('.tt-user-name');
+const sidebar = document.getElementById("ttSidebar");
+const overlay = document.getElementById("ttSidebarOverlay");
+const logoBtn = document.getElementById("ttLogoBtn");
+let btnGuardarPerfil = document.getElementById("tt-btn-guardar-perfil");
+const userAvatar = document.querySelector(".tt-user-avatar");
+const userName = document.querySelector(".tt-user-name");
 
 // Sidebar cerrado por defecto al cargar la página
 if (sidebar) {
@@ -50,19 +50,17 @@ window.addEventListener("resize", function () {
   }
 });
 
-
 //funcion que actualiza las notificaciones en el menu para solicitudes
 
 // ============================================================
 // BADGE SOLICITUDES PENDIENTES
 // ============================================================
 
-function actualizarBadgeSolicitudes() 
-{
-  const badge = document.querySelector('.tt-nav-badge');
-  const campana = document.getElementById('ttCampanaBadge');
+function actualizarBadgeSolicitudes() {
+  const badge = document.querySelector(".tt-nav-badge");
+  const campana = document.getElementById("ttCampanaBadge");
 
-  fetch('/solicitudes/contar-no-vistas')
+  fetch("/solicitudes/contar-no-vistas")
     .then(function (response) {
       if (!response.ok) return;
       return response.json();
@@ -75,9 +73,9 @@ function actualizarBadgeSolicitudes()
       // Badge sidebar
       if (badge) {
         if (total === 0) {
-          badge.style.display = 'none';
+          badge.style.display = "none";
         } else {
-          badge.style.display = '';
+          badge.style.display = "";
           badge.textContent = total;
         }
       }
@@ -85,16 +83,16 @@ function actualizarBadgeSolicitudes()
       // Badge campana
       if (campana) {
         if (total === 0) {
-          campana.classList.add('d-none');
+          campana.classList.add("d-none");
         } else {
-          campana.classList.remove('d-none');
+          campana.classList.remove("d-none");
           campana.textContent = total;
         }
       }
     })
     .catch(function () {
-      if (badge) badge.style.display = 'none';
-      if (campana) campana.classList.add('d-none');
+      if (badge) badge.style.display = "none";
+      if (campana) campana.classList.add("d-none");
     });
 }
 
@@ -102,8 +100,8 @@ function actualizarBadgeSolicitudes()
 // SOLICITAR CAMBIO DE TURNO DESDE VISTA COMPAÑEROS
 // ============================================================
 
-document.addEventListener('click', function (e) {
-  const boton = e.target.closest('.tt-btn-solicitar');
+document.addEventListener("click", function (e) {
+  const boton = e.target.closest(".tt-btn-solicitar");
   if (!boton) return;
 
   const idDestinatario = boton.dataset.id;
@@ -113,32 +111,31 @@ document.addEventListener('click', function (e) {
 });
 
 async function abrirSwalSolicitudCambio(idDestinatario, nombreDestinatario) {
-
   // Paso 1 — Cargamos los turnos del usuario logueado
   let misTurnos = [];
 
   try {
-    const res = await fetch('/turnos/mis-turnos');
+    const res = await fetch("/turnos/mis-turnos");
     const data = await res.json();
-    if (data.status === 'success' && Array.isArray(data.data)) {
+    if (data.status === "success" && Array.isArray(data.data)) {
       misTurnos = data.data;
     }
   } catch (e) {
     await Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: 'No se pudieron cargar tus turnos.',
-      confirmButtonText: 'Aceptar'
+      icon: "error",
+      title: "Error",
+      text: "No se pudieron cargar tus turnos.",
+      confirmButtonText: "Aceptar",
     });
     return;
   }
 
   if (misTurnos.length === 0) {
     await Swal.fire({
-      icon: 'warning',
-      title: 'Sin turnos',
-      text: 'No tienes turnos asignados disponibles para solicitar un cambio.',
-      confirmButtonText: 'Aceptar'
+      icon: "warning",
+      title: "Sin turnos",
+      text: "No tienes turnos asignados disponibles para solicitar un cambio.",
+      confirmButtonText: "Aceptar",
     });
     return;
   }
@@ -147,39 +144,47 @@ async function abrirSwalSolicitudCambio(idDestinatario, nombreDestinatario) {
   let turnosCompanero = [];
 
   try {
-    const res = await fetch(`/turnos/mis-turnos-de/${encodeURIComponent(idDestinatario)}`);
+    const res = await fetch(
+      `/turnos/mis-turnos-de/${encodeURIComponent(idDestinatario)}`,
+    );
     const data = await res.json();
-    if (data.status === 'success' && Array.isArray(data.data)) {
+    if (data.status === "success" && Array.isArray(data.data)) {
       turnosCompanero = data.data;
     }
   } catch (e) {
     await Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: 'No se pudieron cargar los turnos del compañero.',
-      confirmButtonText: 'Aceptar'
+      icon: "error",
+      title: "Error",
+      text: "No se pudieron cargar los turnos del compañero.",
+      confirmButtonText: "Aceptar",
     });
     return;
   }
 
   if (turnosCompanero.length === 0) {
     await Swal.fire({
-      icon: 'warning',
-      title: 'Sin turnos',
+      icon: "warning",
+      title: "Sin turnos",
       text: `${nombreDestinatario} no tiene turnos disponibles para intercambiar.`,
-      confirmButtonText: 'Aceptar'
+      confirmButtonText: "Aceptar",
     });
     return;
   }
 
   // Paso 3 — Mostramos el formulario
-  const opcionesMisTurnos = misTurnos.map(t =>
-    `<option value="${t.tur_id_turno}">${t.tur_inicio} → ${t.tur_fin}</option>`
-  ).join('');
+  const opcionesMisTurnos = misTurnos
+    .map(
+      (t) =>
+        `<option value="${t.tur_id_turno}">${t.tur_inicio} → ${t.tur_fin}</option>`,
+    )
+    .join("");
 
-  const opcionesCompanero = turnosCompanero.map(t =>
-    `<option value="${t.tur_id_turno}">${t.tur_inicio} → ${t.tur_fin}</option>`
-  ).join('');
+  const opcionesCompanero = turnosCompanero
+    .map(
+      (t) =>
+        `<option value="${t.tur_id_turno}">${t.tur_inicio} → ${t.tur_fin}</option>`,
+    )
+    .join("");
 
   const resultado = await Swal.fire({
     title: `Solicitar cambio con ${nombreDestinatario}`,
@@ -200,25 +205,29 @@ async function abrirSwalSolicitudCambio(idDestinatario, nombreDestinatario) {
     `,
     focusConfirm: false,
     showCancelButton: true,
-    confirmButtonText: 'Enviar solicitud',
-    cancelButtonText: 'Cancelar',
+    confirmButtonText: "Enviar solicitud",
+    cancelButtonText: "Cancelar",
     preConfirm: function () {
-      const turnoOriginal = document.getElementById('swal_turno_original').value;
-      const turnoPropuesto = document.getElementById('swal_turno_propuesto').value;
-      const motivo = document.getElementById('swal_motivo').value.trim();
+      const turnoOriginal = document.getElementById(
+        "swal_turno_original",
+      ).value;
+      const turnoPropuesto = document.getElementById(
+        "swal_turno_propuesto",
+      ).value;
+      const motivo = document.getElementById("swal_motivo").value.trim();
 
       if (!turnoOriginal) {
-        Swal.showValidationMessage('Debes seleccionar tu turno.');
+        Swal.showValidationMessage("Debes seleccionar tu turno.");
         return false;
       }
 
       if (!turnoPropuesto) {
-        Swal.showValidationMessage('Debes seleccionar el turno del compañero.');
+        Swal.showValidationMessage("Debes seleccionar el turno del compañero.");
         return false;
       }
 
       return { turnoOriginal, turnoPropuesto, motivo };
-    }
+    },
   });
 
   if (!resultado.isConfirmed) return;
@@ -227,36 +236,35 @@ async function abrirSwalSolicitudCambio(idDestinatario, nombreDestinatario) {
   const idUsuarioLogueado = window.ttUsuario?.id;
 
   const datos = new FormData();
-  datos.append('sol_id_usuario_solicitante', idUsuarioLogueado);
-  datos.append('sol_id_usuario_destinatario', idDestinatario);
-  datos.append('sol_id_turno_original', resultado.value.turnoOriginal);
-  datos.append('sol_id_turno_propuesto', resultado.value.turnoPropuesto);
-  datos.append('sol_motivo', resultado.value.motivo);
+  datos.append("sol_id_usuario_solicitante", idUsuarioLogueado);
+  datos.append("sol_id_usuario_destinatario", idDestinatario);
+  datos.append("sol_id_turno_original", resultado.value.turnoOriginal);
+  datos.append("sol_id_turno_propuesto", resultado.value.turnoPropuesto);
+  datos.append("sol_motivo", resultado.value.motivo);
 
   try {
-    const res = await fetch('/solicitudes/crear', {
-      method: 'POST',
-      body: datos
+    const res = await fetch("/solicitudes/crear", {
+      method: "POST",
+      body: datos,
     });
     const data = await res.json();
 
     if (!res.ok || !data.ok) {
-      throw new Error(data.mensaje || 'No se pudo crear la solicitud.');
+      throw new Error(data.mensaje || "No se pudo crear la solicitud.");
     }
 
     await Swal.fire({
-      icon: 'success',
-      title: 'Solicitud enviada',
-      text: 'La solicitud de cambio se ha enviado correctamente.',
-      confirmButtonText: 'Aceptar'
+      icon: "success",
+      title: "Solicitud enviada",
+      text: "La solicitud de cambio se ha enviado correctamente.",
+      confirmButtonText: "Aceptar",
     });
-
   } catch (error) {
     await Swal.fire({
-      icon: 'error',
-      title: 'Error',
+      icon: "error",
+      title: "Error",
       text: error.message,
-      confirmButtonText: 'Aceptar'
+      confirmButtonText: "Aceptar",
     });
   }
 }
@@ -266,89 +274,99 @@ async function abrirSwalSolicitudCambio(idDestinatario, nombreDestinatario) {
 // ============================================================
 
 if (btnGuardarPerfil) {
-  btnGuardarPerfil.addEventListener('click', async function () {
+  btnGuardarPerfil.addEventListener("click", async function () {
     const btn = this;
-    const mensaje = document.getElementById('tt-perfil-mensaje');
+    const mensaje = document.getElementById("tt-perfil-mensaje");
 
     btn.disabled = true;
-    btn.textContent = 'Guardando...';
+    btn.textContent = "Guardando...";
 
-    const password = document.getElementById('usu_password').value.trim();
-    const passwordConfirm = document.getElementById('usu_password_confirm').value.trim();
+    const password = document.getElementById("usu_password").value.trim();
+    const passwordConfirm = document
+      .getElementById("usu_password_confirm")
+      .value.trim();
 
-// Limpiar mensajes de error previos bajo los inputs
-document.querySelectorAll('.tt-input-error').forEach(el => el.remove());
+    // Limpiar mensajes de error previos bajo los inputs
+    document.querySelectorAll(".tt-input-error").forEach((el) => el.remove());
 
-if (password || passwordConfirm) {
-  let hayError = false;
+    if (password || passwordConfirm) {
+      let hayError = false;
 
-  if (!password) {
-    const err = document.createElement('small');
-    err.className = 'tt-input-error text-danger';
-    err.textContent = 'Campo necesario.';
-    document.getElementById('usu_password').after(err);
-    hayError = true;
-  }
+      if (!password) {
+        const err = document.createElement("small");
+        err.className = "tt-input-error text-danger";
+        err.textContent = "Campo necesario.";
+        document.getElementById("usu_password").after(err);
+        hayError = true;
+      }
 
-  if (!passwordConfirm) {
-    const err = document.createElement('small');
-    err.className = 'tt-input-error text-danger';
-    err.textContent = 'Campo necesario.';
-    document.getElementById('usu_password_confirm').after(err);
-    hayError = true;
-  }
+      if (!passwordConfirm) {
+        const err = document.createElement("small");
+        err.className = "tt-input-error text-danger";
+        err.textContent = "Campo necesario.";
+        document.getElementById("usu_password_confirm").after(err);
+        hayError = true;
+      }
 
-  if (hayError) {
-    btn.disabled = false;
-    btn.textContent = 'Guardar cambios';
-    return;
-  }
+      if (hayError) {
+        btn.disabled = false;
+        btn.textContent = "Guardar cambios";
+        return;
+      }
 
-  if (password !== passwordConfirm) {
-    mensaje.style.display = 'block';
-    mensaje.className = 'alert alert-danger mb-3';
-    mensaje.textContent = 'Las contraseñas no coinciden.';
-    btn.disabled = false;
-    btn.textContent = 'Guardar cambios';
-    return;
-  }
-}
+      if (password !== passwordConfirm) {
+        mensaje.style.display = "block";
+        mensaje.className = "alert alert-danger mb-3";
+        mensaje.textContent = "Las contraseñas no coinciden.";
+        btn.disabled = false;
+        btn.textContent = "Guardar cambios";
+        return;
+      }
+    }
 
     const datos = new FormData();
-    datos.append('usu_nombre', document.getElementById('usu_nombre').value.trim());
-    datos.append('usu_apellidos', document.getElementById('usu_apellidos').value.trim());
-    datos.append('usu_email', document.getElementById('usu_email').value.trim());
+    datos.append(
+      "usu_nombre",
+      document.getElementById("usu_nombre").value.trim(),
+    );
+    datos.append(
+      "usu_apellidos",
+      document.getElementById("usu_apellidos").value.trim(),
+    );
+    datos.append(
+      "usu_email",
+      document.getElementById("usu_email").value.trim(),
+    );
 
     if (password) {
-      datos.append('usu_password', password);
-      datos.append('usu_password_confirm', passwordConfirm);
+      datos.append("usu_password", password);
+      datos.append("usu_password_confirm", passwordConfirm);
     }
 
     try {
-      const res = await fetch('/perfil/actualizar', {
-        method: 'POST',
+      const res = await fetch("/perfil/actualizar", {
+        method: "POST",
         body: datos,
       });
 
       const data = await res.json();
-      mensaje.style.display = 'block';
+      mensaje.style.display = "block";
 
-      if (data.status === 'success') {
-        mensaje.className = 'alert alert-success mb-3';
+      if (data.status === "success") {
+        mensaje.className = "alert alert-success mb-3";
         mensaje.textContent = data.message;
-        document.getElementById('usu_password').value = '';
+        document.getElementById("usu_password").value = "";
       } else {
-        mensaje.className = 'alert alert-danger mb-3';
-        mensaje.textContent = data.message ?? 'Error al guardar los cambios.';
+        mensaje.className = "alert alert-danger mb-3";
+        mensaje.textContent = data.message ?? "Error al guardar los cambios.";
       }
-
     } catch (e) {
-      mensaje.style.display = 'block';
-      mensaje.className = 'alert alert-danger mb-3';
-      mensaje.textContent = 'Error de conexión. Inténtalo de nuevo.';
+      mensaje.style.display = "block";
+      mensaje.className = "alert alert-danger mb-3";
+      mensaje.textContent = "Error de conexión. Inténtalo de nuevo.";
     } finally {
       btn.disabled = false;
-      btn.textContent = 'Guardar cambios';
+      btn.textContent = "Guardar cambios";
     }
   });
 }
@@ -358,9 +376,9 @@ if (password || passwordConfirm) {
 
 [userAvatar, userName].forEach(function (el) {
   if (el) {
-    el.style.cursor = 'pointer';
-    el.addEventListener('click', function () {
-      window.location.href = '/perfil';
+    el.style.cursor = "pointer";
+    el.addEventListener("click", function () {
+      window.location.href = "/perfil";
     });
   }
 });
@@ -369,25 +387,25 @@ if (password || passwordConfirm) {
 // MODO DARK / LIGHT
 // ============================================================
 
-const toggleTema = document.getElementById('tt-toggle-tema');
+const toggleTema = document.getElementById("tt-toggle-tema");
 const htmlEl = document.documentElement;
 
 // Aplicar tema guardado al cargar la página
-const temaGuardado = localStorage.getItem('tt-tema') ?? 'light';
-htmlEl.setAttribute('data-bs-theme', temaGuardado);
+const temaGuardado = localStorage.getItem("tt-tema") ?? "light";
+htmlEl.setAttribute("data-bs-theme", temaGuardado);
 if (toggleTema) {
-  toggleTema.textContent = temaGuardado === 'dark' ? 'light_mode' : 'dark_mode';
+  toggleTema.textContent = temaGuardado === "dark" ? "light_mode" : "dark_mode";
 }
 
 // Cambiar tema al hacer clic
 if (toggleTema) {
-  toggleTema.addEventListener('click', function () {
-    const temaActual = htmlEl.getAttribute('data-bs-theme');
-    const nuevoTema = temaActual === 'dark' ? 'light' : 'dark';
+  toggleTema.addEventListener("click", function () {
+    const temaActual = htmlEl.getAttribute("data-bs-theme");
+    const nuevoTema = temaActual === "dark" ? "light" : "dark";
 
-    htmlEl.setAttribute('data-bs-theme', nuevoTema);
-    localStorage.setItem('tt-tema', nuevoTema);
-    toggleTema.textContent = nuevoTema === 'dark' ? 'light_mode' : 'dark_mode';
+    htmlEl.setAttribute("data-bs-theme", nuevoTema);
+    localStorage.setItem("tt-tema", nuevoTema);
+    toggleTema.textContent = nuevoTema === "dark" ? "light_mode" : "dark_mode";
   });
 }
 //Llamada de la función para actualizar las notificaciones de solicitudes

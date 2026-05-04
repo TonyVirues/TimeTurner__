@@ -6,6 +6,28 @@ document.addEventListener('DOMContentLoaded', function () {
 
   const btnNuevoEmpleado = document.getElementById('btnNuevoEmpleado');
 
+  // ============================================================
+  // BUSCADOR DE USUARIOS
+  // ============================================================
+
+  const buscador = document.getElementById('buscadorUsuarios');
+
+  if (buscador) {
+    buscador.addEventListener('input', function () {
+      const termino = this.value.toLowerCase().trim();
+      const tarjetas = document.querySelectorAll('.tt-usuario-card');
+
+      tarjetas.forEach(function (tarjeta) {
+        const nombre = tarjeta.querySelector('h6')?.textContent.toLowerCase() ?? '';
+        const email = tarjeta.querySelector('small')?.textContent.toLowerCase() ?? '';
+
+        const coincide = nombre.includes(termino) || email.includes(termino);
+        tarjeta.closest('.col-12').style.display = coincide ? '' : 'none';
+      });
+    });
+  }
+
+
   // Solo ejecutamos si el botón existe (administrador)
   if (!btnNuevoEmpleado) return;
 
@@ -27,6 +49,8 @@ document.addEventListener('DOMContentLoaded', function () {
           <input id="sw_email" type="email" class="swal2-input tt-swal-input" placeholder="email@empresa.com">
           <label class="tt-swal-label">Contraseña</label>
           <input id="sw_password" type="password" class="swal2-input tt-swal-input" placeholder="Mínimo 8 caracteres">
+          <label class="tt-swal-label">Confirmar contraseña</label>
+<input id="sw_password_confirm" type="password" class="swal2-input tt-swal-input" placeholder="Confirmar contraseña">
           <label class="tt-swal-label">Rol</label>
           <select id="sw_rol" class="swal2-input tt-swal-input">
             <option value="empleado">Empleado</option>
@@ -39,24 +63,30 @@ document.addEventListener('DOMContentLoaded', function () {
       confirmButtonText: 'Crear empleado',
       cancelButtonText: 'Cancelar',
       preConfirm: function () {
-        const nombre = document.getElementById('sw_nombre').value.trim();
-        const apellidos = document.getElementById('sw_apellidos').value.trim();
-        const email = document.getElementById('sw_email').value.trim();
-        const password = document.getElementById('sw_password').value;
-        const rol = document.getElementById('sw_rol').value;
+  const nombre = document.getElementById('sw_nombre').value.trim();
+  const apellidos = document.getElementById('sw_apellidos').value.trim();
+  const email = document.getElementById('sw_email').value.trim();
+  const password = document.getElementById('sw_password').value;
+  const passwordConfirm = document.getElementById('sw_password_confirm').value;
+  const rol = document.getElementById('sw_rol').value;
 
-        if (!nombre || !apellidos || !email || !password) {
-          Swal.showValidationMessage('Debes rellenar todos los campos.');
-          return false;
-        }
+  if (!nombre || !apellidos || !email || !password || !passwordConfirm) {
+    Swal.showValidationMessage('Debes rellenar todos los campos.');
+    return false;
+  }
 
-        if (password.length < 8) {
-          Swal.showValidationMessage('La contraseña debe tener al menos 8 caracteres.');
-          return false;
-        }
+  if (password.length < 8) {
+    Swal.showValidationMessage('La contraseña debe tener al menos 8 caracteres.');
+    return false;
+  }
 
-        return { nombre, apellidos, email, password, rol };
-      }
+  if (password !== passwordConfirm) {
+    Swal.showValidationMessage('Las contraseñas no coinciden.');
+    return false;
+  }
+
+  return { nombre, apellidos, email, password, rol };
+}
     });
 
     if (!resultado.isConfirmed) return;
@@ -463,5 +493,6 @@ const resultado = await Swal.fire({
       });
     }
   });
+
 
 });

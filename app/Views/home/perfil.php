@@ -1,4 +1,4 @@
-<div class="tt-calendario-wrapper p-3">
+<div class="tt-calendario-wrapper p-3 d-flex ">
   <div class="card h-100 border border-2 shadow rounded-4 overflow-hidden d-flex flex-column">
 
     <!-- Cabecera -->
@@ -35,23 +35,29 @@
           <!-- Formulario -->
           <div id="tt-perfil-mensaje" class="mb-3" style="display:none;"></div>
             <div class="mb-3">
+              <!--Nombre-->
               <label class="form-label fw-semibold">Nombre</label>
               <input type="text" id="usu_nombre" class="form-control"
                 value="<?= $usuario['usu_nombre'] ?? '' ?>">
             </div>
 
+            <!--Apellidos-->
             <div class="mb-3">
               <label class="form-label fw-semibold">Apellidos</label>
               <input type="text" id="usu_apellidos" class="form-control"
                 value="<?= $usuario['usu_apellidos'] ?? '' ?>">
             </div>
 
-            <div class="mb-3">
-              <label class="form-label fw-semibold">Email</label>
-              <input type="email" id="usu_email" class="form-control"
-                value="<?= $usuario['usu_email'] ?? '' ?>">
-            </div>
+            <!--Email-->
+            <?php if (session('usu_rol') === 'administrador') : ?>
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Email</label>
+                <input type="email" id="usu_email" class="form-control"
+                  value="<?= $usuario['usu_email'] ?? '' ?>">
+              </div>
+            <?php endif; ?>
 
+            <!--Contraseñas-->
             <div class="mb-3">
               <label class="form-label fw-semibold">Nueva contraseña</label>
               <input type="password" id="usu_password" class="form-control"
@@ -64,6 +70,7 @@
                 placeholder="Repite la nueva contraseña">
             </div>
 
+            <!--Botón guardado-->
             <div class="d-flex justify-content-end mt-4">
               <button type="button" id="tt-btn-guardar-perfil" class="btn btn-primary px-4">
                 Guardar cambios

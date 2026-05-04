@@ -34,6 +34,7 @@
       <!-- Grid de tarjetas -->
       <div class="row g-3">
         <?php foreach ($usuarios as $usuario) : ?>
+
           <!--Evita que aparezca el propio usuario logeado-->
           <?php if ($usuario['usu_id_usuario'] === session()->get('usu_id_usuario')) continue; ?>
           <div class="col-12 col-sm-6 col-md-4 col-lg-3">
@@ -45,6 +46,11 @@
                   <?= strtoupper(substr($usuario['usu_nombre'], 0, 1)) ?>
                   <?= strtoupper(substr($usuario['usu_apellidos'], 0, 1)) ?>
                 </div>
+                
+                <!-- Badge rol -->
+                <?php if ($usuario['usu_rol'] === 'administrador') : ?>
+                  <span class="badge tt-badge-admin">Administrador</span>
+                <?php endif; ?>
 
                 <!-- Nombre -->
                 <h6 class="mb-0 fw-bold">

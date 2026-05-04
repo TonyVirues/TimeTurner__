@@ -333,10 +333,10 @@ if (btnGuardarPerfil) {
       "usu_apellidos",
       document.getElementById("usu_apellidos").value.trim(),
     );
-    datos.append(
-      "usu_email",
-      document.getElementById("usu_email").value.trim(),
-    );
+    const emailInput = document.getElementById("usu_email");
+    if (emailInput) {
+      datos.append("usu_email", emailInput.value.trim());
+    }
 
     if (password) {
       datos.append("usu_password", password);

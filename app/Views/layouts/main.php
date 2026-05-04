@@ -43,7 +43,7 @@
   </div>
 
   <!-- Copyright -->
-  <div class="px-4 py-2">
+  <div class="px-4 py-2 text-center">
     <small class="text-muted">
       &copy; TimeTurner | Gestor de turnos | Antonio J. Marín Virues | Mar Sánchez Sevillano | <?= date('Y') ?>
       &nbsp;|&nbsp; Environment: <?= ENVIRONMENT ?>

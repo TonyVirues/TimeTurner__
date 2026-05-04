@@ -165,7 +165,7 @@ document.addEventListener("DOMContentLoaded", function () {
         },
       );
     },
-    
+
     eventMouseEnter: function (info) {
     const coloresPorEstado = {
       asignado:       { bg: '#66bb6a', border: '#388e3c' },
@@ -258,6 +258,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Se ejecuta cuando escucha cambios en el select
     horarioSelect.addEventListener("change", function () {
+      const horarioSeleccionado = obtenerHorarioPorId(horariosDisponibles, horarioSelect.value);
+
+      if (horarioSeleccionado && horarioSeleccionado.hor_fecha_inicio) {
+        calendar.gotoDate(horarioSeleccionado.hor_fecha_inicio);
+      }
+
       calendar.refetchEvents();
     });
   }
@@ -362,7 +368,8 @@ function crearOpcionPorDefectoHorario() {
  * @returns
  */
 function construirTextoOpcionHorario(horario) {
-  return `${horario.hor_nombre} | ${horario.hor_fecha_inicio} → ${horario.hor_fecha_fin} | ${capitalizarTexto(horario.hor_estado)}`;
+  return `${horario.hor_nombre} | ${formatearFechaEuropea(horario.hor_fecha_inicio)} → 
+  ${formatearFechaEuropea(horario.hor_fecha_fin)} | ${capitalizarTexto(horario.hor_estado)}`;
 }
 
 /**
@@ -1487,10 +1494,18 @@ function convertirSeleccionMesARangoHorario(info) {
  * @param {*} fecha
  * @returns
  */
+
 function formatearFechaSoloDia(fecha) {
   const year = fecha.getFullYear();
   const month = String(fecha.getMonth() + 1).padStart(2, "0");
   const day = String(fecha.getDate()).padStart(2, "0");
 
   return `${year}-${month}-${day}`;
+}
+
+
+function formatearFechaEuropea(fechaTexto) {
+  if (!fechaTexto) return '';
+  const [year, month, day] = fechaTexto.split('-');
+  return `${day}/${month}/${year}`;
 }

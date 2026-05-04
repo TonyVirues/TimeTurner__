@@ -95,6 +95,16 @@ function actualizarBadgeSolicitudes() {
       if (campana) campana.classList.add("d-none");
     });
 }
+//Cambios para mostrar fecha europea
+function formatearFechaTurno(fechaTexto) {
+  if (!fechaTexto) return '';
+  const fecha = new Date(fechaTexto.replace(' ', 'T'));
+  if (Number.isNaN(fecha.getTime())) return fechaTexto;
+  return fecha.toLocaleString('es-ES', {
+    day: '2-digit', month: '2-digit', year: 'numeric',
+    hour: '2-digit', minute: '2-digit'
+  });
+}
 
 // ============================================================
 // SOLICITAR CAMBIO DE TURNO DESDE VISTA COMPAÑEROS
@@ -172,19 +182,14 @@ async function abrirSwalSolicitudCambio(idDestinatario, nombreDestinatario) {
   }
 
   // Paso 3 — Mostramos el formulario
-  const opcionesMisTurnos = misTurnos
-    .map(
-      (t) =>
-        `<option value="${t.tur_id_turno}">${t.tur_inicio} → ${t.tur_fin}</option>`,
-    )
-    .join("");
+const opcionesMisTurnos = misTurnos
+  .map((t) => `<option value="${t.tur_id_turno}">${formatearFechaTurno(t.tur_inicio)} → ${formatearFechaTurno(t.tur_fin)}</option>`)
+  .join("");
 
-  const opcionesCompanero = turnosCompanero
-    .map(
-      (t) =>
-        `<option value="${t.tur_id_turno}">${t.tur_inicio} → ${t.tur_fin}</option>`,
-    )
-    .join("");
+const opcionesCompanero = turnosCompanero
+  .map((t) => `<option value="${t.tur_id_turno}">${formatearFechaTurno(t.tur_inicio)} → ${formatearFechaTurno(t.tur_fin)}</option>`)
+  .join("");
+
 
   const resultado = await Swal.fire({
     title: `Solicitar cambio con ${nombreDestinatario}`,

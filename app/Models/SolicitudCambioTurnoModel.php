@@ -635,7 +635,7 @@ class SolicitudCambioTurnoModel extends Model
    */
   private function validarEstadosTurnosParaSolicitud(array $turnoOriginal, array $turnoPropuesto): void
   {
-    $estadosNoPermitidos = ['cancelado', 'cambiado'];
+    $estadosNoPermitidos = ['cancelado', 'pendiente_cambio'];
 
     if (in_array($turnoOriginal['tur_estado'], $estadosNoPermitidos, true)) {
       throw new Exception('El turno original no está disponible para intercambio.', 409);
@@ -643,10 +643,6 @@ class SolicitudCambioTurnoModel extends Model
 
     if (in_array($turnoPropuesto['tur_estado'], $estadosNoPermitidos, true)) {
       throw new Exception('El turno propuesto no está disponible para intercambio.', 409);
-    }
-
-    if ($turnoOriginal['tur_estado'] === 'pendiente_cambio' || $turnoPropuesto['tur_estado'] === 'pendiente_cambio') {
-      throw new Exception('Uno de los turnos ya tiene una solicitud pendiente.', 409);
     }
   }
 

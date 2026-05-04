@@ -22,22 +22,45 @@
             </div>
           <?php endif; ?>
 
-          <form action="<?= base_url('login') ?>" method="post">
+          <?php $errorCampo = session()->getFlashdata('errorCampo') ?? ''; ?>
+
+          <form action="<?= base_url('login') ?>" method="post" autocomplete="off">
             <!-- Seguridad -->
             <?= csrf_field() ?>
 
             <!-- Input del ususario -->
             <div class="mb-3 position-relative">
-              <label class="form-label">Usuario / Email</label>
+              <label class="form-label">Email</label>
               <span class="material-symbols-outlined input-icon">person</span>
-              <input type="text" name="email" class="form-control ps-5" placeholder="mar@gmail.com" value="<?= old('email') ?>" required>
+              <input
+                type="text"
+                name="email"
+                class="form-control ps-5 <?= $errorCampo === 'email' ? 'is-invalid' : '' ?>"
+                placeholder="ejemplo@correo.com"
+                value="<?= old('email') ?>"
+                autocomplete="off">
+              <?php if ($errorCampo === 'email'): ?>
+                <div class="invalid-feedback">
+                  <?= esc(session()->getFlashdata('error')) ?>
+                </div>
+              <?php endif; ?>
             </div>
 
             <!-- Input de contraseña -->
             <div class="mb-3 position-relative">
               <label class="form-label">Password</label>
               <span class="material-symbols-outlined input-icon">lock</span>
-              <input type="password" name="password" class="form-control ps-5" placeholder="********" required>
+              <input
+                type="password"
+                name="password"
+                class="form-control ps-5 <?= $errorCampo === 'password' ? 'is-invalid' : '' ?>"
+                placeholder="********"
+                autocomplete="new-password">
+              <?php if ($errorCampo === 'password'): ?>
+                <div class="invalid-feedback">
+                  <?= esc(session()->getFlashdata('error')) ?>
+                </div>
+              <?php endif; ?>
             </div>
 
             <!--Recordarme-->

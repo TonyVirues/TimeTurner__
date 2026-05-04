@@ -51,10 +51,18 @@ class AuthController extends BaseController
     $email = mb_strtolower(trim((string) $this->request->getPost('email')));
     $password = (string) $this->request->getPost('password');
 
-    if ($email === '' || $password === '') {
+    if ($email === '') {
       return redirect()->back()
         ->withInput()
-        ->with('error', 'Debes rellenar email y contraseña.');
+        ->with('error', 'El email es obligatorio.')
+        ->with('errorCampo', 'email');
+    }
+
+    if ($password === '') {
+      return redirect()->back()
+        ->withInput()
+        ->with('error', 'La contraseña es obligatoria.')
+        ->with('errorCampo', 'password');
     }
 
     $usuario = $this->usuarioModel->getUsuarioPorEmail($email);
@@ -105,19 +113,53 @@ class AuthController extends BaseController
     $cpassword = (string) $this->request->getPost('cpassword');
 
     /**Campos obligatorios */
-    if (
-      $nombre === '' ||
-      $apellidos === '' ||
-      $email === '' ||
-      $password === '' ||
-      $cpassword === '' ||
-      $nombreEmpresa === '' ||
-      $cif === ''
-    ) {
+    if ($nombre === '') {
       return redirect()->back()
         ->withInput()
-        ->with('error', 'Debes rellenar todos los campos obligatorios.')
-        ->with('errorCampo', 'obligatorios');
+        ->with('error', 'El nombre es obligatorio.')
+        ->with('errorCampo', 'nombre');
+    }
+
+    if ($apellidos === '') {
+      return redirect()->back()
+        ->withInput()
+        ->with('error', 'Los apellidos son obligatorios.')
+        ->with('errorCampo', 'apellidos');
+    }
+
+    if ($email === '') {
+      return redirect()->back()
+        ->withInput()
+        ->with('error', 'El email es obligatorio.')
+        ->with('errorCampo', 'email');
+    }
+
+    if ($password === '') {
+      return redirect()->back()
+        ->withInput()
+        ->with('error', 'La contraseña es obligatoria.')
+        ->with('errorCampo', 'password');
+    }
+
+    if ($cpassword === '') {
+      return redirect()->back()
+        ->withInput()
+        ->with('error', 'Debes confirmar la contraseña.')
+        ->with('errorCampo', 'password');
+    }
+
+    if ($nombreEmpresa === '') {
+      return redirect()->back()
+        ->withInput()
+        ->with('error', 'El nombre de la empresa es obligatorio.')
+        ->with('errorCampo', 'empresa');
+    }
+
+    if ($cif === '') {
+      return redirect()->back()
+        ->withInput()
+        ->with('error', 'El CIF es obligatorio.')
+        ->with('errorCampo', 'cif');
     }
 
     /**Contraseñas no coinciden */
@@ -148,12 +190,19 @@ class AuthController extends BaseController
         ->with('error', 'Ya existe un usuario con ese email.')
         ->with('errorCampo', 'email');
     }
-    /**Nombre y apellido no pude contener números */
-    if (preg_match('/\d/', $nombre) || preg_match('/\d/', $apellidos)) {
+    /**Nombre no pude contener números */
+    if (preg_match('/\d/', $nombre)) {
       return redirect()->back()
         ->withInput()
         ->with('error', 'El nombre y los apellidos no pueden contener números.')
         ->with('errorCampo', 'nombre');
+    }
+    /**Apellidos no pude contener números */
+    if (preg_match('/\d/', $apellidos)) {
+      return redirect()->back()
+        ->withInput()
+        ->with('error', 'Los apellidos no pueden contener números.')
+        ->with('errorCampo', 'apellidos');
     }
     /**Formato CIF inválido */
     $cif = mb_strtoupper($cif);

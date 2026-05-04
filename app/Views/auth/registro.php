@@ -11,7 +11,6 @@
 
       <!--Lado izquierdo-->
       <div class="col-md-6 login-left d-flex  justify-content-center">
-        <!--Título-->
         <div style="width: 100%; max-width: 400px;">
           <h1 class="fw-bold mb-4">TimeTurner</h1>
           <h2 class="mb-4">Registro</h2>
@@ -22,83 +21,81 @@
             </div>
           <?php endif; ?>
 
-          <!--Variable para validación de error-->
           <?php $errorCampo = session()->getFlashdata('errorCampo') ?? ''; ?>
-          <form action="<?= base_url('registro') ?>" method="post">
-            <!-- Seguridad -->
+
+          <form action="<?= base_url('registro') ?>" method="post" autocomplete="off">
             <?= csrf_field() ?>
 
-            <!-- Input del nombre -->
+            <!-- Nombre -->
             <div class="mb-3 position-relative">
               <label class="form-label">Nombre <span class="text-danger">*</span></label>
               <span class="material-symbols-outlined input-icon">person</span>
               <input type="text" name="usu_nombre"
-                class="form-control ps-5 
-                  <?= in_array($errorCampo, ['nombre', 'obligatorios']) ? 'is-invalid' : '' ?>"
-                placeholder="Nombre" value="<?= old('usu_nombre') ?>" required>
+                class="form-control ps-5 <?= $errorCampo === 'nombre' ? 'is-invalid' : '' ?>"
+                placeholder="Nombre" value="<?= old('usu_nombre') ?>">
               <div class="invalid-feedback"><?= esc(session()->getFlashdata('error')) ?></div>
             </div>
 
-            <!-- Input del apellido -->
+            <!-- Apellidos -->
             <div class="mb-3 position-relative">
               <label class="form-label">Apellidos <span class="text-danger">*</span></label>
               <span class="material-symbols-outlined input-icon">person</span>
               <input type="text" name="usu_apellidos"
-                class="form-control ps-5 <?= in_array($errorCampo, ['nombre', 'obligatorios']) ? 'is-invalid' : '' ?>"
-                placeholder="Apellidos" value="<?= old('usu_apellidos') ?>" required>
+                class="form-control ps-5 <?= $errorCampo === 'apellidos' ? 'is-invalid' : '' ?>"
+                placeholder="Apellidos" value="<?= old('usu_apellidos') ?>">
               <div class="invalid-feedback"><?= esc(session()->getFlashdata('error')) ?></div>
             </div>
 
-            <!--Input del email-->
+            <!-- Email -->
             <div class="mb-3 position-relative">
               <label class="form-label">Email<span class="text-danger">*</span></label>
               <span class="material-symbols-outlined input-icon">mail</span>
               <input type="email" name="usu_email"
-                class="form-control ps-5 <?= in_array($errorCampo, ['email', 'obligatorios']) ? 'is-invalid' : '' ?>"
-                placeholder="ejemplo@correo.com" value="<?= old('usu_email') ?>" required>
+                class="form-control ps-5 <?= $errorCampo === 'email' ? 'is-invalid' : '' ?>"
+                placeholder="ejemplo@correo.com" value="<?= old('usu_email') ?>">
               <div class="invalid-feedback"><?= esc(session()->getFlashdata('error')) ?></div>
             </div>
 
-            <!--Input de contraseña-->
+            <!-- Contraseña -->
             <div class="mb-3 position-relative">
               <label class="form-label">Contraseña <span class="text-danger">*</span></label>
               <span class="material-symbols-outlined input-icon">lock</span>
               <input type="password" name="usu_password"
-                class="form-control ps-5 <?= in_array($errorCampo, ['password', 'obligatorios']) ? 'is-invalid' : '' ?>"
-                placeholder="********" required>
+                class="form-control ps-5 <?= $errorCampo === 'password' ? 'is-invalid' : '' ?>"
+                placeholder="********" autocomplete="new-password">
               <div class="invalid-feedback"><?= esc(session()->getFlashdata('error')) ?></div>
             </div>
 
+            <!-- Confirmar contraseña -->
             <div class="mb-3 position-relative">
               <label class="form-label">Confirma contraseña <span class="text-danger">*</span></label>
               <span class="material-symbols-outlined input-icon">lock</span>
               <input type="password" name="cpassword"
                 class="form-control ps-5 <?= $errorCampo === 'password' ? 'is-invalid' : '' ?>"
-                placeholder="********" required>
+                placeholder="********" autocomplete="new-password">
               <div class="invalid-feedback"><?= esc(session()->getFlashdata('error')) ?></div>
             </div>
 
-            <!-- Input nombre empresa -->
+            <!-- Empresa -->
             <div class="mb-3 position-relative">
               <label class="form-label">Nombre de la empresa <span class="text-danger">*</span></label>
               <span class="material-symbols-outlined input-icon">business</span>
               <input type="text" name="emp_nombre"
-                class="form-control ps-5 <?= $errorCampo === 'obligatorios' ? 'is-invalid' : '' ?>"
-                placeholder="Mi empresa S.L." value="<?= old('emp_nombre') ?>" required>
+                class="form-control ps-5 <?= $errorCampo === 'empresa' ? 'is-invalid' : '' ?>"
+                placeholder="Mi empresa S.L." value="<?= old('emp_nombre') ?>">
               <div class="invalid-feedback"><?= esc(session()->getFlashdata('error')) ?></div>
             </div>
 
-            <!-- Input CIF -->
+            <!-- CIF -->
             <div class="mb-3 position-relative">
               <label class="form-label">CIF <span class="text-danger">*</span></label>
               <span class="material-symbols-outlined input-icon">badge</span>
               <input type="text" name="emp_cif"
                 class="form-control ps-5 <?= $errorCampo === 'cif' ? 'is-invalid' : '' ?>"
-                placeholder="B12345678" value="<?= old('emp_cif') ?>" required>
+                placeholder="B12345678" value="<?= old('emp_cif') ?>">
               <div class="invalid-feedback"><?= esc(session()->getFlashdata('error')) ?></div>
             </div>
 
-            <!--botón-->
             <button type="submit" class="btn btn-primary w-100">Registrarse</button>
 
             <div class="text-center mt-3">
@@ -112,22 +109,16 @@
       <!--Lado derecho-->
       <div class="col-md-6 login-right d-none d-md-flex align-items-center justify-content-center">
         <div class="text-center px-5">
-          <!--Logo-->
           <div class="mb-4">
-            <img src="/assets/imagen/logo.svg" class="img-fluid  rounded" style="max-width: 200px;" alt="Logo Timeturner">
+            <img src="/assets/imagen/logo.svg" class="img-fluid rounded" style="max-width: 200px;" alt="Logo Timeturner">
           </div>
 
-          <!--Título-->
-          <h2 class="fw-bold mb-3">
-            TimeTurner
-          </h2>
+          <h2 class="fw-bold mb-3">TimeTurner</h2>
 
-          <!--Texto-->
-          <p>
-            La mejor forma de gestionar tus turnos de trabajo.
-          </p>
+          <p>La mejor forma de gestionar tus turnos de trabajo.</p>
         </div>
       </div>
+
     </div>
   </div>
 </div>

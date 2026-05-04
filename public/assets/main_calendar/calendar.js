@@ -1270,7 +1270,6 @@ async function confirmarEliminarTurno() {
     showCancelButton: true,
     confirmButtonText: "Sí, eliminar",
     cancelButtonText: "Cancelar",
-    reverseButtons: true,
   });
 
   return resultado.isConfirmed;
@@ -1282,23 +1281,54 @@ async function confirmarEliminarTurno() {
  * @returns
  */
 async function eliminarTurno(turnoId) {
-  // Llamamos al backend para eliminar el turno
   const resultado = await fetch(
     `/turnos/eliminar/${encodeURIComponent(turnoId)}`,
-    {
-      method: "POST",
-    },
+    { method: 'POST' }
   ).then(parsearRespuestaFetch);
 
-  if (!resultado.ok || resultado.data.status !== "success") {
-    throw new Error(resultado.data.message || "No se pudo eliminar el turno");
+  // Si tiene solicitud pendiente mostramos aviso
+  if (resultado.data.status === 'pendiente_cambio') {
+    const confirmado = await Swal.fire({
+      icon: 'warning',
+      title: 'Turno con solicitud pendiente',
+      html: `<p>Este turno tiene una solicitud de cambio pendiente.</p>
+             <p class="text-muted" style="font-size:0.85rem">Si continúas, la solicitud se cancelará automáticamente.</p>`,
+      showCancelButton: true,
+      confirmButtonText: 'Cancelar solicitud y eliminar',
+      cancelButtonText: 'Volver',
+      confirmButtonColor: '#EF4444',
+    });
+
+    if (!confirmado.isConfirmed) return false;
+
+    const resultado2 = await fetch(
+      `/turnos/cancelar-solicitud-y-eliminar/${encodeURIComponent(turnoId)}`,
+      { method: 'POST' }
+    ).then(parsearRespuestaFetch);
+
+    if (!resultado2.ok || resultado2.data.status !== 'success') {
+      throw new Error(resultado2.data.message || 'No se pudo eliminar el turno.');
+    }
+
+    await Swal.fire({
+      icon: 'success',
+      title: 'Turno eliminado',
+      text: resultado2.data.message,
+      confirmButtonText: 'Aceptar'
+    });
+
+    return true;
+  }
+
+  if (!resultado.ok || resultado.data.status !== 'success') {
+    throw new Error(resultado.data.message || 'No se pudo eliminar el turno.');
   }
 
   await Swal.fire({
-    icon: "success",
-    title: "Turno eliminado",
-    text: "El turno se ha eliminado correctamente.",
-    confirmButtonText: "Aceptar",
+    icon: 'success',
+    title: 'Turno eliminado',
+    text: 'El turno se ha eliminado correctamente.',
+    confirmButtonText: 'Aceptar'
   });
 
   return true;

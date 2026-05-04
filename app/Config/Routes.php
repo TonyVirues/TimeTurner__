@@ -35,6 +35,7 @@ $routes->get('turnos/eventos', 'TurnosController::eventos');
 $routes->post('turnos/crear', 'TurnosController::crear');
 $routes->post('turnos/actualizar/(:num)', 'TurnosController::actualizar/$1');
 $routes->post('turnos/eliminar/(:num)', 'TurnosController::eliminar/$1');
+$routes->post('turnos/cancelar-solicitud-y-eliminar/(:num)', 'TurnosController::cancelarSolicitudYEliminar/$1');
 
 // Rutas de usuarios
 $routes->get('usuarios/listado', 'UsuariosController::listado');

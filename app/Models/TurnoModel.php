@@ -108,7 +108,7 @@ class TurnoModel extends Model
     return $eventos;
   }
 
-  
+
 /**
  * Devuelve los turnos de un horario filtrados por estado, en formato FullCalendar
  * @param int $horarioId
@@ -187,13 +187,13 @@ public function getTurnosParaCalendarioFiltrados(int $horarioId, array $estados)
    * @param int $usuarioId
    * @return array
    */
-  public function getTurnosPorUsuario(int $usuarioId): array
-  {
+public function getTurnosPorUsuario(int $usuarioId): array
+{
     return $this->where('tur_id_usuario', $usuarioId)
-      ->whereIn('tur_estado', ['asignado', 'cambiado'])
-      ->orderBy('tur_inicio', 'ASC')
-      ->findAll();
-  }
+        ->whereIn('tur_estado', ['asignado', 'pendiente_cambio', 'cambiado'])
+        ->orderBy('tur_inicio', 'ASC')
+        ->findAll();
+}
 
   /**
    * Devuelve los turnos asignados a un usuario concreto de la misma empresa

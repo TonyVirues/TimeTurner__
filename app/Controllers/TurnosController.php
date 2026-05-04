@@ -379,37 +379,89 @@ public function eventos(): ResponseInterface
    */
   public function eliminar($id): ResponseInterface
   {
-    $errorPermisos = $this->exigirAdministrador();
+      $errorPermisos = $this->exigirAdministrador();
 
-    if ($errorPermisos !== null) {
-      return $errorPermisos;
-    }
+      if ($errorPermisos !== null) {
+          return $errorPermisos;
+      }
 
-    $turno = $this->turnoModel->getTurno((int) $id);
+      $turno = $this->turnoModel->getTurno((int) $id);
 
-    if (!$turno) {
-      return $this->responderNoEncontrado();
-    }
+      if (!$turno) {
+          return $this->responderNoEncontrado();
+      }
 
-    $errorEmpresaTurno = $this->validarTurnoPerteneceAEmpresaActual($turno);
+      $errorEmpresaTurno = $this->validarTurnoPerteneceAEmpresaActual($turno);
 
-    if ($errorEmpresaTurno !== null) {
-      return $errorEmpresaTurno;
-    }
+      if ($errorEmpresaTurno !== null) {
+          return $errorEmpresaTurno;
+      }
 
-    $eliminado = $this->turnoModel->delete((int) $id);
+      if ($turno['tur_estado'] === 'pendiente_cambio') {
+          return $this->response->setStatusCode(409)->setJSON([
+              'status' => 'pendiente_cambio',
+              'message' => 'Este turno tiene una solicitud de cambio pendiente.',
+          ]);
+      }
 
-    if (!$eliminado) {
-      return $this->response->setStatusCode(500)->setJSON([
-        'status' => 'error',
-        'message' => 'No se pudo eliminar el turno.',
+      $eliminado = $this->turnoModel->delete((int) $id);
+
+      if (!$eliminado) {
+          return $this->response->setStatusCode(500)->setJSON([
+              'status' => 'error',
+              'message' => 'No se pudo eliminar el turno.',
+          ]);
+      }
+
+      return $this->response->setJSON([
+          'status' => 'success',
+          'message' => 'Turno eliminado correctamente.',
       ]);
-    }
+  }
 
-    return $this->response->setJSON([
-      'status' => 'success',
-      'message' => 'Turno eliminado correctamente.',
-    ]);
+  /**
+   * Cancela la solicitud pendiente del turno y lo elimina
+   * @param int $id
+   * @return ResponseInterface
+   */
+  public function cancelarSolicitudYEliminar(int $id): ResponseInterface
+  {
+      $errorPermisos = $this->exigirAdministrador();
+
+      if ($errorPermisos !== null) {
+          return $errorPermisos;
+      }
+
+      $turno = $this->turnoModel->getTurno($id);
+
+      if (!$turno) {
+          return $this->responderNoEncontrado();
+      }
+
+      $errorEmpresa = $this->validarTurnoPerteneceAEmpresaActual($turno);
+
+      if ($errorEmpresa !== null) {
+          return $errorEmpresa;
+      }
+
+      $this->db->table('solicitudes_cambio_turno')
+          ->groupStart()
+              ->where('sol_id_turno_original', $id)
+              ->orWhere('sol_id_turno_propuesto', $id)
+          ->groupEnd()
+          ->where('sol_estado', 'pendiente')
+          ->update([
+              'sol_estado' => 'cancelada',
+              'sol_fecha_resolucion' => date('Y-m-d H:i:s'),
+              'sol_comentario_resolucion' => 'Cancelada automáticamente por eliminación del turno.',
+          ]);
+
+      $this->turnoModel->delete($id);
+
+      return $this->response->setJSON([
+          'status' => 'success',
+          'message' => 'Solicitud cancelada y turno eliminado correctamente.',
+      ]);
   }
 
   /**

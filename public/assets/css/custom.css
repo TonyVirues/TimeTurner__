@@ -254,6 +254,16 @@ section {
   color: #495057;
 }
 
+[data-bs-theme="dark"] .tt-swal-info {
+  background-color: #2a3f57;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-bs-theme="dark"] .tt-swal-info-titulo,
+[data-bs-theme="dark"] .tt-swal-info-valor {
+  color: #F1F5F9;
+}
+
 /* ==== Fechas en línea ==== */
 
 .tt-swal-fechas {

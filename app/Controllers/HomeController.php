@@ -55,7 +55,7 @@ class HomeController extends BaseController
     return view('home/home', [
       'vista_contenido' => 'home/usuarios',
       'usuarios' => $usuarioModel->getUsuariosPorEmpresa($idEmpresa),
-      'title' => 'Compañeros | TimeTurner',
+      'title' => (session()->get('usu_rol') === 'administrador' ? 'Gestión de usuarios' : 'Compañeros') . ' | TimeTurner',
     ]);
   }
 

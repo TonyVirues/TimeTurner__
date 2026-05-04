@@ -165,6 +165,32 @@ document.addEventListener("DOMContentLoaded", function () {
         },
       );
     },
+    
+    eventMouseEnter: function (info) {
+    const coloresPorEstado = {
+      asignado:       { bg: '#66bb6a', border: '#388e3c' },
+      disponible:     { bg: '#42a5f5', border: '#1976d2' },
+      pendiente_cambio: { bg: '#ffa726', border: '#f57c00' },
+      cambiado:       { bg: '#ab47bc', border: '#7b1fa2' },
+      cancelado:      { bg: '#757575', border: '#424242' },
+    };
+
+    const estado = info.event.extendedProps.estado;
+    const colores = coloresPorEstado[estado];
+
+    if (colores) {
+      info.el.style.backgroundColor = colores.bg;
+      info.el.style.borderColor = colores.border;
+      info.el.style.boxShadow = '0 4px 12px rgba(0,0,0,0.25)';
+      info.el.style.cursor = 'pointer';
+    }
+  },
+
+  eventMouseLeave: function (info) {
+    info.el.style.backgroundColor = '';
+    info.el.style.borderColor = '';
+    info.el.style.boxShadow = '';
+  },
 
     /**
      * Carga los turnos del calendario desde el backend según el horario seleccionado

@@ -54,22 +54,8 @@
       </a>
     </li>
 
-    <!--Mis turnos-->
-    <li class="nav-item">
-      <a href="#" class="nav-link tt-nav-link d-flex align-items-center gap-2 rounded-3">
-        <span class="material-symbols-outlined">badge</span>
-        <span class="tt-nav-label">Mis turnos</span>
-        <span class="tt-nav-badge-blue ms-auto">12</span>
-      </a>
-    </li>
-
-    <!--Horarios-->
-    <li class="nav-item">
-      <a href="#" class="nav-link tt-nav-link d-flex align-items-center gap-2 rounded-3">
-        <span class="material-symbols-outlined">table_view</span>
-        <span class="tt-nav-label">Horarios</span>
-      </a>
-    </li>
+    <!-- Espaciador -->
+    <li class="flex-grow-1"></li>
   </ul>
 
 <!-- Pie del sidebar — usuario -->

@@ -72,22 +72,25 @@
     </li>
   </ul>
 
-  <!-- Pie del sidebar — usuario -->
-  <div class="px-2 pb-3 tt-sidebar-footer tt-sidebar-border-top">
-    <div class="d-flex align-items-center gap-2 px-2 py-2 rounded-3 tt-user-block">
-      <div class="tt-user-avatar d-flex align-items-center justify-content-center rounded-circle">
-        <?= strtoupper(substr(session('usu_nombre') ?? 'U', 0, 1)) ?>
-      </div>
-      <div style="overflow: hidden; flex: 1;">
-        <span class="d-block tt-user-name text-truncate">
-          <?= (session('usu_nombre') ?? 'Usuario') ?>
-        </span>
-        <a href="<?= base_url('logout') ?>" class="tt-logout-link">
-          Cerrar sesión
-        </a>
-      </div>
+<!-- Pie del sidebar — usuario -->
+<div class="px-2 pb-3 tt-sidebar-footer tt-sidebar-border-top">
+  <div class="d-flex align-items-center gap-2 px-2 py-2 rounded-3 tt-user-block">
+    <div class="tt-user-avatar d-flex align-items-center justify-content-center rounded-circle">
+      <?= strtoupper(substr(session('usu_nombre') ?? 'U', 0, 1)) ?>
     </div>
+    <div style="overflow: hidden; flex: 1;">
+      <span class="d-block tt-user-name text-truncate">
+        <?= (session('usu_nombre') ?? 'Usuario') ?>
+      </span>
+    </div>
+    <a href="<?= base_url('logout') ?>" 
+      class="btn btn-sm tt-btn-nuevo-empleado d-flex align-items-center justify-content-center flex-shrink-0"
+      title="Cerrar sesión"
+      style="width: 32px; height: 32px; padding: 0; border-radius: 8px;">
+      <span class="material-symbols-outlined" style="font-size: 18px;">logout</span>
+    </a>
   </div>
+</div>
 
 </nav>
 

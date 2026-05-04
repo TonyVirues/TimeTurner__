@@ -219,23 +219,29 @@ class HorariosController extends BaseController
    * Devuelve la lista de horarios de la empresa del usuario logueado
    * @return ResponseInterface
    */
-  public function listado(): ResponseInterface
-  {
+public function listado(): ResponseInterface
+{
     $errorLogin = $this->exigirLogin();
 
     if ($errorLogin !== null) {
-      return $errorLogin;
+        return $errorLogin;
     }
 
     $idEmpresa = (int) session()->get('usu_id_empresa');
+    $rol = session()->get('usu_rol');
 
-    $horarios = $this->horarioModel
-      ->where('hor_id_empresa', $idEmpresa)
-      ->orderBy('hor_fecha_inicio', 'ASC')
-      ->findAll();
+    $query = $this->horarioModel
+        ->where('hor_id_empresa', $idEmpresa)
+        ->orderBy('hor_fecha_inicio', 'ASC');
+
+    if ($rol !== 'administrador') {
+        $query->where('hor_estado', 'publicado');
+    }
+
+    $horarios = $query->findAll();
 
     return $this->response->setJSON($horarios);
-  }
+}
 
   /**
    * Aplica las reglas de validación para horarios

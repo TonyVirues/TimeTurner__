@@ -110,7 +110,9 @@ class AuthController extends BaseController
       $apellidos === '' ||
       $email === '' ||
       $password === '' ||
-      $nombreEmpresa === ''
+      $cpassword === '' ||
+      $nombreEmpresa === '' ||
+      $cif === ''
     ) {
       return redirect()->back()
         ->withInput()
@@ -148,22 +150,24 @@ class AuthController extends BaseController
     }
     /**Nombre y apellido no pude contener números */
     if (preg_match('/\d/', $nombre) || preg_match('/\d/', $apellidos)) {
-        return redirect()->back()
-            ->withInput()
-            ->with('error', 'El nombre y los apellidos no pueden contener números.')
-            ->with('errorCampo', 'nombre');
+      return redirect()->back()
+        ->withInput()
+        ->with('error', 'El nombre y los apellidos no pueden contener números.')
+        ->with('errorCampo', 'nombre');
     }
     /**Formato CIF inválido */
-    if ($cif !== '' && !preg_match('/^[ABCDEFGHJKLMNPQRSUVW]\d{7}[0-9A-J]$/i', $cif)) {
-        return redirect()->back()
-            ->withInput()
-            ->with('error', 'El CIF no tiene un formato válido. Ejemplo: B12345678')
-            ->with('errorCampo', 'cif');
+    $cif = mb_strtoupper($cif);
+
+    if (!preg_match('/^[ABCDEFGHJKLMNPQRSUVW]\d{7}[0-9A-J]$/', $cif)) {
+      return redirect()->back()
+        ->withInput()
+        ->with('error', 'El CIF no tiene un formato válido. Ejemplo: B12345678 o A1234567B')
+        ->with('errorCampo', 'cif');
     }
 
     /**El CIF ya existe */
-    if ($cif !== '' && $this->empresaModel->existeCif($cif)) {
-    return redirect()->back()
+    if ($this->empresaModel->existeCif($cif)) {
+      return redirect()->back()
         ->withInput()
         ->with('error', 'Ya existe una empresa registrada con ese CIF.')
         ->with('errorCampo', 'cif');
@@ -172,7 +176,7 @@ class AuthController extends BaseController
     /**Array para validad las credenciales de la empresa*/
     $idEmpresa = $this->empresaModel->insert([
       'emp_nombre' => $nombreEmpresa,
-      'emp_cif' => $cif !== '' ? $cif : null,
+      'emp_cif' => $cif,
       'emp_activa' => 1,
     ]);
 

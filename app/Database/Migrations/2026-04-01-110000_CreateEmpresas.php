@@ -23,8 +23,8 @@ class CreateEmpresas extends Migration
       ],
       'emp_cif' => [
         'type' => 'VARCHAR',
-        'constraint' => 20,
-        'null' => true,
+        'constraint' => 9,
+        'null' => false,
       ],
       'emp_activa' => [
         'type' => 'TINYINT',

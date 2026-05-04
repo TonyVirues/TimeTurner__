@@ -243,15 +243,10 @@ document.addEventListener("DOMContentLoaded", function () {
    * y recarga los turnos del calendario cuando cambia el horario seleccionado
    */
   if (horarioSelect) {
-    cargarHorariosEnSelector(horarioSelect)
-      .then(function (resultado) {
-        horariosDisponibles = resultado.horarios;
-
-        if (resultado.horarios.length > 0) {
-          horarioSelect.value = resultado.horarios[0].hor_id_horario;
-          calendar.refetchEvents();
-        }
-      })
+cargarHorariosEnSelector(horarioSelect)
+  .then(function (resultado) {
+    horariosDisponibles = resultado.horarios;
+  })
       .catch(function (error) {
         console.error("Error cargando horarios:", error);
       });

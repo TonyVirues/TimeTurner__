@@ -149,32 +149,39 @@ public function misTurnosDe(int $idUsuario): ResponseInterface{
    * Solo si el horario pertenece a la empresa del usuario logueado
    * @return ResponseInterface
    */
-  public function eventos(): ResponseInterface{
+public function eventos(): ResponseInterface
+{
     $errorLogin = $this->exigirLogin();
 
     if ($errorLogin !== null) {
-      return $errorLogin;
+        return $errorLogin;
     }
 
     $horarioId = (int) $this->request->getGet('horario_id');
 
     if ($horarioId <= 0) {
-      return $this->response->setStatusCode(400)->setJSON([
-        'status' => 'error',
-        'message' => 'El parámetro horario_id es obligatorio.',
-      ]);
+        return $this->response->setStatusCode(400)->setJSON([
+            'status' => 'error',
+            'message' => 'El parámetro horario_id es obligatorio.',
+        ]);
     }
 
     $errorHorario = $this->validarHorarioExistenteYDeEmpresaActual($horarioId);
 
     if ($errorHorario !== null) {
-      return $errorHorario;
+        return $errorHorario;
     }
 
-    $eventos = $this->turnoModel->getTurnosParaCalendario($horarioId);
+    $rol = session()->get('usu_rol');
+
+    if ($rol !== 'administrador') {
+        $eventos = $this->turnoModel->getTurnosParaCalendarioFiltrados($horarioId, ['asignado', 'pendiente_cambio', 'cambiado']);
+    } else {
+        $eventos = $this->turnoModel->getTurnosParaCalendario($horarioId);
+    }
 
     return $this->response->setJSON($eventos);
-  }
+}
 
   /**
    * Crea un turno nuevo en la empresa del administrador logueado

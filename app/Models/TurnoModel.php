@@ -108,6 +108,55 @@ class TurnoModel extends Model
     return $eventos;
   }
 
+  
+/**
+ * Devuelve los turnos de un horario filtrados por estado, en formato FullCalendar
+ * @param int $horarioId
+ * @param array $estados
+ * @return array
+ */
+public function getTurnosParaCalendarioFiltrados(int $horarioId, array $estados): array
+{
+    $turnos = $this->select('
+        turnos.tur_id_turno,
+        turnos.tur_id_horario,
+        turnos.tur_id_usuario,
+        turnos.tur_inicio,
+        turnos.tur_fin,
+        turnos.tur_estado,
+        turnos.tur_observaciones,
+        usuarios.usu_nombre,
+        usuarios.usu_apellidos
+      ')
+      ->join('usuarios', 'usuarios.usu_id_usuario = turnos.tur_id_usuario', 'left')
+      ->where('turnos.tur_id_horario', $horarioId)
+      ->whereIn('turnos.tur_estado', $estados)
+      ->orderBy('turnos.tur_inicio', 'ASC')
+      ->findAll();
+
+    $eventos = [];
+
+    foreach ($turnos as $turno) {
+        $nombreCompleto = trim(($turno['usu_nombre'] ?? '') . ' ' . ($turno['usu_apellidos'] ?? ''));
+
+        $eventos[] = [
+            'id' => $turno['tur_id_turno'],
+            'title' => $nombreCompleto !== '' ? $nombreCompleto : 'Sin asignar',
+            'start' => date('c', strtotime($turno['tur_inicio'])),
+            'end' => date('c', strtotime($turno['tur_fin'])),
+            'extendedProps' => [
+                'estado' => $turno['tur_estado'],
+                'usuario' => $nombreCompleto !== '' ? $nombreCompleto : null,
+                'tur_id_usuario' => $turno['tur_id_usuario'],
+                'observaciones' => $turno['tur_observaciones'],
+                'tur_id_horario' => $turno['tur_id_horario'],
+            ],
+        ];
+    }
+
+    return $eventos;
+}
+
   /**
    * Comprueba si un usuario ya tiene otro turno que se solapa con el rango indicado
    * @param int $usuarioId

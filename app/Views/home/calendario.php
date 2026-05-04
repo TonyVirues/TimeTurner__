@@ -18,16 +18,19 @@
       </select>
 
       <?php if ($esAdministrador): ?>
-        <button type="button" id="btnNuevoHorario" class="btn btn-sm btn-primary">
-          Nuevo horario
+        <button type="button" id="btnNuevoHorario" class="btn btn-sm tt-btn-nuevo-empleado d-flex align-items-center justify-content-center"
+          title="Nuevo horario" style="width: 36px; height: 36px; padding: 0;">
+          <span class="material-symbols-outlined" style="font-size: 20px;">add</span>
         </button>
 
-        <button type="button" id="btnEditarHorario" class="btn btn-sm btn-outline-secondary">
-          Editar horario
+        <button type="button" id="btnEditarHorario" class="btn btn-sm btn-outline-secondary d-flex align-items-center justify-content-center"
+          title="Editar horario" style="width: 36px; height: 36px; padding: 0;">
+          <span class="material-symbols-outlined" style="font-size: 20px;">edit</span>
         </button>
 
-        <button type="button" id="btnEliminarHorario" class="btn btn-sm btn-outline-danger">
-          Eliminar horario
+        <button type="button" id="btnEliminarHorario" class="btn btn-sm btn-outline-danger d-flex align-items-center justify-content-center"
+          title="Eliminar horario" style="width: 36px; height: 36px; padding: 0;">
+          <span class="material-symbols-outlined" style="font-size: 20px;">delete</span>
         </button>
       <?php endif; ?>
     </div>

@@ -63,16 +63,6 @@
               <?php endif; ?>
             </div>
 
-            <!--Recordarme-->
-            <div class="d-flex justify-content-between mb-3">
-              <div class="form-check">
-                <input type="checkbox" class="form-check-input" name="remember">
-                <label class="form-check-label">Recuerdame</label>
-              </div>
-
-              <a href="#">¿Olvidaste la contraseña?</a>
-            </div>
-
             <!--botón-->
             <button type="submit" class="btn btn-primary w-100">Continuar</button>
 
